@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import Generator from './Generator.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import Faq from './Faq.astro';
+import { BRAND } from '../lib/seo.js';
+import { useI18n, localizePath } from '../i18n/index.js';
+
+interface Props { locale?: string; }
+const { locale = 'en' } = Astro.props;
+const I = useI18n(locale);
+const h = I.home;
+const base = locale === 'en' ? '' : `/${locale}`;
+const url = new URL(localizePath(locale, '/'), Astro.site).href;
+
+// [landing slug, content type id (for the translated label), English link text]
+const GRID = [
+  ['url-qr-code', 'url', 'URL QR code generator'], ['text-qr-code', 'text', 'Text QR code generator'], ['email-qr-code', 'email', 'Email QR code generator'],
+  ['phone-qr-code', 'phone', 'Phone number QR code generator'], ['sms-qr-code', 'sms', 'SMS QR code generator'], ['whatsapp-qr-code', 'whatsapp', 'WhatsApp QR code generator'],
+  ['wifi-qr-code', 'wifi', 'WiFi QR code generator'], ['vcard-qr-code', 'vcard', 'vCard QR code generator'], ['location-qr-code', 'geo', 'Location QR code generator'],
+  ['event-qr-code', 'event', 'Event QR code generator'], ['google-review-qr-code', 'review', 'Google review QR code generator'], ['feedback-qr-code', 'feedback', 'Feedback QR code generator'],
+  ['app-download-qr-code', 'app', 'App download QR code generator'], ['coupon-qr-code', 'coupon', 'Coupon QR code generator'], ['payment-qr-code', 'payment', 'Payment QR code generator'],
+  ['bitcoin-qr-code', 'crypto', 'Bitcoin QR code generator'],
+];
+const descKey = { url: 'url', text: 'text', email: 'email', phone: 'phone', sms: 'sms', whatsapp: 'whatsapp', wifi: 'wifi', vcard: 'vcard', geo: 'location', event: 'event', review: 'review', feedback: 'feedback', app: 'app', coupon: 'coupon', payment: 'payment', crypto: 'bitcoin' };
+const gridText = (type, en) => locale === 'en' ? en : I.t('lp_h1', { x: I.t('p_' + type) });
+
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: `${BRAND} – ${h.eyebrow}`, url, inLanguage: locale,
+    applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', description: h.description,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: locale,
+    mainEntity: I.faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+];
+---
+<Base title={h.title} description={h.description} jsonLd={jsonLd}>
+  <SiteHeader />
+  <main class="wrap">
+    <h1 class="sr-only">{h.h1}</h1>
+    <div class="generator-first"><Generator locale={locale} /></div>
+
+    <section class="hero hero-end" aria-label={h.eyebrow}>
+      <p class="eyebrow">{h.eyebrow}</p>
+      <p class="hero-title">{h.hero_a}<span class="grad-text">{h.hero_b}</span>{h.hero_c}</p>
+      <p class="lede">{h.lede}</p>
+    </section>
+
+    <article class="content prose" aria-labelledby="about">
+      <h2 id="about">{h.about_h}</h2>
+      <p>{h.about_1}</p>
+      <p>{h.about_2}</p>
+
+      <h2>{h.kw_h}</h2>
+      <p>{h.kw_p}</p>
+      <ul>{h.kw_li.map(li => <li set:html={li} />)}</ul>
+
+      <h2>{h.how_h}</h2>
+      <ol class="steps">
+        {h.steps.map(([title, text], i) => <li><span class="step">{i + 1}</span><h3>{title}</h3><p>{text}</p></li>)}
+      </ol>
+
+      <h2>{h.types_h}</h2>
+      <p>{h.types_p}</p>
+      <ul class="type-grid">
+        {GRID.map(([slug, type, en]) => (
+          <li><a href={`${base}/${slug}/`}>{gridText(type, en)}</a>{I.c.descs[descKey[type]] && <span>{I.c.descs[descKey[type]]}</span>}</li>
+        ))}
+      </ul>
+
+      <h2>{h.social_h}</h2>
+      <p>{h.social_p}</p>
+      <ul>{h.social_li.map(li => <li set:html={li} />)}</ul>
+
+      <h2>{h.custom_h}</h2>
+      <p>{h.custom_p}</p>
+      <ul>{h.custom_li.map(li => <li>{li}</li>)}</ul>
+      <p>{h.custom_p2}</p>
+
+      <h2>{h.dl_h}</h2>
+      <p>{h.dl_p}</p>
+
+      <h2>{h.biz_h}</h2>
+      <p>{h.biz_p}</p>
+
+      <h2>{h.static_h}</h2>
+      <p>{h.static_p}</p>
+
+      <h2>{h.alt_h}</h2>
+      <p>{h.alt_p}</p>
+      <p>{h.alt_p2}</p>
+      <ul>{h.alt_li.map(li => <li set:html={li} />)}</ul>
+
+      <Faq items={I.faq} heading={I.t('faq_h')} />
+    </article>
+  </main>
+  <SiteFooter />
+</Base>

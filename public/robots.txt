@@ -1,0 +1,21 @@
+# QR Code Station robots.txt
+# https://qrcodestation.com
+
+User-agent: *
+Allow: /
+
+# Search and AI crawlers are explicitly welcome.
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+# The sitemap index already lists sitemap-0.xml.
+Sitemap: https://qrcodestation.com/sitemap-index.xml

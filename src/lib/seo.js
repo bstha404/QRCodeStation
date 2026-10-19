@@ -1,0 +1,117 @@
+// Brand + per-type landing page content. Edit copy here; pages are generated from it.
+export const BRAND = 'QR Code Station';
+
+export const LANDINGS = [
+  { slug: 'url-qr-code', type: 'url', nav: 'URL',
+    title: 'URL QR Code Generator – Link to Any Website | QR Code Station',
+    description: 'Turn any website link into a custom QR code with your logo and colors. Free, no sign-up, never expires. Download PNG or SVG.',
+    h1: 'URL QR code generator', intro: 'Paste a link and get a QR code that opens it on any phone camera. Style it, add your logo, and download in high resolution.',
+    faq: [['Can I change the link later?', 'No. Static QR codes store the link directly in the pattern. To change it, generate a new code.'], ['How long can the URL be?', 'Up to about 2,900 characters, but shorter links produce simpler codes that scan faster.']] },
+  { slug: 'wifi-qr-code', type: 'wifi', nav: 'Wi‑Fi',
+    title: 'Wi‑Fi QR Code Generator – Share Your Network Password | QR Code Station',
+    description: 'Create a Wi‑Fi QR code so guests can join your network without typing the password. Works with WPA, WPA2, WPA3 and WEP.',
+    h1: 'Wi‑Fi QR code generator', intro: 'Enter your network name and password. Guests scan the code with their camera and join instantly on iPhone and Android.',
+    faq: [['Is my Wi‑Fi password sent anywhere?', 'No. The code is generated in your browser and the password never leaves your device.'], ['Does it work for hidden networks?', 'Yes. Turn on “Hidden network” so phones know to look for it.']] },
+  { slug: 'vcard-qr-code', type: 'vcard', nav: 'vCard',
+    title: 'vCard QR Code Generator – Digital Business Card | QR Code Station',
+    description: 'Make a vCard or MeCard QR code for your business card. One scan saves your name, phone, email, company and address to contacts.',
+    h1: 'vCard QR code generator', intro: 'Add your contact details and print the code on business cards, badges or email signatures. One scan saves you to their contacts.',
+    faq: [['vCard or MeCard?', 'vCard 3.0 supports more fields and works on all modern phones. MeCard is shorter, so the code is less dense.'], ['Can I include a photo?', 'Photos make the code too large to scan reliably, so they are not included.']] },
+  { slug: 'whatsapp-qr-code', type: 'whatsapp', nav: 'WhatsApp',
+    title: 'WhatsApp QR Code Generator – Start a Chat Instantly | QR Code Station',
+    description: 'Create a QR code that opens a WhatsApp chat with your number and an optional prefilled message. Free for business and personal use.',
+    h1: 'WhatsApp QR code generator', intro: 'Enter your number with country code and an optional message. Customers scan to open a chat with you right away.',
+    faq: [['What number format should I use?', 'Use the full international number without + or spaces, e.g. 12025550123.']] },
+  { slug: 'email-qr-code', type: 'email', nav: 'Email',
+    title: 'Email QR Code Generator – Prefilled Email | QR Code Station',
+    description: 'Create a QR code that opens a new email with the address, subject and message already filled in.',
+    h1: 'Email QR code generator', intro: 'Set the recipient, subject and message. Scanning opens the phone’s mail app with everything ready to send.', faq: [] },
+  { slug: 'sms-qr-code', type: 'sms', nav: 'SMS',
+    title: 'SMS QR Code Generator – Prefilled Text Message | QR Code Station',
+    description: 'Generate a QR code that opens a text message with your number and message prefilled. Great for opt-ins and feedback.',
+    h1: 'SMS QR code generator', intro: 'Enter a phone number and message. Scanning opens the messaging app ready to send.', faq: [] },
+  { slug: 'phone-qr-code', type: 'phone', nav: 'Phone',
+    title: 'Phone Number QR Code Generator – Tap to Call | QR Code Station',
+    description: 'Create a QR code that dials your phone number when scanned. Free, customizable, and never expires.',
+    h1: 'Phone QR code generator', intro: 'Enter a number and scanning will offer to call it immediately.', faq: [] },
+  { slug: 'location-qr-code', type: 'geo', nav: 'Location',
+    title: 'Location QR Code Generator – Google Maps & GPS | QR Code Station',
+    description: 'Make a QR code that opens a map pin at your exact coordinates in Google Maps or the phone’s default maps app.',
+    h1: 'Location QR code generator', intro: 'Enter latitude and longitude to point people to your shop, venue or meeting spot.', faq: [] },
+  { slug: 'event-qr-code', type: 'event', nav: 'Event',
+    title: 'Event QR Code Generator – Add to Calendar | QR Code Station',
+    description: 'Create a QR code that adds your event, time and location to the scanner’s calendar.',
+    h1: 'Event QR code generator', intro: 'Add the title, time and place. Scanning lets guests save the event to their calendar.', faq: [] },
+  { slug: 'text-qr-code', type: 'text', nav: 'Text',
+    title: 'Text QR Code Generator – Plain Text | QR Code Station',
+    description: 'Encode any plain text into a QR code that displays it when scanned. Works offline, no internet needed to read.',
+    h1: 'Text QR code generator', intro: 'Type any message and it appears on screen when scanned, even without internet.', faq: [] },
+  { slug: 'bitcoin-qr-code', type: 'crypto', nav: 'Crypto',
+    title: 'Bitcoin & Crypto QR Code Generator – Payment Request | QR Code Station',
+    description: 'Create a payment QR code for Bitcoin, Ethereum, Litecoin and more, with amount, label and message.',
+    h1: 'Crypto payment QR code generator', intro: 'Enter a receiving address and optional amount to create a scannable payment request for wallets.', faq: [] },
+  { slug: 'google-review-qr-code', type: 'review', nav: 'Google review',
+    title: 'Google Review QR Code Generator – Get More Reviews | QR Code Station',
+    description: 'Create a QR code that opens your Google review box. Paste your Place ID or review link, style it, and print it for receipts, tables and shop windows.',
+    h1: 'Google review QR code generator', intro: 'Make it effortless for happy customers to review you. Paste your Google Place ID or review link and download a code to print.',
+    faq: [['Where do I find my Place ID?', 'Use Google’s Place ID Finder, or copy the “Ask for reviews” link from your Google Business Profile and paste it instead.']] },
+  { slug: 'feedback-qr-code', type: 'feedback', nav: 'Feedback form',
+    title: 'Feedback & Survey QR Code Generator – Google Forms | QR Code Station',
+    description: 'Turn a Google Forms (or any survey) link into a QR code so customers can give feedback in seconds. Free, no sign-up.',
+    h1: 'Feedback and survey QR code generator', intro: 'Paste the link to your Google Form or survey. Customers scan and answer on their phone.', faq: [] },
+  { slug: 'app-download-qr-code', type: 'app', nav: 'App download',
+    title: 'App Download QR Code Generator – Google Play & App Store | QR Code Station',
+    description: 'Create a QR code that opens your app’s page on Google Play or the Apple App Store. Free, customizable and printable.',
+    h1: 'App download QR code generator', intro: 'Enter your app ID or store link and send people straight to the download page.',
+    faq: [['Can one code open both stores?', 'Not with a static QR code. Make one code per store, or link to a web page that offers both.']] },
+  { slug: 'coupon-qr-code', type: 'coupon', nav: 'Coupon',
+    title: 'Coupon & Discount QR Code Generator | QR Code Station',
+    description: 'Create a coupon QR code with your offer, code, expiry date and terms. Print it on flyers, receipts and packaging.',
+    h1: 'Coupon QR code generator', intro: 'Enter your offer and coupon code. Scanning shows the deal on the customer’s phone.',
+    faq: [['Can I turn a coupon off later?', 'No. The offer is stored inside the code. Use an expiry date, and print a new code for new offers.']] },
+  { slug: 'payment-qr-code', type: 'payment', nav: 'Payment',
+    title: 'Payment QR Code Generator – PayPal, UPI, Venmo, Cash App | QR Code Station',
+    description: 'Create a payment QR code for PayPal, UPI, Venmo or Cash App with an optional amount and note.',
+    h1: 'Payment QR code generator', intro: 'Choose a payment method, enter your account and optionally an amount. Customers scan to pay.',
+    faq: [['Does it work for local wallets and bank apps?', 'No. Many regional wallets and bank apps use their own QR format. Download the QR from that app instead.']] },
+];
+
+export const HOME_FAQ = [
+  ['Do these QR codes expire?', 'No. The codes are static: the content is encoded directly into the image, so they keep working forever and don’t depend on this website.'],
+  ['Can I add my logo?', 'Yes. Upload a PNG, JPG or SVG in the Logo step. Use error correction Q or H so the code still scans with part of it covered.'],
+  ['Which file format should I download?', 'Use SVG for print and design tools because it scales to any size. Use PNG for websites and documents, with a transparent background if needed.'],
+  ['Is my data sent to a server?', 'No. QR codes are generated entirely in your browser using the open-source Nayuki QR Code generator library.'],
+  ['What is error correction?', 'It lets a QR code be read even when part of it is damaged or hidden. Low recovers about 7% of the code, High about 30%, at the cost of a denser pattern.'],
+  ['What is a QR code?', 'A QR code is a square barcode that stores information such as a link, text, Wi‑Fi details or a contact card. Point a phone camera at it to open or save that information instantly.'],
+  ['What is the best free QR code generator?', 'The best free QR code generator is one that needs no sign up, never expires, lets you add your logo and colors, and gives you high-quality downloads in PNG and SVG. QR Code Station is built to offer all of that for free.'],
+  ['Do I need an Adobe, Canva or Google account to use this QR code generator?', 'No. QR Code Station is independent and not affiliated with Adobe, Canva or Google. You do not need any account or login to make or download a QR code.'],
+  ['Does this website store my data in my browser? How do I delete it?', 'Yes, a little. To remember your last settings, the site saves your content, design choices, uploaded logos and theme in your browser’s local storage. It never leaves your device. To delete it, use the “Delete my saved data” button on the Privacy policy page, or clear this site’s data in your browser settings (the Privacy policy page has step-by-step instructions for Chrome, Edge, Firefox, Safari, iPhone and Android). Private or incognito windows delete it automatically when closed.'],
+];
+
+// Public contact address shown on the Contact page and in the legal pages.
+export const CONTACT_EMAIL = 'biplovestha290@gmail.com';
+// WhatsApp number in international format, digits only.
+export const WHATSAPP_NUMBER = '9779864691672';
+export const WHATSAPP_DISPLAY = '+977 9864691672';
+export const UPDATED = 'October 17, 2026';
+
+export const COMPANY_LINKS = [
+  { href: '/about/', label: 'About us' },
+  { href: '/faq/', label: 'FAQ' },
+  { href: '/contact/', label: 'Contact us' },
+  { href: '/privacy-policy/', label: 'Privacy policy' },
+  { href: '/terms-and-conditions/', label: 'Terms & conditions' },
+];
+
+export const MORE_FAQ = [
+  ['Is the QR code generator really free?', 'Yes. You can create and download as many QR codes as you like with no account, no watermark and no time limit.'],
+  ['What is the difference between static and dynamic QR codes?', 'A static code stores your content directly in the pattern, so it never expires and needs no server. A dynamic code points to a redirect that can be edited later and can track scans. QR Code Station creates static codes.'],
+  ['Can I edit a QR code after printing it?', 'No. Static codes cannot be changed once printed. If the content changes, generate and print a new code.'],
+  ['Can I track how many people scan my code?', 'Not directly. To measure scans, add UTM parameters to your link and check the results in your own web analytics.'],
+  ['How big should I print my QR code?', 'At least 2 × 2 cm (about 0.8 inch) for close-range scanning. Make it larger for posters or anything scanned from a distance: roughly 1 cm of code for every 10 cm of scanning distance.'],
+  ['Why won’t my QR code scan?', 'The usual causes are low contrast between code and background, a logo that is too large, a missing quiet zone, or too much data. Use a dark code on a light background, keep error correction at Q or H with a logo, and test with a phone before printing.'],
+  ['Can I make QR codes for social media, PDFs or videos?', 'Yes. Upload your PDF or video online, or copy your social profile link, and paste it into the URL type. The URL type also has one-tap shortcuts for popular social networks.'],
+  ['Can I use the QR codes for business or commercial use?', 'Yes. Codes you create are yours to use on products, packaging, menus, ads and more.'],
+  ['Does it work on iPhone and Android?', 'Yes. Both open the camera app and recognize QR codes without installing anything.'],
+];
+export const ALL_FAQ = [...HOME_FAQ, ...MORE_FAQ];

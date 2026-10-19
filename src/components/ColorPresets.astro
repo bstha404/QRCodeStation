@@ -1,0 +1,22 @@
+---
+import { COLOR_FAMILIES } from '../lib/render.js';
+import { getLocale, useI18n } from '../i18n/index.js';
+// targets: [stateKey, label, optional data-show key]
+interface Props { scope: string; targets: [string, string, string?][]; }
+const { scope, targets } = Astro.props;
+const I = useI18n(getLocale(Astro.url.pathname));
+const x = I.x;
+const N = I.N;
+---
+<div class="group palette" data-palette={scope} data-default={targets[0][0]}>
+  <span class="label">{x('Color presets')}</span>
+  <div class="swatches" role="group" aria-label="Color families">
+    {COLOR_FAMILIES.map(f => <button type="button" class="swatch" data-family={f.id} title={N(f.label)} aria-label={N(f.label)} aria-pressed="false" style={`background:${f.shades[5]}`}></button>)}
+  </div>
+  <div class="shades-wrap" data-shades-wrap hidden>
+    <div class="pills" role="group" aria-label="Apply color to">
+      {targets.map(([k, label, show], i) => <button type="button" class="pill" data-apply={k} data-show={show} hidden={!!show} aria-pressed={i === 0 ? 'true' : 'false'}>{x(label)}</button>)}
+    </div>
+    <div class="shades" data-shades role="group" aria-label="Shades"></div>
+  </div>
+</div>

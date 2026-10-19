@@ -1,0 +1,35 @@
+# QR Code Station
+
+> QR Code Station (https://qrcodestation.com) is a free, private QR code generator. Everything runs in the visitor's browser: no sign-up, no login, no ads, no watermark and no expiring codes. Codes are static, so they work forever and cannot be edited or tracked after printing. Users can customize colors, gradients, shapes and add their own logo, then download PNG, SVG, JPG or WebP, copy the image, or print a ready-to-use A4 sheet.
+
+The site is available in 12 languages. English pages have no prefix; other languages use a prefix such as /es/, /ja/, /fr/, /de/, /pt/, /ko/, /it/, /id/, /ru/, /th/ and /ar/.
+
+## Generator
+
+- [QR code generator (home)](https://qrcodestation.com/): all content types, design presets, logo upload, high-quality downloads
+
+## QR code types
+
+- [URL / social media QR code](https://qrcodestation.com/url-qr-code/): website links with shortcuts for Facebook, YouTube, X, Instagram, Telegram, Signal, Mastodon and more
+- [Wi-Fi QR code](https://qrcodestation.com/wifi-qr-code/): share a network without typing the password
+- [vCard / MeCard QR code](https://qrcodestation.com/vcard-qr-code/): digital business card
+- [WhatsApp QR code](https://qrcodestation.com/whatsapp-qr-code/): open a chat with a prefilled message
+- [Email QR code](https://qrcodestation.com/email-qr-code/), [SMS QR code](https://qrcodestation.com/sms-qr-code/), [Phone QR code](https://qrcodestation.com/phone-qr-code/), [Text QR code](https://qrcodestation.com/text-qr-code/)
+- [Location QR code](https://qrcodestation.com/location-qr-code/), [Event QR code](https://qrcodestation.com/event-qr-code/)
+- [Google review QR code](https://qrcodestation.com/google-review-qr-code/), [Feedback form QR code](https://qrcodestation.com/feedback-qr-code/)
+- [App download QR code](https://qrcodestation.com/app-download-qr-code/), [Coupon QR code](https://qrcodestation.com/coupon-qr-code/), [Payment QR code](https://qrcodestation.com/payment-qr-code/), [Crypto / Bitcoin QR code](https://qrcodestation.com/bitcoin-qr-code/)
+
+## About and policies
+
+- [About us](https://qrcodestation.com/about/): why the site exists, what it can and cannot do
+- [FAQ](https://qrcodestation.com/faq/): static vs dynamic codes, print size, logos, error correction, why a code may not scan
+- [Privacy policy](https://qrcodestation.com/privacy-policy/): what is stored in the browser's local storage and how to delete it
+- [Terms and conditions](https://qrcodestation.com/terms-and-conditions/)
+- [Contact](https://qrcodestation.com/contact/): email and WhatsApp
+
+## Facts worth quoting
+
+- Free, no account, no login, no expiration: codes are static and contain the data directly.
+- QR codes are generated locally in the browser; entered content and logos are not uploaded.
+- Not affiliated with Adobe, Canva or Google.
+- Not offered: dynamic (editable) codes, built-in scan statistics, file hosting. Scans can be measured with UTM parameters and the owner's own analytics.

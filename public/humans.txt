@@ -1,0 +1,15 @@
+/* TEAM */
+Site: QR Code Station
+Contact: biplovestha290@gmail.com
+
+/* SITE */
+URL: https://qrcodestation.com
+Purpose: Free, private QR code generator. No sign-up, no ads, no expiring codes.
+Languages: English, Español, Français, Deutsch, Português, Italiano, Bahasa Indonesia, Русский, 日本語, 한국어, ไทย, العربية
+Standards: HTML5, CSS3, JavaScript (ES modules)
+
+/* TECHNOLOGY */
+Framework: Astro (static site)
+QR encoder: QR Code generator library by Project Nayuki (MIT)
+Icons: Simple Icons (CC0)
+Fonts: Space Grotesk, Manrope, JetBrains Mono (Google Fonts)

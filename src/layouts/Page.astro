@@ -1,0 +1,26 @@
+---
+import Base from './Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { BRAND } from '../lib/seo.js';
+import { getLocale, localizePath } from '../i18n/index.js';
+interface Props { title: string; description: string; heading: string; updated?: string; jsonLd?: object[]; }
+const { title, description, heading, updated, jsonLd = [] } = Astro.props;
+const locale = getLocale(Astro.url.pathname);
+const url = new URL(Astro.url.pathname, Astro.site).href;
+const crumbs = { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+  { '@type': 'ListItem', position: 1, name: BRAND, item: new URL(localizePath(locale, '/'), Astro.site).href },
+  { '@type': 'ListItem', position: 2, name: heading, item: url } ] };
+---
+<Base title={title} description={description} jsonLd={[crumbs, ...jsonLd]}>
+  <SiteHeader />
+  <main class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href={localizePath(locale, '/')}>{BRAND}</a><span aria-hidden="true">/</span><span>{heading}</span></nav>
+    <article class="page-doc">
+      <h1>{heading}</h1>
+      {updated && <p class="updated">{updated}</p>}
+      <slot />
+    </article>
+  </main>
+  <SiteFooter />
+</Base>

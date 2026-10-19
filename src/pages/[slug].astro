@@ -1,0 +1,15 @@
+---
+import LandingPage from '../components/LandingPage.astro';
+import StaticPage from '../components/StaticPage.astro';
+import { LANDINGS } from '../lib/seo.js';
+import { STATIC_ID } from '../i18n/index.js';
+
+export function getStaticPaths() {
+  return [
+    ...LANDINGS.map(page => ({ params: { slug: page.slug }, props: { page } })),
+    ...Object.keys(STATIC_ID).map(slug => ({ params: { slug }, props: { id: STATIC_ID[slug] } })),
+  ];
+}
+const { page, id } = Astro.props;
+---
+{page ? <LandingPage page={page} locale="en" /> : <StaticPage id={id} locale="en" />}

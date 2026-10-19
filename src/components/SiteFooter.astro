@@ -1,0 +1,26 @@
+---
+import { BRAND, LANDINGS, COMPANY_LINKS } from '../lib/seo.js';
+import { getLocale, localizePath, useI18n } from '../i18n/index.js';
+const locale = getLocale(Astro.url.pathname);
+const I = useI18n(locale);
+const typeName = (l) => locale === 'en' ? l.nav + ' QR code' : I.t('ft_qr', { x: I.t('p_' + l.type) });
+const tagline = locale === 'en' ? 'Free QR Code Generator' : I.home.eyebrow;
+const year = new Date().getFullYear();
+const coLabel = { '/about/': 'nav_about', '/faq/': 'nav_faq', '/contact/': 'nav_contact', '/privacy-policy/': 'privacy', '/terms-and-conditions/': 'terms' };
+---
+<footer class="site-footer">
+  <div class="wrap">
+    <nav class="footer-links" aria-label="QR code types">
+      <span class="label">{I.t('ft_types')}</span>
+      <ul>{LANDINGS.map(l => <li><a href={localizePath(locale, `/${l.slug}/`)}>{typeName(l)}</a></li>)}</ul>
+    </nav>
+    <nav class="footer-links" aria-label="Company">
+      <span class="label">{I.t('ft_company')}</span>
+      <ul>{COMPANY_LINKS.map(l => <li><a href={localizePath(locale, l.href)}>{coLabel[l.href] ? I.t(coLabel[l.href]) : l.label}</a></li>)}</ul>
+    </nav>
+    <div class="footer-meta">
+      <span>© {year} {BRAND} · {tagline}</span>
+      <span>{I.t('ft_made')}</span>
+    </div>
+  </div>
+</footer>

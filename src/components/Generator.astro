@@ -1,0 +1,662 @@
+---
+import { QrCode } from '../lib/qrcodegen.js';
+import { siFacebook, siYoutube, siX, siInstagram, siTelegram, siSignal, siMastodon, siTiktok, siThreads, siBluesky, siPinterest, siSnapchat, siReddit, siGithub, siDiscord, siTwitch, siWhatsapp } from 'simple-icons';
+import ColorPresets from './ColorPresets.astro';
+import HelpBox from './HelpBox.astro';
+import { useI18n } from '../i18n/index.js';
+import { SOCIALS, TYPES, BODY, FRAME, BALL, ECC, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, bodyThumb, frameThumb, ballThumb } from '../lib/render.js';
+
+const ICONS: Record<string, string> = Object.fromEntries(Object.entries({
+  facebook: siFacebook, youtube: siYoutube, x: siX, instagram: siInstagram, telegram: siTelegram, signal: siSignal, mastodon: siMastodon,
+  tiktok: siTiktok, threads: siThreads, bluesky: siBluesky, pinterest: siPinterest, snapchat: siSnapchat, reddit: siReddit,
+  github: siGithub, discord: siDiscord, twitch: siTwitch, whatsapp: siWhatsapp,
+}).map(([k, v]) => [k, v.path]));
+// simple-icons dropped the LinkedIn logo, so it is drawn from its own path (24×24 viewBox).
+ICONS.linkedin = 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z';
+const { initialType = 'url', locale = 'en' } = Astro.props;
+const I = useI18n(locale);
+const x = I.x;
+const N = I.N;
+const c = I.c;
+const FD = { ...FIELD_DEFAULTS, ...c.defs };
+const isUrl = initialType === 'url';
+// Rendered at build time so the page ships a real QR code and thumbnails in the HTML.
+const sample = QrCode.encodeText('https://example.com', QrCode.Ecc.LOW);
+const initialQr = QrCode.encodeText(FIELD_DEFAULTS.url, QrCode.Ecc.MEDIUM);
+const initialSvg = isUrl ? buildSvg(initialQr, { ...DESIGN_DEFAULTS, border: 4 }) : '';
+const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
+---
+<div class="gen" id="qr-app" data-locale={locale} data-initial-type={isUrl ? undefined : initialType}>
+  <div class="type-bar pills" role="group" aria-label="Content type">
+    {TYPES.map(t => <button type="button" class="pill" data-type={t.id} aria-pressed={t.id === initialType ? 'true' : 'false'}>{x(t.label)}</button>)}
+  </div>
+  <div class="tabs" role="tablist" aria-label="QR code options">
+    <button type="button" class="tab" role="tab" id="tab-content" aria-controls="panel-content" data-tab="content" aria-selected="true"><span class="step">1</span><span class="tab-name">{x("Content")}</span></button>
+    <button type="button" class="tab" role="tab" id="tab-colors" aria-controls="panel-colors" data-tab="colors" aria-selected="false"><span class="step">2</span><span class="tab-name">{x("Colors")}</span><span class="card-sum" data-summary="colors">{x("Solid")}</span></button>
+    <button type="button" class="tab" role="tab" id="tab-logo" aria-controls="panel-logo" data-tab="logo" aria-selected="false"><span class="step">3</span><span class="tab-name">{x("Logo")}</span><span class="card-sum" data-summary="logo">{x("None")}</span></button>
+    <button type="button" class="tab" role="tab" id="tab-design" aria-controls="panel-design" data-tab="design" aria-selected="false"><span class="step">4</span><span class="tab-name">{x("Design")}</span><span class="card-sum" data-summary="design"></span></button>
+    <button type="button" class="tab" role="tab" id="tab-encoding" aria-controls="panel-encoding" data-tab="encoding" aria-selected="false"><span class="step">5</span><span class="tab-name">{x("Encoding")}</span><span class="card-sum" data-summary="encoding">ECC M · v1–40</span></button>
+  </div>
+  <div class="gen-body">
+  <div class="gen-main" data-panels>
+    <div class="panel panel-stack" role="tabpanel" id="panel-content" aria-labelledby="tab-content" data-panel="content">
+    <section class="card">
+      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
+      <div class="card-body" style="padding-top:20px">
+        {TYPES.map(t => (
+          <div class="fields" data-fields={t.id} hidden={t.id !== initialType}>
+            {t.fields.map(f => (
+              <div class:list={['field', f.half && 'half']} data-showif={f.showIf ? f.showIf.join('=') : undefined} hidden={f.showIf ? FD[f.showIf[0]] !== f.showIf[1] : undefined}>
+                {f.type === 'select' ? (
+                  <>
+                    <span class="label">{x(f.label)}</span>
+                    <div class="pills" role="group" aria-label={x(f.label)}>
+                      {f.options.map(([v, l]) => <button type="button" class="pill" data-field-opt={f.k} data-value={v} aria-pressed={FD[f.k] === v ? 'true' : 'false'}>{x(l)}</button>)}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <label class="label" for={`f-${f.k}`}>{x(f.label)}</label>
+                    {f.type === 'area'
+                      ? <textarea class="input" id={`f-${f.k}`} rows="4" data-field={f.k} placeholder={x(f.ph)}>{FD[f.k]}</textarea>
+                      : <input class="input" id={`f-${f.k}`} type={f.it || 'text'} data-field={f.k} placeholder={f.ph} value={FD[f.k]} />}
+                  </>
+                )}
+              </div>
+            ))}
+            {t.id === 'url' && (
+              <div class="field social" style="flex:1 1 100%">
+                <span class="label">{x("Social media shortcuts")}</span>
+                <div class="social-grid" role="group" aria-label={x("Social media shortcuts")}>
+                  {SOCIALS.map(sc => (
+                    <button type="button" class="social-btn" data-social={sc.id} data-prefix={sc.prefix} data-ph={sc.ph} aria-pressed="false">
+                      {ICONS[sc.id]
+                        ? <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d={ICONS[sc.id]} /></svg>
+                        : <span class="social-fallback" aria-hidden="true">in</span>}
+                      <span>{sc.label}</span>
+                    </button>
+                  ))}
+                </div>
+                <span class="hint">{x("Pick a platform, then replace the highlighted part with your own username.")}</span>
+              </div>
+            )}
+            {t.id === 'wifi' && (
+              <label class="switch-row" style="flex:1 1 100%"><span><b>{x("Hidden network")}</b></span><input type="checkbox" class="switch" role="switch" data-field-bool="wifiHidden" /></label>
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+    {TYPES.map(ty => <HelpBox id={ty.id} helpFor={ty.id} initialHidden={ty.id !== initialType} title={c.help.title_type.replace('{t}', I.t('p_' + ty.id))} items={c.help[ty.id]} />)}
+    </div>
+
+    <div class="panel panel-stack" role="tabpanel" id="panel-colors" aria-labelledby="tab-colors" data-panel="colors" hidden>
+    <section class="card">
+      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
+      <div class="card-body">
+        <div class="group">
+          <label class="switch-row"><span><b>{x("Gradient")}</b><small>{x("Blend two colors across the code")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="gradient" /></label>
+          <label class="switch-row"><span><b>{x("Transparent background")}</b><small>{x("PNG, SVG and WebP keep transparency")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="transparent" /></label>
+          <label class="switch-row"><span><b>{x("Custom eye colors")}</b><small>{x("Color the three corner markers separately")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="customEyes" /></label>
+        </div>
+        <div class="logo-row" data-show="gradient" hidden>
+          <div class="pills" role="group" aria-label="Gradient type">
+            <button type="button" class="pill" data-opt="gradType" data-value="linear" aria-pressed="true">{x("Linear")}</button>
+            <button type="button" class="pill" data-opt="gradType" data-value="radial" aria-pressed="false">{x("Radial")}</button>
+          </div>
+          <label class="range" data-show="linear" style="flex:1 1 200px"><span>{x("Angle")}</span><input type="range" min="0" max="360" step="5" data-num="gradAngle" value="45" /><output data-out="gradAngle" data-suffix="°">45°</output></label>
+        </div>
+        <div class="colors">
+          <label class="color"><span class="label" data-fg-label>{x("Code color")}</span><span class="color-box"><input type="color" data-color="fg" value={DESIGN_DEFAULTS.fg} aria-label={x("Code color")} /><input type="text" data-hex="fg" maxlength="7" value={DESIGN_DEFAULTS.fg} /></span></label>
+          <label class="color" data-show="gradient" hidden><span class="label">{x("Gradient end")}</span><span class="color-box"><input type="color" data-color="grad2" value={DESIGN_DEFAULTS.grad2} aria-label={x("Gradient end")} /><input type="text" data-hex="grad2" maxlength="7" value={DESIGN_DEFAULTS.grad2} /></span></label>
+          <label class="color" data-show="bg"><span class="label">{x("Background")}</span><span class="color-box"><input type="color" data-color="bg" value={DESIGN_DEFAULTS.bg} aria-label={x("Background color")} /><input type="text" data-hex="bg" maxlength="7" value={DESIGN_DEFAULTS.bg} /></span></label>
+          <label class="color" data-show="eyes" hidden><span class="label">{x("Eye frame")}</span><span class="color-box"><input type="color" data-color="frameColor" value={DESIGN_DEFAULTS.frameColor} aria-label="Eye frame color" /><input type="text" data-hex="frameColor" maxlength="7" value={DESIGN_DEFAULTS.frameColor} /></span></label>
+          <label class="color" data-show="eyes" hidden><span class="label">{x("Eye ball")}</span><span class="color-box"><input type="color" data-color="ballColor" value={DESIGN_DEFAULTS.ballColor} aria-label="Eye ball color" /><input type="text" data-hex="ballColor" maxlength="7" value={DESIGN_DEFAULTS.ballColor} /></span></label>
+        </div>
+        <ColorPresets scope="colors" targets={[['fg', 'Code'], ['grad2', 'Gradient end', 'gradient'], ['bg', 'Background', 'bg'], ['frameColor', 'Eye frame', 'eyes'], ['ballColor', 'Eye ball', 'eyes']]} />
+        <p class="warn" data-show="lowContrast" hidden>{x("Low contrast between code and background. Some scanners may fail — keep the code darker than the background.")}</p>
+      </div>
+    </section>
+    <HelpBox id="colors" title={c.help.colors.title} items={c.help.colors.items} />
+    </div>
+
+    <div class="panel panel-stack" role="tabpanel" id="panel-logo" aria-labelledby="tab-logo" data-panel="logo" hidden>
+    <section class="card">
+      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
+      <div class="card-body">
+        <div class="logo-row">
+          <div class="logo-list" data-logo-list></div>
+          <label class="upload" data-dropzone><span class="upload-main">{x("Upload images")}</span><small class="upload-hint">{x("or drag and drop")}</small><input type="file" accept="image/*" multiple data-logo-file hidden /></label>
+          <button type="button" class="link-btn" data-action="removeLogo" data-show="logo" hidden>{x("Remove all logos")}</button>
+        </div>
+        <p class="hint" data-show="logoMany" hidden>{x("Tap a logo to preview it on the code. Tap − to remove one.")}</p>
+        <div class="group" data-show="logo" hidden>
+          <label class="range"><span>{x("Size")}</span><input type="range" min="10" max="35" step="1" data-num="logoPct" value="22" /><output data-out="logoPct" data-suffix="%">22%</output></label>
+          <label class="switch-row"><span><b>{x("Clear modules behind logo")}</b><small>{x("Removes dots under the image for a clean edge")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="clearLogo" checked /></label>
+          <label class="switch-row"><span><b>{x("Logo background")}</b><small>{x("Place the logo on a colored rounded square")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="logoBg" /></label>
+          <div class="colors" data-show="logoBg" hidden><label class="color"><span class="label">{x("Background color")}</span><span class="color-box"><input type="color" data-color="logoBgColor" value="#FFFFFF" aria-label={x("Background color")} /><input type="text" data-hex="logoBgColor" maxlength="7" value="#FFFFFF" /></span></label></div>
+          <label class="switch-row"><span><b>{x("Logo stroke")}</b><small>{x("Add an outline around the logo")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="logoStroke" /></label>
+          <div class="logo-row" data-show="logoStroke" hidden>
+            <div class="colors" style="flex:1 1 190px"><label class="color"><span class="label">{x("Stroke color")}</span><span class="color-box"><input type="color" data-color="logoStrokeColor" value="#FFFFFF" aria-label={x("Stroke color")} /><input type="text" data-hex="logoStrokeColor" maxlength="7" value="#FFFFFF" /></span></label></div>
+            <label class="range" style="flex:1 1 200px"><span>{x("Width")}</span><input type="range" min="1" max="10" step="1" data-num="logoStrokeW" value="3" /><output data-out="logoStrokeW">3</output></label>
+          </div>
+          <div data-show="logoStyle" hidden>
+            <ColorPresets scope="logo" targets={[['logoBgColor', 'Logo background', 'logoBg'], ['logoStrokeColor', 'Logo stroke', 'logoStroke']]} />
+          </div>
+          <p class="warn" data-show="logoWarn" hidden>{x("A logo hides part of the code. Use error correction Q or H so it still scans.")} <button type="button" data-action="eccHigh">{x("Switch to High")}</button></p>
+        </div>
+      </div>
+    </section>
+    <HelpBox id="logo" title={c.help.logo.title} items={c.help.logo.items} />
+    </div>
+
+    <div class="panel panel-stack" role="tabpanel" id="panel-design" aria-labelledby="tab-design" data-panel="design" hidden>
+    <section class="card">
+      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
+      <div class="card-body">
+        <div class="group">
+          <div class="group-head"><span class="label">{x("Presets")}</span><button type="button" class="link-btn" data-action="resetDesign">{x("Reset design")}</button></div>
+          <div class="pills" role="group" aria-label="What a preset changes">
+            <button type="button" class="pill" data-opt="presetMode" data-value="all" aria-pressed="true">{x("Shapes + colors")}</button>
+            <button type="button" class="pill" data-opt="presetMode" data-value="shape" aria-pressed="false">{x("Shapes only")}</button>
+            <button type="button" class="pill shuffle" data-action="shufflePreset" title="Pick a random preset">{x("⤮ Shuffle")}</button>
+          </div>
+          <div class="presets">
+            {PRESETS.map((p, i) => <button type="button" class="preset" data-preset={i}><span class="preset-thumb" set:html={presetSvgs[i]}></span>{N(p.name)}</button>)}
+          </div>
+          <button type="button" class="link-btn" data-action="togglePresets" aria-expanded="false">{I.t('d_all', { n: PRESETS.length })}</button>
+        </div>
+        <div class="group"><span class="label">{x("Body shape")}</span>
+          <div class="tiles">{BODY.map(([id, l]) => <button type="button" class="tile" data-opt="body" data-value={id} title={N(l)} aria-label={N(l)} aria-pressed={id === 'square' ? 'true' : 'false'} set:html={bodyThumb(id)} />)}</div>
+        </div>
+        <div class="group"><span class="label">{x("Eye frame")}</span>
+          <div class="tiles">{FRAME.map(([id, l]) => <button type="button" class="tile" style="padding:14px" data-opt="frame" data-value={id} title={N(l)} aria-label={N(l)} aria-pressed={id === 'square' ? 'true' : 'false'} set:html={frameThumb(id)} />)}</div>
+        </div>
+        <div class="group"><span class="label">{x("Eye ball")}</span>
+          <div class="tiles">{BALL.map(([id, l]) => <button type="button" class="tile" style="padding:14px" data-opt="ball" data-value={id} title={N(l)} aria-label={N(l)} aria-pressed={id === 'square' ? 'true' : 'false'} set:html={ballThumb(id)} />)}</div>
+        </div>
+      </div>
+    </section>
+    <HelpBox id="design" title={c.help.design.title} items={c.help.design.items} />
+    </div>
+
+    <div class="panel panel-stack" role="tabpanel" id="panel-encoding" aria-labelledby="tab-encoding" data-panel="encoding" hidden>
+    <section class="card">
+      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
+      <div class="card-body">
+        <div class="group"><span class="label">{x("Error correction")}</span>
+          <div class="ecc-grid">{ECC.map(([v, l, d]) => <button type="button" class="ecc" data-opt="ecc" data-value={v} aria-pressed={v === 'M' ? 'true' : 'false'}><b>{x(l)} ({v})</b><small>{d.replace('recovery', x('recovery'))}</small></button>)}</div>
+        </div>
+        <label class="switch-row"><span><b>{x("Boost error correction")}</b><small>{x("Raise ECC when it fits without growing the version")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="boost" checked /></label>
+        <div class="group"><span class="label">{x("Mask pattern")}</span>
+          <div class="pills">{[-1, 0, 1, 2, 3, 4, 5, 6, 7].map(m => <button type="button" class="pill mono" data-opt="mask" data-numeric data-value={m} aria-pressed={m === -1 ? 'true' : 'false'}>{m === -1 ? x('Auto') : m}</button>)}</div>
+        </div>
+        <div class="group">
+          <label class="range"><span>{x("Min version")}</span><input type="range" min="1" max="40" data-num="minVer" value="1" /><output data-out="minVer">1</output></label>
+          <label class="range"><span>{x("Max version")}</span><input type="range" min="1" max="40" data-num="maxVer" value="40" /><output data-out="maxVer">40</output></label>
+        </div>
+      </div>
+    </section>
+    <HelpBox id="encoding" title={c.help.encoding.title} items={c.help.encoding.items} />
+    </div>
+  </div>
+
+  <aside class="gen-side" aria-label="Preview and download">
+    <div class="preview-card">
+      <div class="well">
+        <div class="qr-box" data-qr-box>
+          <div data-qr role="img" aria-label="QR code preview" set:html={initialSvg} style="width:100%;height:100%"></div>
+          <p class="qr-msg" data-qr-msg hidden={isUrl}>{x("Fill in the content fields to generate your QR code.")}</p>
+        </div>
+      </div>
+      <div class="group tweak">
+        <label class="range"><span>{x("Quiet zone")}</span><input type="range" min="0" max="10" data-num="border" value="4" /><output data-out="border">4</output></label>
+        <label class="range"><span>{x("Rounded corners")}</span><input type="range" min="0" max="35" step="1" data-num="radius" value="0" /><output data-out="radius" data-suffix="%">0%</output></label>
+      </div>
+      <div class="group" style="gap:8px">
+        <label class="range"><span>{x("Quality")}</span><input type="range" min="200" max="4000" step="100" data-num="exportSize" value="1024" /><output data-out="exportSize">1024 × 1024</output></label>
+        <span class="hint" data-scale-hint>{x("SVG scales to any size")}</span>
+      </div>
+      <div class="btns">
+        <button type="button" class="btn primary" data-dl="png">{x("Download PNG")}</button>
+        <div class="btn-row">
+          <button type="button" class="btn" data-dl="svg">SVG</button>
+          <button type="button" class="btn" data-dl="jpeg">JPG</button>
+          <button type="button" class="btn" data-dl="webp">WebP</button>
+        </div>
+        <div class="btn-row copy-row">
+          <button type="button" class="btn ghost" data-action="copySvg" aria-live="polite">{x("Copy SVG")}</button>
+          <button type="button" class="btn ghost" data-action="copyImg" aria-live="polite">{x("Copy image")}</button>
+          <button type="button" class="btn ghost" data-action="printPdf" title="Opens a print-ready page. Choose “Save as PDF” in the print dialog.">{x("Print / PDF")}</button>
+        </div>
+      </div>
+      <details class="qr-details" data-details>
+        <summary>{x("QR details & code")}</summary>
+        <dl class="stats">
+          <div><dt>{x("Version")}</dt><dd data-stat="version">{initialQr.version}</dd></div>
+          <div><dt>{x("Modules")}</dt><dd data-stat="modules">{initialQr.size} × {initialQr.size}</dd></div>
+          <div><dt>{x("Error correction")}</dt><dd data-stat="ecc">—</dd></div>
+          <div><dt>{x("Mask pattern")}</dt><dd data-stat="mask">—</dd></div>
+          <div><dt>{x("Encoding mode")}</dt><dd data-stat="mode">—</dd></div>
+          <div><dt>{x("Characters")}</dt><dd data-stat="chars">—</dd></div>
+          <div><dt>{x("Data bits")}</dt><dd data-stat="bits">—</dd></div>
+          <div><dt>{x("Capacity used")}</dt><dd data-stat="used">—</dd></div>
+        </dl>
+
+        <div class="code-out" data-code>
+          <label class="field"><span class="label">{x("Encoded text")}</span><textarea class="input" rows="3" readonly data-payload></textarea></label>
+          <label class="field"><span class="label">{x("SVG XML code")}</span><textarea class="input" rows="6" readonly data-svg-code></textarea></label>
+        </div>
+      </details>
+    </div>
+  </aside>
+  </div>
+</div>
+
+<script id="i18n-data" type="application/json" set:html={JSON.stringify({ ui: I.ui, sheet: I.sheet, names: c.names, defs: c.defs, locale, dir: I.dir, site: Astro.site?.origin })}></script>
+
+<script>
+  import { QrCode, QrSegment } from '../lib/qrcodegen.js';
+  import { TYPES, BODY, FRAME, BALL, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, buildPayload, buildSheet, contrast, COLOR_FAMILIES, APP_LINKS } from '../lib/render.js';
+
+  const I18N = JSON.parse(document.getElementById('i18n-data')!.textContent || '{}');
+  const T = (id: string, v?: Record<string, any>) => { const s0: string = (I18N.ui && I18N.ui[id]) ?? id; return v ? s0.replace(/\{(\w+)\}/g, (_: string, k: string) => String(v[k] ?? '')) : s0; };
+  const TS = (eng: string, v?: Record<string, any>) => { const s0: string = (I18N.sheet && I18N.sheet[eng]) ?? eng; return v ? s0.replace(/\{(\w+)\}/g, (_: string, k: string) => String(v[k] ?? '')) : s0; };
+  const STORE = 'qrcodestation-state-v1';
+  const root = document.getElementById('qr-app')!;
+  const $ = (sel: string) => root.querySelector(sel) as any;
+  const $$ = (sel: string) => Array.from(root.querySelectorAll(sel)) as any[];
+
+  const defaults = () => ({ type: 'url', data: { ...FIELD_DEFAULTS, ...(I18N.defs || {}) }, ...DESIGN_DEFAULTS, logo: null as string | null, logos: [] as string[], logoBg: false, logoBgColor: '#FFFFFF', logoStroke: false, logoStrokeColor: '#FFFFFF', logoStrokeW: 3, logoPct: 22, clearLogo: true, ecc: 'M', boost: true, mask: -1, border: 4, radius: 0, presetMode: 'all', minVer: 1, maxVer: 40, exportSize: 1024, showCode: false });
+  let s: any = defaults();
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (saved) {
+      // Saved example text that was never edited should follow the page language instead of sticking to another one.
+      const sd = Object.fromEntries(Object.entries(saved.data || {}).filter(([k, v]) => v !== FIELD_DEFAULTS[k as keyof typeof FIELD_DEFAULTS] || !(I18N.defs && k in I18N.defs)));
+      s = { ...s, ...saved, data: { ...s.data, ...sd }, showCode: false };
+    }
+  } catch (e) {}
+  // Landing pages (e.g. /wifi-qr-code/) always open on their own content type.
+  if (!Array.isArray(s.logos)) s.logos = [];
+  if (s.logo && !s.logos.includes(s.logo)) s.logos = [...s.logos, s.logo];
+  if (root.dataset.initialType) s.type = root.dataset.initialType;
+
+  let last: any = null, saveT: any;
+  const set = (patch: any) => { s = { ...s, ...patch }; render(); };
+  const setField = (k: string, v: any) => { s = { ...s, data: { ...s.data, [k]: v } }; render(); };
+
+  const SHOW: Record<string, () => boolean> = {
+    gradient: () => s.gradient, linear: () => s.gradient && s.gradType === 'linear', bg: () => !s.transparent,
+    eyes: () => s.customEyes, logo: () => !!s.logo, logoMany: () => s.logos.length > 0, logoBg: () => s.logoBg, logoStyle: () => s.logoBg || s.logoStroke, logoStroke: () => s.logoStroke, logoWarn: () => !!s.logo && (s.ecc === 'L' || s.ecc === 'M'),
+    lowContrast: () => contrast(s.fg, s.transparent ? '#FFFFFF' : s.bg) < 3,
+  };
+
+  function encode(text: string) {
+    if (!text) return { msg: T('v_fill') };
+    try {
+      const E = QrCode.Ecc, ecl = ({ L: E.LOW, M: E.MEDIUM, Q: E.QUARTILE, H: E.HIGH } as any)[s.ecc];
+      const segs = QrSegment.makeSegments(text);
+      const qr = QrCode.encodeSegments(segs, ecl, Math.min(s.minVer, s.maxVer), Math.max(s.minVer, s.maxVer), s.mask, s.boost);
+      return { qr, segs, bits: QrSegment.getTotalBits(segs, qr.version), cap: QrCode.getNumDataCodewords(qr.version, qr.errorCorrectionLevel) * 8 };
+    } catch (e) {
+      return { msg: T('v_toomuch') };
+    }
+  }
+  const svgOpts = () => ({ ...s, logoSize: s.logoPct / 100 });
+
+  const thumbQr = QrCode.encodeText('https://example.com', QrCode.Ecc.LOW);
+  let thumbKey = 'all';
+  const pick = (o: any, ks: string[]) => Object.fromEntries(ks.map(k => [k, o[k]]));
+  let lastPreset = -1;
+  function applyPreset(i: number) {
+    const p = PRESETS[i]; lastPreset = i;
+    set(s.presetMode === 'shape' ? { body: p.body, frame: p.frame, ball: p.ball } : { ...p });
+  }
+  const pal: Record<string, { fam: string; target: string }> = {};
+  const palOK = (k: string) => ({ grad2: s.gradient, bg: !s.transparent, frameColor: s.customEyes, ballColor: s.customEyes, logoBgColor: s.logoBg, logoStrokeColor: s.logoStroke } as Record<string, boolean>)[k] ?? true;
+  function syncPalette() {
+    $$('[data-palette]').forEach(root => {
+      const sc = root.dataset.palette!, st = pal[sc] ||= { fam: '', target: root.dataset.default! };
+      const fam = COLOR_FAMILIES.find(f => f.id === st.fam);
+      if (!palOK(st.target)) st.target = Array.from(root.querySelectorAll<HTMLElement>('[data-apply]')).map(b => b.dataset.apply!).find(palOK) || root.dataset.default!;
+      (root.querySelector('[data-shades-wrap]') as HTMLElement).hidden = !fam;
+      root.querySelectorAll<HTMLElement>('[data-family]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.family === st.fam)));
+      root.querySelectorAll<HTMLElement>('[data-apply]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.apply === st.target)));
+      const box = root.querySelector('[data-shades]') as HTMLElement;
+      if (fam && box.dataset.fam !== fam.id) {
+        box.dataset.fam = fam.id;
+        box.replaceChildren(...fam.shades.map(c => {
+          const b = document.createElement('button'); b.type = 'button'; b.className = 'shade'; b.dataset.shade = c; b.setAttribute('aria-label', c);
+          b.style.background = c; return b;
+        }));
+      }
+      box.querySelectorAll<HTMLElement>('[data-shade]').forEach(b => b.setAttribute('aria-pressed', String(String(s[st.target]).toLowerCase() === b.dataset.shade!.toLowerCase())));
+    });
+  }
+
+  function render() {
+    const active = document.activeElement;
+    $$('[data-type]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.type === s.type)));
+    $$('[data-fields]').forEach(el => { el.hidden = el.dataset.fields !== s.type; });
+    $$('[data-showif]').forEach(el => { const [k, v] = el.dataset.showif.split('='); el.hidden = String(s.data[k]) !== v; });
+    $$('[data-help]').forEach(el => { el.hidden = el.dataset.help !== s.type; });
+    $$('[data-field]').forEach(el => { const v = s.data[el.dataset.field] ?? ''; if (el !== active && el.value !== v) el.value = v; });
+    $$('[data-social]').forEach(b => b.setAttribute('aria-pressed', String(!!s.data.url && s.data.url.startsWith(b.dataset.prefix))));
+    $$('[data-field-opt]').forEach(b => b.setAttribute('aria-pressed', String(s.data[b.dataset.fieldOpt] === b.dataset.value)));
+    $$('[data-field-bool]').forEach(el => { el.checked = !!s.data[el.dataset.fieldBool]; });
+    $$('[data-opt]').forEach(b => b.setAttribute('aria-pressed', String(String(s[b.dataset.opt]) === b.dataset.value)));
+    $$('[data-bool]').forEach(el => { el.checked = !!s[el.dataset.bool]; });
+    $$('[data-num]').forEach(el => { if (el !== active) el.value = s[el.dataset.num]; });
+    $$('[data-out]').forEach(el => { const k = el.dataset.out; el.textContent = k === 'exportSize' ? `${s[k]} × ${s[k]}` : s[k] + (el.dataset.suffix || ''); });
+    $$('[data-color]').forEach(el => { if (/^#[0-9a-f]{6}$/i.test(s[el.dataset.color])) el.value = s[el.dataset.color].toLowerCase(); });
+    $$('[data-hex]').forEach(el => { if (el !== active) el.value = s[el.dataset.hex]; });
+    $$('[data-show]').forEach(el => { el.hidden = !SHOW[el.dataset.show](); });
+    syncPalette();
+    const tk = s.presetMode === 'shape' ? ['fg', 'grad2', 'gradient', 'gradType', 'gradAngle', 'bg', 'transparent', 'customEyes', 'frameColor', 'ballColor'].map(k => s[k]).join('|') : 'all';
+    if (thumbKey !== tk) {
+      thumbKey = tk;
+      $$('[data-preset]').forEach(b => {
+        const p = PRESETS[+b.dataset.preset!];
+        const o = s.presetMode === 'shape' ? { ...DESIGN_DEFAULTS, ...pick(s, ['fg', 'grad2', 'gradient', 'gradType', 'gradAngle', 'bg', 'transparent', 'customEyes', 'frameColor', 'ballColor']), body: p.body, frame: p.frame, ball: p.ball } : p;
+        (b.querySelector('.preset-thumb') as HTMLElement).innerHTML = buildSvg(thumbQr, { ...o, border: 2 });
+      });
+    }
+    $('[data-fg-label]').textContent = s.gradient ? T('c_gstart') : T('c_code');
+    const lkey = s.logos.length + '|' + s.logos.indexOf(s.logo);
+    const list = $('[data-logo-list]');
+    if (list.dataset.key !== lkey) {
+      list.dataset.key = lkey;
+      list.replaceChildren(...s.logos.map((src: string, i: number) => {
+        const w = document.createElement('div'); w.className = 'logo-item';
+        const pick = document.createElement('button'); pick.type = 'button'; pick.className = 'logo-thumb'; pick.dataset.logoPick = String(i);
+        pick.setAttribute('aria-pressed', String(src === s.logo)); pick.setAttribute('aria-label', `Use logo ${i + 1}`);
+        const img = document.createElement('img'); img.src = src; img.alt = ''; pick.appendChild(img);
+        const del = document.createElement('button'); del.type = 'button'; del.className = 'logo-x'; del.dataset.logoDel = String(i);
+        del.setAttribute('aria-label', `Remove logo ${i + 1}`); del.textContent = '−';
+        w.append(pick, del); return w;
+      }));
+    }
+
+    const name = (L: string[][], v: string) => { const eng = (L.find(o => o[0] === v) || L[0])[1]; return (I18N.names && I18N.names[eng]) || eng; };
+    $('[data-summary="colors"]').textContent = s.gradient ? T('gradient') : T('solid');
+    $('[data-summary="logo"]').textContent = s.logo ? T('added') : T('none');
+    $('[data-summary="design"]').textContent = [name(BODY, s.body), name(FRAME, s.frame), name(BALL, s.ball)].join(' · ');
+    $('[data-summary="encoding"]').textContent = `ECC ${s.ecc} · v${Math.min(s.minVer, s.maxVer)}–${Math.max(s.minVer, s.maxVer)}`;
+
+    const payload = buildPayload(s.type, s.data);
+    const r: any = encode(payload); last = r;
+    const svg = r.qr ? buildSvg(r.qr, svgOpts()) : '';
+    $('[data-qr]').innerHTML = svg; $('[data-qr]').hidden = !svg;
+    $('[data-qr-msg]').textContent = r.msg || ''; $('[data-qr-msg]').hidden = !!svg;
+    $('[data-qr-box]').classList.toggle('checker', !!s.transparent);
+    $$('[data-dl], [data-action="copySvg"], [data-action="copyImg"], [data-action="printPdf"]').forEach(b => { b.disabled = !r.qr; });
+
+    const E = r.qr ? 'LMQH'[r.qr.errorCorrectionLevel.ordinal] : '';
+    const stats: Record<string, any> = {
+      version: r.qr ? r.qr.version : '—', modules: r.qr ? `${r.qr.size} × ${r.qr.size}` : '—',
+      ecc: r.qr ? E + (E !== s.ecc ? ' (boosted)' : '') : '—', mask: r.qr ? r.qr.mask + (s.mask === -1 ? ' (auto)' : '') : '—',
+      mode: r.segs && r.segs.length ? r.segs[0].mode.name : '—', chars: payload.length,
+      bits: r.qr ? `${r.bits} / ${r.cap}` : '—', used: r.qr ? Math.round(r.bits / r.cap * 100) + '%' : '—',
+    };
+    $$('[data-stat]').forEach(el => { el.textContent = stats[el.dataset.stat]; });
+    const S = r.qr ? r.qr.size + 2 * s.border : 0;
+    $('[data-scale-hint]').textContent = S ? T('v_ppm', { n: (s.exportSize / S).toFixed(1) }) : T('v_scales');
+
+    if (s.showCode) { $('[data-payload]').value = payload; $('[data-svg-code]').value = svg; }
+
+    clearTimeout(saveT);
+    saveT = setTimeout(() => {
+      const dd = defaults().data as Record<string, any>; const out: any = { ...s, data: Object.fromEntries(Object.entries(s.data).filter(([k, v]) => v !== dd[k])) }; out.logos = s.logos.filter((l: string) => l.length <= 400000); if (out.logo && out.logo.length > 400000) out.logo = null;
+      try { localStorage.setItem(STORE, JSON.stringify(out)); } catch (e) {}
+    }, 300);
+  }
+
+  function saveBlob(blob: Blob, filename: string) {
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  }
+  function download(fmt: string) {
+    if (!last || !last.qr) return;
+    const px = s.exportSize, svg = buildSvg(last.qr, svgOpts(), px);
+    if (fmt === 'svg') return saveBlob(new Blob([svg], { type: 'image/svg+xml' }), 'qr-code-station.svg');
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement('canvas'); c.width = c.height = px;
+      const ctx = c.getContext('2d')!;
+      if (fmt === 'jpeg') { ctx.fillStyle = s.transparent || s.radius > 0 ? '#FFFFFF' : s.bg; ctx.fillRect(0, 0, px, px); }
+      ctx.drawImage(img, 0, 0, px, px);
+      c.toBlob(b => b && saveBlob(b, 'qr-code-station.' + (fmt === 'jpeg' ? 'jpg' : fmt)), 'image/' + fmt, .95);
+    };
+    img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+  }
+
+
+  function printSheet() {
+    if (!last || !last.qr) return;
+    const esc = (v: string) => v.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' } as any)[c]);
+    const sh = buildSheet(s.type, s.data, TS);
+    const rows = sh.lines.map(([k, v]: string[]) => `<div class="row"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>`).join('');
+    const site = esc(I18N.site || location.origin);
+    const html = `<!doctype html><html lang="${I18N.locale || 'en'}" dir="${I18N.dir || 'ltr'}"><head><meta charset="utf-8"><title>QR code</title><style>
+      @page { size: A4; margin: 12mm; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body { font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #111; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      /* One A4 page: 210 × 297 mm minus the 12 mm margins. The content is scaled down to fit when it is too tall. */
+      .page { width: 186mm; height: 272mm; overflow: hidden; display: flex; align-items: center; justify-content: center; page-break-after: avoid; break-after: avoid; }
+      .fit { width: 100%; }
+      .sheet { width: 100%; max-width: 170mm; margin: 0 auto; text-align: center; transform-origin: top center; }
+      h1 { font-size: 28pt; line-height: 1.15; margin: 0 0 8mm; word-break: break-word; }
+      .rows { margin: 0 auto 9mm; max-width: 140mm; text-align: start; border: 1px solid #ccc; border-radius: 4mm; }
+      .row { display: flex; gap: 6mm; padding: 3mm 5mm; border-bottom: 1px solid #e3e3e3; font-size: 12.5pt; }
+      .row:last-child { border-bottom: 0; }
+      .k { flex: none; width: 30mm; color: #666; }
+      .v { flex: 1; font-weight: 600; word-break: break-word; white-space: pre-wrap; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden; }
+      .qr { width: 100mm; height: 100mm; margin: 0 auto 7mm; }
+      .qr svg { width: 100%; height: 100%; display: block; }
+      .cap { font-size: 21pt; font-weight: 700; }
+      .foot { margin-top: 12mm; font-size: 9pt; color: #777; }
+      .foot a { color: inherit; text-decoration: none; }
+    </style></head><body><div class="page"><div class="fit" id="fit"><div class="sheet" id="sheet">
+      ${sh.heading ? `<h1>${esc(sh.heading)}</h1>` : ''}
+      ${rows ? `<div class="rows">${rows}</div>` : ''}
+      <div class="qr">${buildSvg(last.qr, svgOpts())}</div>
+      <div class="cap">${esc(sh.caption)}</div>
+      <div class="foot">${esc(TS('Created with QR Code Station'))} (<a href="${site}" dir="ltr">${site}</a>)</div>
+    </div></div></div><script>
+      (function () {
+        var page = document.querySelector('.page'), fit = document.getElementById('fit'), sheet = document.getElementById('sheet');
+        var avail = page.getBoundingClientRect().height, need = sheet.getBoundingClientRect().height;
+        if (need > avail) {
+          var k = avail / need;
+          sheet.style.transform = 'scale(' + k + ')';
+          fit.style.height = (need * k) + 'px';
+        }
+      })();
+    <\/script></body></html>`;
+    const f = document.createElement('iframe');
+    f.setAttribute('aria-hidden', 'true'); f.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0';
+    f.onload = () => {
+      const w = f.contentWindow!;
+      w.focus(); w.print();
+      setTimeout(() => f.remove(), 60000);
+    };
+    f.srcdoc = html;
+    document.body.appendChild(f);
+  }
+
+  const actions: Record<string, (b: HTMLElement) => void> = {
+    copyImg: (b) => {
+      if (!last || !last.qr) return;
+      const px = Math.min(s.exportSize, 2048), svg = buildSvg(last.qr, svgOpts(), px);
+      const label = T('v_copyimg');
+      const done = (ok: boolean) => { b.textContent = ok ? T('v_copied') : T('v_copyfail'); clearTimeout((b as any)._t); (b as any)._t = setTimeout(() => { b.textContent = label; }, 1800); };
+      const toPng = () => new Promise<Blob>((res, rej) => {
+        const img = new Image();
+        img.onload = () => {
+          const c = document.createElement('canvas'); c.width = c.height = px;
+          c.getContext('2d')!.drawImage(img, 0, 0, px, px);
+          c.toBlob(bl => bl ? res(bl) : rej(new Error('png')), 'image/png');
+        };
+        img.onerror = () => rej(new Error('img'));
+        img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+      });
+      try {
+        if (!navigator.clipboard || !(window as any).ClipboardItem) throw new Error('unsupported');
+        // Passing the promise keeps Safari happy: the write must start inside the click handler.
+        navigator.clipboard.write([new (window as any).ClipboardItem({ 'image/png': toPng() })]).then(() => done(true), () => done(false));
+      } catch (e) { done(false); }
+    },
+    printPdf: () => printSheet(),
+    shufflePreset: () => {
+      let i; do { i = Math.floor(Math.random() * PRESETS.length); } while (PRESETS.length > 1 && i === lastPreset);
+      applyPreset(i);
+    },
+    togglePresets: () => { presetsOpen = !presetsOpen; layoutPresets(); },
+    togglePanel: () => {
+      const c = root.toggleAttribute('data-collapsed');
+      root.querySelectorAll<HTMLElement>('.collapse-btn').forEach(b => {
+        b.textContent = c ? '+' : '−'; b.setAttribute('aria-expanded', String(!c)); b.setAttribute('aria-label', c ? T('expand') : T('collapse'));
+      });
+      if (c) root.querySelector('.tabs')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    },
+    removeLogo: () => set({ logo: null, logos: [] }),
+    eccHigh: () => set({ ecc: 'H' }),
+    resetDesign: () => set({ ...DESIGN_DEFAULTS }),
+    copySvg: (b) => {
+      if (!last || !last.qr) return;
+      const text = buildSvg(last.qr, svgOpts(), s.exportSize);
+      const done = (ok: boolean) => { b.textContent = ok ? T('v_copied') : T('v_copyfail'); clearTimeout((b as any)._t); (b as any)._t = setTimeout(() => { b.textContent = T('v_copy'); }, 1800); };
+      const fallback = () => {
+        const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select(); let ok = false;
+        try { ok = document.execCommand('copy'); } catch (e) {}
+        ta.remove(); done(ok);
+      };
+      if (navigator.clipboard?.writeText) navigator.clipboard.writeText(text).then(() => done(true), fallback); else fallback();
+    },
+  };
+
+  root.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest('button') as HTMLButtonElement | null;
+    if (!b || !root.contains(b)) return;
+    const d = b.dataset;
+    const pr = b.closest('[data-palette]') as HTMLElement | null, ps = pr ? (pal[pr.dataset.palette!] ||= { fam: '', target: pr.dataset.default! }) : null;
+    if (d.family && ps) { ps.fam = ps.fam === d.family ? '' : d.family!; syncPalette(); }
+    else if (d.apply && ps) { ps.target = d.apply!; syncPalette(); }
+    else if (d.shade && ps) set({ [ps.target]: d.shade });
+    else if (d.social) {
+      const url = d.prefix! + d.ph!;
+      setField('url', url);
+      const inp = document.getElementById('f-url') as HTMLInputElement | null;
+      if (inp) { inp.focus(); inp.setSelectionRange(d.prefix!.length, url.length); }
+    }
+    else if (d.logoPick) set({ logo: s.logos[+d.logoPick] });
+    else if (d.logoDel) {
+      const i = +d.logoDel, gone = s.logos[i], logos = s.logos.filter((_: string, j: number) => j !== i);
+      set({ logos, logo: gone === s.logo ? (logos[Math.min(i, logos.length - 1)] ?? null) : s.logo });
+    }
+    else if (d.type) set({ type: d.type });
+    else if (d.opt) set({ [d.opt]: b.hasAttribute('data-numeric') ? +d.value! : d.value });
+    else if (d.fieldOpt) {
+      // Switching store swaps the link template, but never overwrites a link the user has edited.
+      if (d.fieldOpt === 'appStore') {
+        const other = d.value === 'apple' ? APP_LINKS.play : APP_LINKS.apple;
+        if (!s.data.appId || s.data.appId === other) s = { ...s, data: { ...s.data, appId: (APP_LINKS as any)[d.value!] } };
+      }
+      setField(d.fieldOpt, d.value);
+    }
+    else if (d.preset) applyPreset(+d.preset);
+    else if (d.dl) download(d.dl);
+    else if (d.action) actions[d.action]?.(b);
+  });
+  root.addEventListener('input', (e) => {
+    const t = e.target as any, d = t.dataset;
+    if (d.field) setField(d.field, t.value);
+    else if (d.num) set({ [d.num]: +t.value });
+    else if (d.color) set({ [d.color]: t.value.toUpperCase() });
+    else if (d.hex) { let v = t.value.trim(); if (v && v[0] !== '#') v = '#' + v; if (/^#[0-9a-f]{6}$/i.test(v)) set({ [d.hex]: v.toUpperCase() }); }
+  });
+  function addLogoFiles(all: File[]) {
+    const files = all.filter(f => f.type.startsWith('image/')); if (!files.length) return;
+    Promise.all(files.map(f => new Promise<string>(res => { const rd = new FileReader(); rd.onload = () => res(rd.result as string); rd.readAsDataURL(f); })))
+      .then(urls => {
+        const logos = [...s.logos, ...urls.filter(u => !s.logos.includes(u))];
+        set({ logos, logo: urls[urls.length - 1], ecc: s.ecc === 'L' || s.ecc === 'M' ? 'H' : s.ecc });
+      });
+  }
+  // Drag and drop images onto the upload button / logo row.
+  const dz = (e: DragEvent) => ((e.target as HTMLElement).closest('[data-dropzone]') as HTMLElement | null);
+  const hasFiles = (e: DragEvent) => !!e.dataTransfer && Array.from(e.dataTransfer.types).includes('Files');
+  ['dragenter', 'dragover'].forEach(ev => root.addEventListener(ev, (e: any) => { const z = dz(e); if (z && hasFiles(e)) { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; z.classList.add('dragover'); } }));
+  root.addEventListener('dragleave', (e: any) => { const z = dz(e); if (z && !z.contains(e.relatedTarget as Node)) z.classList.remove('dragover'); });
+  root.addEventListener('drop', (e: any) => { const z = dz(e); if (!z) return; e.preventDefault(); z.classList.remove('dragover'); addLogoFiles(Array.from(e.dataTransfer?.files || []) as File[]); });
+  root.addEventListener('change', (e) => {
+    const t = e.target as any, d = t.dataset;
+    if (d.bool) set({ [d.bool]: t.checked });
+    else if (d.fieldBool) setField(d.fieldBool, t.checked);
+    else if (t.hasAttribute('data-logo-file')) { addLogoFiles(Array.from(t.files || []) as File[]); t.value = ''; }
+  });
+
+  render();
+
+  // Presets: when collapsed show exactly two full rows, whatever the number of columns at this width.
+  let presetsOpen = false;
+  function layoutPresets() {
+    const grid = document.querySelector<HTMLElement>('.presets'), btn = document.querySelector<HTMLElement>('[data-action="togglePresets"]');
+    if (!grid || !btn) return;
+    const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
+    if (cols < 2) return; // panel is hidden; measured again when it is shown
+    const items = Array.from(grid.children) as HTMLElement[];
+    const n = presetsOpen ? items.length : cols * 2;
+    items.forEach((el, i) => { el.hidden = i >= n; });
+    btn.hidden = items.length <= cols * 2;
+    btn.setAttribute('aria-expanded', String(presetsOpen));
+    btn.textContent = presetsOpen ? T('d_fewer') : T('d_all', { n: items.length });
+  }
+  const presetGrid = document.querySelector('.presets');
+  if (presetGrid && 'ResizeObserver' in window) new ResizeObserver(layoutPresets).observe(presetGrid);
+  layoutPresets();
+
+  const det = document.querySelector<HTMLDetailsElement>('[data-details]');
+  det?.addEventListener('toggle', () => set({ showCode: det.open }));
+
+  // Tabs: click, keyboard, and swipe (left→right = previous, right→left = next).
+  (() => {
+    const tabs = Array.from(document.querySelectorAll<HTMLElement>('[data-tab]'));
+    const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-panel]'));
+    const host = document.querySelector<HTMLElement>('[data-panels]')!;
+    let cur = 0;
+    const show = (i: number, focus = false) => {
+      cur = Math.max(0, Math.min(tabs.length - 1, i));
+      tabs.forEach((b, j) => { b.setAttribute('aria-selected', String(j === cur)); b.tabIndex = j === cur ? 0 : -1; });
+      panels.forEach((p, j) => { p.hidden = j !== cur; });
+      tabs[cur].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+      if (focus) tabs[cur].focus();
+    };
+    tabs.forEach((b, j) => {
+      b.addEventListener('click', () => show(j));
+      b.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); show(cur + 1, true); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); show(cur - 1, true); }
+      });
+    });
+    let x0 = 0, y0 = 0, tracking = false;
+    const skip = (el: EventTarget | null) => el instanceof HTMLElement && !!el.closest('input[type="range"], input[type="text"], textarea');
+    host.addEventListener('touchstart', e => { tracking = !skip(e.target); x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
+    host.addEventListener('touchend', e => {
+      if (!tracking) return; tracking = false;
+      const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) show(cur + (dx < 0 ? 1 : -1) * (document.documentElement.dir === 'rtl' ? -1 : 1));
+    }, { passive: true });
+    show(0);
+  })();
+
+  // Help boxes: always open on wide screens, collapsible dropdowns on mobile.
+  (() => {
+    const mq = window.matchMedia('(min-width: 720px)');
+    const sync = () => document.querySelectorAll<HTMLDetailsElement>('[data-explain]').forEach(d => { d.open = mq.matches; });
+    sync(); mq.addEventListener('change', sync);
+  })();
+</script>

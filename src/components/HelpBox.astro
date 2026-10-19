@@ -1,0 +1,10 @@
+---
+interface Props { id: string; title: string; items: string[][]; helpFor?: string; initialHidden?: boolean; }
+const { id, title, items, helpFor, initialHidden = false } = Astro.props;
+---
+<details class="card explain" aria-labelledby={`help-${id}`} data-explain data-help={helpFor} hidden={initialHidden}>
+  <summary><h3 id={`help-${id}`} class="explain-title">{title}</h3></summary>
+  <div class="card-body">
+    <dl class="explain-list">{items.map(([a, b]) => <div><dt>{a}</dt><dd set:html={b}></dd></div>)}</dl>
+  </div>
+</details>

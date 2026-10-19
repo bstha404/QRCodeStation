@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import Generator from './Generator.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import Faq from './Faq.astro';
+import { BRAND, LANDINGS, HOME_FAQ } from '../lib/seo.js';
+import { useI18n, localizePath } from '../i18n/index.js';
+
+interface Props { page: any; locale?: string; }
+const { page, locale = 'en' } = Astro.props;
+const I = useI18n(locale);
+const en = locale === 'en';
+const x = I.t('p_' + page.type);
+const title = en ? page.title : I.t('lp_title', { x }) + ` | ${BRAND}`;
+const description = en ? page.description : I.t('lp_desc', { x });
+const h1 = en ? page.h1 : I.t('lp_h1', { x });
+const intro = en ? page.intro : I.t('lp_intro', { x });
+const eyebrow = en ? 'Free · No sign-up · Never expires' : I.t('lp_eyebrow');
+const faq = [...(I.c.lfaq[page.slug] || []), ...I.faq.slice(0, 3)];
+const url = new URL(localizePath(locale, `/${page.slug}/`), Astro.site).href;
+const home = new URL(localizePath(locale, '/'), Astro.site).href;
+
+const jsonLd = [
+  { '@context': 'https://schema.org', '@type': 'WebApplication', name: `${h1} – ${BRAND}`, url, inLanguage: locale,
+    applicationCategory: 'UtilitiesApplication', operatingSystem: 'Any', description,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: BRAND, item: home },
+    { '@type': 'ListItem', position: 2, name: h1, item: url } ] },
+  { '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: locale,
+    mainEntity: faq.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+];
+const related = LANDINGS.filter(l => l.slug !== page.slug).slice(0, 6);
+const relText = (l) => en ? `${l.nav} QR code` : I.t('ft_qr', { x: I.t('p_' + l.type) });
+---
+<Base title={title} description={description} jsonLd={jsonLd}>
+  <SiteHeader />
+  <main class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href={localizePath(locale, '/')}>{BRAND}</a><span aria-hidden="true">/</span><span>{h1}</span></nav>
+    <section class="hero">
+      <p class="eyebrow">{eyebrow}</p>
+      <h1>{h1}</h1>
+      <p class="lede">{intro}</p>
+    </section>
+    <Generator initialType={page.type} locale={locale} />
+    <section class="content">
+      <Faq items={faq} heading={I.t('faq_h')} />
+      <h2 style="margin-top:56px">{I.t('ft_types')}</h2>
+      <div class="pills">{related.map(l => <a class="pill" href={localizePath(locale, `/${l.slug}/`)}>{relText(l)}</a>)}</div>
+    </section>
+  </main>
+  <SiteFooter />
+</Base>

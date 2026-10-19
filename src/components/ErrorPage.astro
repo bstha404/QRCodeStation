@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import { BRAND, LANDINGS } from '../lib/seo.js';
+import { LOCALES, useI18n, localizePath } from '../i18n/index.js';
+
+// An error page is a single file served for every URL, so all languages are rendered and the matching one
+// is shown from the URL prefix (/es/…) in the browser. English is the visible fallback.
+interface Props { kind: 'e404' | 'e500'; code: string; }
+const { kind, code } = Astro.props;
+const blocks = LOCALES.map(l => {
+  const I = useI18n(l.code);
+  const pg = I.c.pages[kind];
+  const rep = (s: string) => s.replaceAll('{brand}', BRAND);
+  return { code: l.code, dir: l.dir, title: rep(pg.title), h1: pg.h1, lede: pg.lede, home: pg.home, report: pg.report, popular: pg.popular,
+    links: LANDINGS.slice(0, 8).map(p => ({ href: localizePath(l.code, `/${p.slug}/`), text: l.code === 'en' ? `${p.nav} QR code` : I.t('ft_qr', { x: I.t('p_' + p.type) }) })),
+    homeHref: localizePath(l.code, '/'), contactHref: localizePath(l.code, '/contact/') };
+});
+const en = blocks[0];
+---
+<Base title={en.title} description={useI18n('en').c.pages[kind].desc} noindex>
+  <SiteHeader />
+  <main class="wrap">
+    <section class="error-page" id="error-page">
+      {blocks.map(b => (
+        <div data-err={b.code} dir={b.dir} hidden={b.code !== 'en'}>
+          <p class="error-code">{code}</p>
+          <h1>{b.h1}</h1>
+          <p class="lede">{b.lede}</p>
+          <div class="error-actions"><a class="btn primary" href={b.homeHref}>{b.home}</a><a class="btn ghost" href={b.contactHref}>{b.report}</a></div>
+          {kind === 'e404' && (<>
+            <p class="label" style="margin-top:32px">{b.popular}</p>
+            <div class="pills" style="justify-content:center">{b.links.map(l => <a class="pill" href={l.href}>{l.text}</a>)}</div>
+          </>)}
+        </div>
+      ))}
+    </section>
+  </main>
+  <SiteFooter />
+</Base>
+<script is:inline set:html={`(() => {
+  const codes = ${JSON.stringify(blocks.map(b => b.code))}, titles = ${JSON.stringify(Object.fromEntries(blocks.map(b => [b.code, b.title])))};
+  const seg = location.pathname.split('/')[1];
+  const lang = codes.includes(seg) ? seg : 'en';
+  if (lang === 'en') return;
+  document.querySelectorAll('[data-err]').forEach(el => { el.hidden = el.dataset.err !== lang; });
+  document.title = titles[lang];
+  document.documentElement.lang = lang;
+  const b = document.querySelector('[data-err="' + lang + '"]'); if (b) document.documentElement.dir = b.getAttribute('dir') || 'ltr';
+})();`}></script>

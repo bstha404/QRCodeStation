@@ -1,0 +1,77 @@
+---
+import Page from '../layouts/Page.astro';
+import Faq from './Faq.astro';
+import { BRAND, CONTACT_EMAIL, WHATSAPP_NUMBER, WHATSAPP_DISPLAY, LANDINGS } from '../lib/seo.js';
+import { QrCode } from '../lib/qrcodegen.js';
+import { buildSvg, DESIGN_DEFAULTS } from '../lib/render.js';
+import { useI18n, localizePath } from '../i18n/index.js';
+
+interface Props { id: 'about' | 'faq' | 'contact' | 'privacy' | 'terms'; locale?: string; }
+const { id, locale = 'en' } = Astro.props;
+const I = useI18n(locale);
+const pg = I.c.pages[id];
+const tok = (s: string) => s.replaceAll('{brand}', BRAND).replaceAll('{email}', CONTACT_EMAIL)
+  .replaceAll('{contact_url}', localizePath(locale, '/contact/')).replaceAll('{privacy_url}', localizePath(locale, '/privacy-policy/'));
+const iso = '2026-10-17';
+let dateText = I.c.pages.updatedDate;
+try { dateText = new Date(iso + 'T00:00:00Z').toLocaleDateString(locale, { dateStyle: 'long', timeZone: 'UTC' }); } catch (e) {}
+const updated = (id === 'privacy' || id === 'terms') ? `${I.c.pages.updated}: ${dateText}` : undefined;
+const faqItems = id === 'faq' ? [...I.faq, ...I.c.faqMore] : [];
+const jsonLd = id === 'faq' ? [{ '@context': 'https://schema.org', '@type': 'FAQPage', inLanguage: locale,
+  mainEntity: faqItems.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }] : [];
+const mailTo = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(tok(I.c.pages.contact.emailSubject))}`;
+const waText = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(tok(I.c.pages.contact.waMsg))}`;
+const mailHref = mailTo, waHref = waText;
+const qrSvg = (txt) => buildSvg(QrCode.encodeText(txt, QrCode.Ecc.MEDIUM), { ...DESIGN_DEFAULTS, border: 2 });
+const emailSvg = id === 'contact' ? qrSvg(mailTo) : '';
+const waSvg = id === 'contact' ? qrSvg(waText) : '';
+const typeLabel = (l) => locale === 'en' ? `${l.nav} QR code` : I.t('ft_qr', { x: I.t('p_' + l.type) });
+---
+<Page title={tok(pg.title)} description={tok(pg.desc)} heading={tok(pg.h1)} updated={updated} jsonLd={jsonLd}>
+  {(id === 'about' || id === 'privacy' || id === 'terms') && pg.blocks.map(([kind, body]) => {
+    if (kind === 'lead') return <p class="lead" set:html={tok(body)} />;
+    if (kind === 'h2') return <h2>{tok(body)}</h2>;
+    if (kind === 'p') return <p set:html={tok(body)} />;
+    if (kind === 'ul') return <ul>{body.map(li => <li set:html={tok(li)} />)}</ul>;
+    if (kind === 'clear') return (<div class="clear-box"><button type="button" class="btn primary" data-clear-storage>{pg.clearBtn}</button><p class="hint" data-clear-status role="status" aria-live="polite"></p></div>);
+    if (kind === 'types') return <ul class="inline-links">{LANDINGS.map(l => <li><a href={localizePath(locale, `/${l.slug}/`)}>{typeLabel(l)}</a></li>)}</ul>;
+    return null;
+  })}
+  {id === 'privacy' && (
+    <script define:vars={{ done: tok(pg.clearDone) }}>
+      document.querySelectorAll('[data-clear-storage]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          ['qrcodestation-state-v1', 'qrstudio-state-v2', 'theme'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+          var st = document.querySelector('[data-clear-status]'); if (st) st.textContent = done;
+        });
+      });
+    </script>
+  )}
+  {id === 'faq' && (<>
+    <p class="lead" set:html={tok(pg.lead)} />
+    <Faq items={faqItems} heading="" />
+  </>)}
+  {id === 'contact' && (<>
+    <p class="lead">{pg.lead}</p>
+    <div class="contact-grid">
+      <section class="contact-card" aria-labelledby="c-email">
+        <p class="eyebrow" id="c-email">{pg.emailTitle}</p>
+        <p class="contact-value"><a href={mailHref}>{CONTACT_EMAIL}</a></p>
+        <p>{pg.emailText}</p>
+        <figure class="contact-qr"><div set:html={emailSvg} role="img" aria-label={pg.emailScan}></div><figcaption>{pg.emailScan}</figcaption></figure>
+        <a class="btn primary" href={mailHref}>{pg.emailBtn}</a>
+      </section>
+      <section class="contact-card" aria-labelledby="c-wa">
+        <p class="eyebrow" id="c-wa">{pg.waTitle}</p>
+        <p class="contact-value"><a href={waHref} rel="noopener" target="_blank" dir="ltr">{WHATSAPP_DISPLAY}</a></p>
+        <p>{pg.waText}</p>
+        <figure class="contact-qr"><div set:html={waSvg} role="img" aria-label={pg.waScan}></div><figcaption>{pg.waScan}</figcaption></figure>
+        <a class="btn primary" href={waHref} rel="noopener" target="_blank">{pg.waBtn}</a>
+      </section>
+    </div>
+    <section class="contact-card contact-include">
+      <h2>{pg.includeTitle}</h2>
+      <ul>{pg.include.map(li => <li>{li}</li>)}</ul>
+    </section>
+  </>)}
+</Page>
