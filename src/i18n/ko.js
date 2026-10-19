@@ -39,7 +39,7 @@ export const ui = {
   e_low: '낮음', e_med: '중간', e_q: '사분위', e_high: '높음', e_rec: '복구',
   v_fill: '내용을 입력하면 QR 코드가 생성됩니다.',
   v_toomuch: '선택한 버전 범위와 오류 정정으로는 데이터가 너무 많습니다. 최대 버전을 높이거나 오류 정정을 낮추세요.',
-  v_quiet: '여백 영역', v_round: '둥근 모서리', v_quality: '품질', v_scales: 'SVG는 어떤 크기로도 확대됩니다',
+  v_quiet: '여백', v_round: '둥근 모서리', v_quality: '품질', v_scales: 'SVG는 어떤 크기로도 확대됩니다',
   v_ppm: '≈ 모듈당 {n}px · SVG는 어떤 크기로도 확대됩니다', v_dl_png: 'PNG 다운로드', v_copy: 'SVG 복사', v_copyimg: '이미지 복사', v_copied: '복사됨!', v_copyfail: '복사 실패',
   v_print: '인쇄 / PDF', v_details: 'QR 상세 정보 및 코드', v_version: '버전', v_modules: '모듈', v_mode: '인코딩 모드',
   ph_text: '최대 약 2,900자까지의 텍스트',

@@ -49,7 +49,7 @@ export const ui = {
   // preview / actions
   v_fill: 'Fill in the content fields to generate your QR code.',
   v_toomuch: 'Too much data for the selected version range and error correction. Raise the max version or lower error correction.',
-  v_quiet: 'Quiet zone', v_round: 'Rounded corners', v_quality: 'Quality', v_scales: 'SVG scales to any size',
+  v_quiet: 'Margin', v_round: 'Rounded corners', v_quality: 'Quality', v_scales: 'SVG scales to any size',
   v_ppm: '≈ {n} px per module · SVG scales to any size', v_dl_png: 'Download PNG', v_copy: 'Copy SVG', v_copyimg: 'Copy image', v_copied: 'Copied!', v_copyfail: 'Copy failed',
   v_print: 'Print / PDF', v_details: 'QR details & code', v_version: 'Version', v_modules: 'Modules', v_mode: 'Encoding mode',
   ph_text: 'Any text up to ~2,900 characters',

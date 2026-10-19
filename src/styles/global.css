@@ -398,3 +398,6 @@ a.pill { text-decoration: none; }
 .clear-box { margin: 18px 0 8px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
 .clear-box .btn.primary { width: auto; padding: 12px 24px; }
 .clear-box .hint { color: var(--charge); font-size: 14px; margin: 0; min-height: 1.2em; }
+
+/* When the preview wraps under the settings (tablet), center it instead of leaving it on the left. */
+.gen-side { margin-inline: auto; width: 100%; }

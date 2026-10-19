@@ -39,7 +39,7 @@ export const ui = {
   e_low: 'Rendah', e_med: 'Sedang', e_q: 'Kuartil', e_high: 'Tinggi', e_rec: 'pemulihan',
   v_fill: 'Isi kolom konten untuk membuat kode QR Anda.',
   v_toomuch: 'Data terlalu banyak untuk rentang versi dan koreksi kesalahan yang dipilih. Naikkan versi maks. atau turunkan koreksi kesalahan.',
-  v_quiet: 'Zona tenang', v_round: 'Sudut membulat', v_quality: 'Kualitas', v_scales: 'SVG dapat diskalakan ke ukuran apa pun',
+  v_quiet: 'Margin', v_round: 'Sudut membulat', v_quality: 'Kualitas', v_scales: 'SVG dapat diskalakan ke ukuran apa pun',
   v_ppm: '≈ {n} px per modul · SVG dapat diskalakan ke ukuran apa pun', v_dl_png: 'Unduh PNG', v_copy: 'Salin SVG', v_copyimg: 'Salin gambar', v_copied: 'Tersalin!', v_copyfail: 'Gagal menyalin',
   v_print: 'Cetak / PDF', v_details: 'Detail & kode QR', v_version: 'Versi', v_modules: 'Modul', v_mode: 'Mode pengodean',
   ph_text: 'Teks apa pun hingga ~2.900 karakter',

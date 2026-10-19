@@ -39,7 +39,7 @@ export const ui = {
   e_low: 'Faible', e_med: 'Moyenne', e_q: 'Quartile', e_high: 'Élevée', e_rec: 'de récupération',
   v_fill: 'Renseignez le contenu pour générer votre QR code.',
   v_toomuch: 'Trop de données pour la plage de versions et la correction d’erreurs choisies. Augmentez la version max. ou baissez la correction d’erreurs.',
-  v_quiet: 'Zone de silence', v_round: 'Coins arrondis', v_quality: 'Qualité', v_scales: 'Le SVG s’adapte à toutes les tailles',
+  v_quiet: 'Marge', v_round: 'Coins arrondis', v_quality: 'Qualité', v_scales: 'Le SVG s’adapte à toutes les tailles',
   v_ppm: '≈ {n} px par module · le SVG s’adapte à toutes les tailles', v_dl_png: 'Télécharger en PNG', v_copy: 'Copier le SVG', v_copyimg: 'Copier l’image', v_copied: 'Copié !', v_copyfail: 'Échec de la copie',
   v_print: 'Imprimer / PDF', v_details: 'Détails et code du QR', v_version: 'Version', v_modules: 'Modules', v_mode: 'Mode d’encodage',
   ph_text: 'Tout texte jusqu’à ~2 900 caractères',

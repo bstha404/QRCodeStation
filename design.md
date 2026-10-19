@@ -222,7 +222,7 @@ Borders over shadows. The only real shadows are the language dropdown, the mobil
 
 - `--panel` card, 24px radius, sticky on desktop.
 - `.well` holds the live QR; checkerboard background when the code is transparent.
-- Quiet zone, Rounded corners and Quality sliders sit under the QR.
+- Margin (the empty border around the code), Rounded corners and Quality sliders sit under the QR.
 - Buttons: full-width primary **Download PNG**, a row of SVG / JPG / WebP, then **Copy SVG · Copy image · Print / PDF**.
 - Collapsible “QR details & code” dropdown holds the stats grid and the encoded text / SVG source.
 

@@ -109,7 +109,7 @@ export const MORE_FAQ = [
   ['Can I edit a QR code after printing it?', 'No. Static codes cannot be changed once printed. If the content changes, generate and print a new code.'],
   ['Can I track how many people scan my code?', 'Not directly. To measure scans, add UTM parameters to your link and check the results in your own web analytics.'],
   ['How big should I print my QR code?', 'At least 2 × 2 cm (about 0.8 inch) for close-range scanning. Make it larger for posters or anything scanned from a distance: roughly 1 cm of code for every 10 cm of scanning distance.'],
-  ['Why won’t my QR code scan?', 'The usual causes are low contrast between code and background, a logo that is too large, a missing quiet zone, or too much data. Use a dark code on a light background, keep error correction at Q or H with a logo, and test with a phone before printing.'],
+  ['Why won’t my QR code scan?', 'The usual causes are low contrast between code and background, a logo that is too large, too small a margin around the code (the “quiet zone”), or too much data. Use a dark code on a light background, keep error correction at Q or H with a logo, and test with a phone before printing.'],
   ['Can I make QR codes for social media, PDFs or videos?', 'Yes. Upload your PDF or video online, or copy your social profile link, and paste it into the URL type. The URL type also has one-tap shortcuts for popular social networks.'],
   ['Can I use the QR codes for business or commercial use?', 'Yes. Codes you create are yours to use on products, packaging, menus, ads and more.'],
   ['Does it work on iPhone and Android?', 'Yes. Both open the camera app and recognize QR codes without installing anything.'],

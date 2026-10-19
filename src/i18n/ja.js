@@ -39,7 +39,7 @@ export const ui = {
   e_low: '低', e_med: '中', e_q: '準高', e_high: '高', e_rec: '復元',
   v_fill: '内容を入力するとQRコードが生成されます。',
   v_toomuch: '選択したバージョン範囲と誤り訂正ではデータが多すぎます。最大バージョンを上げるか、誤り訂正を下げてください。',
-  v_quiet: 'クワイエットゾーン', v_round: '角の丸み', v_quality: '画質', v_scales: 'SVGは任意のサイズに拡大できます',
+  v_quiet: '余白', v_round: '角の丸み', v_quality: '画質', v_scales: 'SVGは任意のサイズに拡大できます',
   v_ppm: '≈ 1モジュール{n}px · SVGは任意のサイズに拡大できます', v_dl_png: 'PNGをダウンロード', v_copy: 'SVGをコピー', v_copyimg: '画像をコピー', v_copied: 'コピーしました！', v_copyfail: 'コピーに失敗しました',
   v_print: '印刷／PDF', v_details: 'QRの詳細とコード', v_version: 'バージョン', v_modules: 'モジュール数', v_mode: 'エンコードモード',
   ph_text: '最大約2,900文字までの任意のテキスト',

@@ -39,7 +39,7 @@ export const ui = {
   e_low: 'Bassa', e_med: 'Media', e_q: 'Quartile', e_high: 'Alta', e_rec: 'di recupero',
   v_fill: 'Compila il contenuto per generare il tuo codice QR.',
   v_toomuch: 'Troppi dati per l’intervallo di versioni e la correzione errori scelti. Aumenta la versione massima o riduci la correzione errori.',
-  v_quiet: 'Zona di rispetto', v_round: 'Angoli arrotondati', v_quality: 'Qualità', v_scales: 'L’SVG si adatta a qualsiasi dimensione',
+  v_quiet: 'Margine', v_round: 'Angoli arrotondati', v_quality: 'Qualità', v_scales: 'L’SVG si adatta a qualsiasi dimensione',
   v_ppm: '≈ {n} px per modulo · l’SVG si adatta a qualsiasi dimensione', v_dl_png: 'Scarica PNG', v_copy: 'Copia SVG', v_copyimg: 'Copia immagine', v_copied: 'Copiato!', v_copyfail: 'Copia non riuscita',
   v_print: 'Stampa / PDF', v_details: 'Dettagli e codice QR', v_version: 'Versione', v_modules: 'Moduli', v_mode: 'Modalità di codifica',
   ph_text: 'Qualsiasi testo fino a ~2.900 caratteri',
