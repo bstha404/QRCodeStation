@@ -401,3 +401,4 @@ a.pill { text-decoration: none; }
 
 /* When the preview wraps under the settings (tablet), center it instead of leaving it on the left. */
 .gen-side { margin-inline: auto; width: 100%; }
+.preset:focus-visible { outline: 2px solid var(--charge); outline-offset: 2px; border-color: var(--charge); }

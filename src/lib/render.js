@@ -57,10 +57,10 @@ export const SOCIALS = [
 export const APP_LINKS = { play: 'https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME', apple: 'https://apps.apple.com/us/app/app-name/idYOUR_APP_ID' };
 
 export const FIELD_DEFAULTS = { url: 'https://example.com', text: 'Hello, world! Replace this with your own text.', to: 'name@example.com', subject: 'Hello from QR Code Station', body: 'Hi there, I scanned your QR code!', tel: '+1 202 555 0123', smsNum: '+1 202 555 0123', smsMsg: 'Hello! I scanned your QR code.', waNum: '12025550123', waMsg: 'Hello! I scanned your QR code.', ssid: 'MyHomeWiFi', wifiPass: 'my-wifi-password', wifiEnc: 'WPA', wifiHidden: false, vcFormat: 'vcard', first: 'John', last: 'Doe', org: 'Example Inc.', title: 'Software Engineer', mobile: '+1 202 555 0123', work: '+1 202 555 0147', vemail: 'john.doe@example.com', website: 'https://example.com', street: '123 Main Street', city: 'New York', zip: '10001', country: 'United States', lat: '40.7128', lng: '-74.0060', geoQ: 'New York, NY, USA', geoFmt: 'geo', evTitle: 'Team Meetup', evLoc: 'New York, NY, USA', evStart: '2026-12-01T10:00', evEnd: '2026-12-01T11:00', evDesc: 'Join us for our monthly team meetup.', coin: 'bitcoin', addr: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '0.001', clabel: 'Donation', cmsg: 'Thanks for your support', placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4', formUrl: 'https://forms.gle/abc123XYZ', appStore: 'play', appId: 'https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME', cpTitle: 'Get 20% off your next order', cpCode: 'SAVE20', cpExpiry: '2026-12-31', cpTerms: 'Valid on orders over $25. One use per customer.', cpLink: 'https://example.com/shop', payMethod: 'paypal', payId: 'example', payName: 'Jane Doe', payAmt: '10', payCur: 'USD', payNote: 'Thank you' };
-export const DESIGN_DEFAULTS = { fg: '#0B0D0C', bg: '#FFFFFF', transparent: false, gradient: false, gradType: 'linear', grad2: '#58AE37', gradAngle: 45, customEyes: false, frameColor: '#0B0D0C', ballColor: '#0B0D0C', body: 'square', frame: 'square', ball: 'square' };
-export const BODY = [['square', 'Square'], ['rounded', 'Rounded'], ['dots', 'Dots'], ['classy', 'Classy'], ['diamond', 'Diamond'], ['small', 'Small squares'], ['vertical', 'Vertical bars'], ['horizontal', 'Horizontal bars']];
-export const FRAME = [['square', 'Square'], ['rounded', 'Rounded'], ['extra', 'Extra rounded'], ['circle', 'Circle'], ['leaf', 'Leaf'], ['pointed', 'Pointed']];
-export const BALL = [['square', 'Square'], ['rounded', 'Rounded'], ['circle', 'Circle'], ['diamond', 'Diamond'], ['leaf', 'Leaf'], ['pointed', 'Pointed']];
+export const DESIGN_DEFAULTS = { fg: '#0B0D0C', bg: '#FFFFFF', transparent: false, gradient: false, gradType: 'linear', grad2: '#58AE37', gradAngle: 45, customEyes: false, frameColor: '#0B0D0C', ballColor: '#0B0D0C', body: 'square', frame: 'square', ball: 'square', palette: null, ghost: null, backdrop: null };
+export const BODY = [['square', 'Square'], ['rounded', 'Rounded'], ['dots', 'Dots'], ['classy', 'Classy'], ['diamond', 'Diamond'], ['small', 'Small squares'], ['vertical', 'Vertical bars'], ['horizontal', 'Horizontal bars'], ['pixel', 'Pixel mix']];
+export const FRAME = [['square', 'Square'], ['rounded', 'Rounded'], ['extra', 'Extra rounded'], ['circle', 'Circle'], ['leaf', 'Leaf'], ['pointed', 'Pointed'], ['squircle', 'Squircle'], ['cookie', 'Cookie'], ['flower', 'Flower'], ['arch', 'Arch'], ['octagon', 'Octagon'], ['hexagon', 'Hexagon']];
+export const BALL = [['square', 'Square'], ['rounded', 'Rounded'], ['circle', 'Circle'], ['diamond', 'Diamond'], ['leaf', 'Leaf'], ['pointed', 'Pointed'], ['squircle', 'Squircle'], ['cookie', 'Cookie'], ['flower', 'Flower'], ['arch', 'Arch'], ['octagon', 'Octagon'], ['hexagon', 'Hexagon'], ['sparkle', 'Sparkle'], ['cross', 'Cross']];
 export const ECC = [['L', 'Low', '~7% recovery'], ['M', 'Medium', '~15% recovery'], ['Q', 'Quartile', '~25% recovery'], ['H', 'High', '~30% recovery']];
 export const PRESETS = [
   { name: 'Classic', ...DESIGN_DEFAULTS },
@@ -118,6 +118,28 @@ export const PRESETS = [
   { name: 'Brick', fg: '#0B3954', bg: '#FFF1E6', body: 'rounded', frame: 'rounded', ball: 'circle', customEyes: true, frameColor: '#8D0801', ballColor: '#8D0801' },
   { name: 'Bluebell', fg: '#1E3A8A', grad2: '#312E81', gradient: true, gradAngle: 90, bg: '#E8F0FE', body: 'dots', frame: 'circle', ball: 'circle' },
   { name: 'Moss', fg: '#1B3A1B', bg: '#E3EFC9', body: 'vertical', frame: 'leaf', ball: 'leaf' },
+  { name: 'Squircle pop', fg: '#3B1D5A', bg: '#F3E9FF', body: 'rounded', frame: 'squircle', ball: 'squircle' },
+  { name: 'Cookie', fg: '#5A2A12', bg: '#FFEFD9', body: 'dots', frame: 'cookie', ball: 'cookie' },
+  { name: 'Blossom', fg: '#7A1B3A', bg: '#FFE4EC', body: 'rounded', frame: 'flower', ball: 'flower' },
+  { name: 'Arcade', fg: '#12384F', bg: '#E4F4FF', body: 'small', frame: 'arch', ball: 'arch' },
+  { name: 'Gem', fg: '#0B3D2E', bg: '#E1F7EC', body: 'diamond', frame: 'octagon', ball: 'octagon' },
+  { name: 'Honeycomb', fg: '#5C3B00', bg: '#FFF1CC', body: 'dots', frame: 'hexagon', ball: 'hexagon' },
+  { name: 'Twinkle', fg: '#1E1B4B', bg: '#EEEBFF', body: 'classy', frame: 'squircle', ball: 'sparkle' },
+  { name: 'Plus', fg: '#0F3B2B', bg: '#E8F5EC', body: 'vertical', frame: 'octagon', ball: 'cross' },
+  { name: 'Pebble', fg: '#1F2937', bg: '#EDEFF2', body: 'rounded', frame: 'cookie', ball: 'squircle' },
+  { name: 'Daisy', fg: '#7A2E0E', bg: '#FFF3E0', body: 'dots', frame: 'flower', ball: 'circle' },
+  { name: 'Night market', fg: '#FDE68A', bg: '#1C1917', body: 'rounded', frame: 'squircle', ball: 'hexagon' },
+  { name: 'Ocean glass', fg: '#064663', grad2: '#0A5578', gradient: true, gradAngle: 60, bg: '#E6F7FB', body: 'rounded', frame: 'arch', ball: 'squircle' },
+  { name: 'Rosette', fg: '#5B1A44', bg: '#FDE7F3', body: 'classy', frame: 'flower', ball: 'cookie' },
+  { name: 'Spark', fg: '#3C1E00', bg: '#FFEFC2', body: 'small', frame: 'hexagon', ball: 'sparkle' },
+  { name: 'Meadow', fg: '#14432A', bg: '#E9F6E7', body: 'rounded', frame: 'cookie', ball: 'flower' },
+  { name: 'Lilac pop', fg: '#3B0764', grad2: '#5B21B6', gradient: true, gradAngle: 45, bg: '#F5EBFF', body: 'dots', frame: 'squircle', ball: 'cookie' },
+  { name: 'Pixel pop', fg: '#B3262E', bg: '#FFD0D3', backdrop: true, body: 'pixel', frame: 'circle', ball: 'flower', palette: ['#B3262E', '#9B2D4B', '#6B3FA0'], ghost: ['#F7B3BB', '#E3C6F2'] },
+  { name: 'Pixel mint', fg: '#0F6B3F', bg: '#CDEFDC', backdrop: true, body: 'pixel', frame: 'circle', ball: 'flower', palette: ['#0F6B3F', '#1F4E5F', '#5B3FA0'], ghost: ['#A9DDBF', '#C3D8F0'] },
+  { name: 'Pixel sky', fg: '#0B4F9C', bg: '#CDE5FA', backdrop: true, body: 'pixel', frame: 'circle', ball: 'flower', palette: ['#0B4F9C', '#1E3A8A', '#6D28D9'], ghost: ['#A9CFF0', '#D3C6F3'] },
+  { name: 'Pixel sun', fg: '#6B3A00', bg: '#FFE6A3', backdrop: true, body: 'pixel', frame: 'circle', ball: 'flower', palette: ['#6B3A00', '#9A2F00', '#4C2A85'], ghost: ['#F5D488', '#F8CDB8'] },
+  { name: 'Pixel violet', fg: '#4C1D95', bg: '#E5D0FA', backdrop: true, body: 'pixel', frame: 'circle', ball: 'flower', palette: ['#4C1D95', '#6B1257', '#17406F'], ghost: ['#D8BBF4', '#B9D0F0'] },
+  { name: 'Pixel peach', fg: '#8F2B0B', bg: '#FFD7BF', backdrop: true, body: 'pixel', frame: 'circle', ball: 'flower', palette: ['#8F2B0B', '#7A2040', '#3F2F82'], ghost: ['#F8C2A0', '#F0C4D6'] },
 ].map(p => ({ ...DESIGN_DEFAULTS, ...p }));
 
 const n2 = v => +(+v).toFixed(3);
@@ -144,6 +166,38 @@ function bodyCell(shape, x, y, { T, B, L, R }) {
     default: return `M${x},${y}h1v1h-1Z`;
   }
 }
+// Organic eye shapes are drawn from a radius function r(θ), scaled to touch the box edges.
+const TAU = Math.PI * 2;
+const RADIAL = {
+  squircle: t => Math.pow(Math.pow(Math.abs(Math.cos(t)), 4) + Math.pow(Math.abs(Math.sin(t)), 4), -0.25),
+  cookie: t => 1 - 0.14 * Math.cos(4 * t),
+  flower: t => 1 + 0.07 * Math.cos(8 * t),
+  sparkle: t => 1 + 0.55 * Math.cos(4 * t),
+  pillow: t => 1 - 0.2 * Math.cos(4 * t),
+};
+const RADIAL_N = { flower: 112, sparkle: 96 };
+function radial(shape, cx, cy, ext) {
+  const fn = RADIAL[shape], N = RADIAL_N[shape] || 80;
+  let m = 0;
+  for (let i = 0; i < 360; i++) { const t = i * TAU / 360, r = fn(t); m = Math.max(m, r * Math.abs(Math.cos(t)), r * Math.abs(Math.sin(t))); }
+  const k = ext / m; let d = '';
+  for (let i = 0; i < N; i++) { const t = i * TAU / N, r = fn(t) * k; d += (i ? 'L' : 'M') + n2(cx + r * Math.cos(t)) + ',' + n2(cy + r * Math.sin(t)); }
+  return d + 'Z';
+}
+// Regular polygon whose flat sides (octagon) or points (hexagon) touch the box edges.
+function polygon(cx, cy, ext, sides, rot) {
+  const R = sides === 8 ? ext / Math.cos(Math.PI / 8) : ext; let d = '';
+  for (let i = 0; i < sides; i++) { const t = rot + i * TAU / sides; d += (i ? 'L' : 'M') + n2(cx + R * Math.cos(t)) + ',' + n2(cy + R * Math.sin(t)); }
+  return d + 'Z';
+}
+// Dome on top, softly rounded bottom corners.
+function arch(x, y, w) {
+  const r = w / 2, c = w * .16;
+  return `M${n2(x)},${n2(y + r)}A${n2(r)},${n2(r)} 0 0 1 ${n2(x + w)},${n2(y + r)}V${n2(y + w - c)}Q${n2(x + w)},${n2(y + w)} ${n2(x + w - c)},${n2(y + w)}H${n2(x + c)}Q${n2(x)},${n2(y + w)} ${n2(x)},${n2(y + w - c)}Z`;
+}
+const cross = (x, y) => [[1, 0], [2, 0], [2, 1], [3, 1], [3, 2], [2, 2], [2, 3], [1, 3], [1, 2], [0, 2], [0, 1], [1, 1]].map(([a, b], i) => (i ? 'L' : 'M') + n2(x + a) + ',' + n2(y + b)).join('') + 'Z';
+const ring = (outer, inner) => outer + inner;
+
 function framePath(shape, x, y) {
   const pair = (o, i) => rr(x, y, 7, 7, o) + rr(x + 1, y + 1, 5, 5, i);
   switch (shape) {
@@ -152,6 +206,10 @@ function framePath(shape, x, y) {
     case 'circle': return circ(x + 3.5, y + 3.5, 3.5) + circ(x + 3.5, y + 3.5, 2.5);
     case 'leaf': return pair([3, 0, 3, 0], [2, 0, 2, 0]);
     case 'pointed': return pair([3, 3, 0, 3], [2, 2, 0, 2]);
+    case 'squircle': case 'cookie': case 'flower': return ring(radial(shape, x + 3.5, y + 3.5, 3.5), radial(shape, x + 3.5, y + 3.5, 2.5));
+    case 'arch': return ring(arch(x, y, 7), arch(x + 1, y + 1, 5));
+    case 'octagon': return ring(polygon(x + 3.5, y + 3.5, 3.5, 8, Math.PI / 8), polygon(x + 3.5, y + 3.5, 2.5, 8, Math.PI / 8));
+    case 'hexagon': return ring(polygon(x + 3.5, y + 3.5, 3.5, 6, 0), polygon(x + 3.5, y + 3.5, 2.5, 6, 0));
     default: return pair([0, 0, 0, 0], [0, 0, 0, 0]);
   }
 }
@@ -162,6 +220,11 @@ function ballPath(shape, x, y) {
     case 'diamond': return diamond(x - .3, y - .3, 3.6);
     case 'leaf': return rr(x, y, 3, 3, [1.5, 0, 1.5, 0]);
     case 'pointed': return rr(x, y, 3, 3, [1.4, 1.4, 0, 1.4]);
+    case 'squircle': case 'cookie': case 'flower': case 'sparkle': return radial(shape, x + 1.5, y + 1.5, 1.5);
+    case 'arch': return arch(x, y, 3);
+    case 'octagon': return polygon(x + 1.5, y + 1.5, 1.5, 8, Math.PI / 8);
+    case 'hexagon': return polygon(x + 1.5, y + 1.5, 1.5, 6, 0);
+    case 'cross': return cross(x, y);
     default: return rr(x, y, 3, 3, [0, 0, 0, 0]);
   }
 }
@@ -170,6 +233,7 @@ function ballPath(shape, x, y) {
 const SAMPLE = ['10110', '11011', '00101', '11100', '10111'];
 export function bodyThumb(shape) {
   const on = (x, y) => y >= 0 && y < 5 && x >= 0 && x < 5 && SAMPLE[y][x] === '1';
+  if (shape === 'pixel') return `<svg viewBox="-.2 -.2 5.4 5.4" aria-hidden="true"><path fill="currentColor" d="${pixelPaths(on, 5, 0, 0, ['x'])[0]}"/></svg>`;
   let d = '';
   for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++) if (on(x, y)) d += bodyCell(shape, x, y, { T: on(x, y - 1), B: on(x, y + 1), L: on(x - 1, y), R: on(x + 1, y) });
   return `<svg viewBox="-.2 -.2 5.4 5.4" aria-hidden="true"><path fill="currentColor" d="${d}"/></svg>`;
@@ -181,6 +245,42 @@ export const ballThumb = s => `<svg viewBox="-.5 -.5 4 4" aria-hidden="true"><pa
 // duplicate id makes url(#id) resolve to the first one in the document (or to a hidden one that never paints).
 let gradN = 0;
 const gradPrefix = typeof window === 'undefined' ? 's' : 'c' + Date.now().toString(36);
+// "Pixel mix": modules become a playful mix of pills, dots and little flowers in a few colors,
+// with faint "ghost" modules and scattered specks around (inspired by phone Wi‑Fi sharing codes).
+const hash2 = (x, y, k = 0) => { let h = (x * 374761393 + y * 668265263 + k * 2147483647) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return ((h ^ (h >>> 16)) >>> 0) / 4294967296; };
+function blob(cx, cy, r) {
+  let d = '';
+  for (let i = 0; i < 40; i++) { const t = i * TAU / 40, rr_ = r * (1 + 0.1 * Math.cos(8 * t)); d += (i ? 'L' : 'M') + n2(cx + rr_ * Math.cos(t)) + ',' + n2(cy + rr_ * Math.sin(t)); }
+  return d + 'Z';
+}
+// Returns [{ ci, d }] where ci indexes the palette; (ox, oy) is the position of module (0, 0).
+function pixelPaths(on, n, ox, oy, colors) {
+  const used = new Set(), out = colors.map(() => '');
+  const key = (x, y) => y * 1000 + x;
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    if (!on(x, y) || used.has(key(x, y))) continue;
+    const h = hash2(x, y), h2 = hash2(x, y, 7);
+    const ci = colors.length < 2 ? 0 : h2 < .55 ? 0 : h2 < .85 ? 1 : Math.min(2, colors.length - 1);
+    const run = (dx, dy, max) => { let L = 1; while (L < max && on(x + dx * L, y + dy * L) && !used.has(key(x + dx * L, y + dy * L))) L++; return L; };
+    const want = 2 + Math.floor(hash2(x, y, 3) * 3);
+    const first = h < .5 ? [1, 0] : [0, 1], second = h < .5 ? [0, 1] : [1, 0];
+    let dir = null, L = 1;
+    for (const dd of [first, second]) { const l = run(dd[0], dd[1], want); if (l >= 2) { dir = dd; L = l; break; } }
+    let p;
+    if (dir) {
+      for (let i = 0; i < L; i++) used.add(key(x + dir[0] * i, y + dir[1] * i));
+      const w = dir[0] ? L : 1, hh = dir[1] ? L : 1;
+      p = rr(ox + x + .1, oy + y + .1, w - .2, hh - .2, [.4, .4, .4, .4]);
+    } else {
+      used.add(key(x, y));
+      const cx = ox + x + .5, cy = oy + y + .5, k = hash2(x, y, 11);
+      p = k < .5 ? circ(cx, cy, .4) : k < .85 ? blob(cx, cy, .42) : rr(ox + x + .12, oy + y + .12, .76, .76, [.22, .22, .22, .22]);
+    }
+    out[ci] += p;
+  }
+  return out;
+}
+
 export function buildSvg(qr, o, px) {
   const n = qr.size, b = o.border ?? 4, S = n + 2 * b;
   const eye = (x, y) => (x < 7 && y < 7) || (x >= n - 7 && y < 7) || (x < 7 && y >= n - 7);
@@ -189,8 +289,11 @@ export function buildSvg(qr, o, px) {
   if (o.logo && o.clearLogo) { lx0 = (n - ls) / 2 - .6; lx1 = (n + ls) / 2 + .6; }
   const cleared = (x, y) => lx0 >= 0 && x + .5 > lx0 && x + .5 < lx1 && y + .5 > lx0 && y + .5 < lx1;
   const on = (x, y) => qr.getModule(x, y) && !eye(x, y) && !cleared(x, y);
-  let d = '';
-  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (on(x, y))
+  const pix = o.body === 'pixel';
+  const colors = pix ? (o.palette && o.palette.length ? o.palette : [o.fg]) : null;
+  let d = '', pixParts = [];
+  if (pix) pixParts = pixelPaths(on, n, b, b, colors);
+  else for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (on(x, y))
     d += bodyCell(o.body, x + b, y + b, { T: on(x, y - 1), B: on(x, y + 1), L: on(x - 1, y), R: on(x + 1, y) });
   let defs = '', fill = o.fg;
   if (o.gradient) {
@@ -200,7 +303,8 @@ export function buildSvg(qr, o, px) {
     else { const a = (o.gradAngle - 90) * Math.PI / 180, dx = Math.cos(a) * c, dy = Math.sin(a) * c; defs = `<linearGradient id="${gid}" gradientUnits="userSpaceOnUse" x1="${n2(c - dx)}" y1="${n2(c - dy)}" x2="${n2(c + dx)}" y2="${n2(c + dy)}"><stop offset="0" stop-color="${o.fg}"/><stop offset="1" stop-color="${o.grad2}"/></linearGradient>`; }
     fill = `url(#${gid})`;
   }
-  const fc = o.customEyes ? o.frameColor : fill, bc = o.customEyes ? o.ballColor : fill;
+  const eyeBase = pix && colors ? colors[0] : fill;
+  const fc = o.customEyes ? o.frameColor : eyeBase, bc = o.customEyes ? o.ballColor : eyeBase;
   let eyes = '';
   [[0, 0, 0], [n - 7, 0, 90], [0, n - 7, -90]].forEach(([ex, ey, rot]) => {
     const x = ex + b, y = ey + b, t = rot ? ` transform="rotate(${rot} ${x + 3.5} ${y + 3.5})"` : '';
@@ -213,9 +317,25 @@ export function buildSvg(qr, o, px) {
     if (box) logo = `<rect x="${n2(p + w / 2)}" y="${n2(p + w / 2)}" width="${n2(ls - w)}" height="${n2(ls - w)}" rx="${n2(ls * .24)}" fill="${o.logoBg ? o.logoBgColor : 'none'}"${w ? ` stroke="${o.logoStrokeColor}" stroke-width="${n2(w)}"` : ''}/>`;
     logo += `<image href="${o.logo}" x="${n2(p + inset)}" y="${n2(p + inset)}" width="${n2(is)}" height="${n2(is)}" preserveAspectRatio="xMidYMid meet"/>`;
   }
-  const bg = o.transparent ? '' : `<rect width="${S}" height="${S}"${o.radius ? ` rx="${n2(S * o.radius / 100)}"` : ''} fill="${o.bg}"/>`;
+  // Decoration: a soft cookie-shaped backdrop, faint ghost modules and scattered specks.
+  let decor = '', ghostSvg = '';
+  // A backdrop turns the whole image into the cookie shape: the Background color fills the shape and the corners stay transparent.
+  if (o.backdrop && !o.transparent) decor += `<path fill="${o.bg}" d="${radial('pillow', S / 2, S / 2, S / 2 * .97)}"/>`;
+  if (pix && o.ghost && o.ghost.length) {
+    const g = o.ghost, gd = g.map(() => '');
+    for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) if (!qr.getModule(x, y) && !eye(x, y) && !cleared(x, y)) gd[hash2(x, y, 5) < .6 ? 0 : (g.length > 1 ? 1 : 0)] += circ(b + x + .5, b + y + .5, .34);
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+      const inside = x >= b && x < n + b && y >= b && y < n + b;
+      if (inside || hash2(x, y, 13) > .2) continue;
+      const sz = .3 + hash2(x, y, 17) * .3, jx = hash2(x, y, 19) * (1 - sz), jy = hash2(x, y, 23) * (1 - sz);
+      gd[hash2(x, y, 29) < .5 ? 0 : (g.length > 1 ? 1 : 0)] += rr(x + jx, y + jy, sz, sz, [sz * .3, sz * .3, sz * .3, sz * .3]);
+    }
+    ghostSvg = gd.map((p, i) => p ? `<path fill="${g[i]}" d="${p}"/>` : '').join('');
+  }
+  const bodySvg = pix ? pixParts.map((p, i) => p ? `<path fill="${colors[i]}" d="${p}"/>` : '').join('') : `<path fill="${fill}" d="${d}"/>`;
+  const bg = o.transparent || o.backdrop ? '' : `<rect width="${S}" height="${S}"${o.radius ? ` rx="${n2(S * o.radius / 100)}"` : ''} fill="${o.bg}"/>`;
   const size = px ? ` width="${px}" height="${px}"` : '';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${S} ${S}"${size}${o.body === 'square' ? ' shape-rendering="crispEdges"' : ''}>${defs ? '<defs>' + defs + '</defs>' : ''}${bg}<path fill="${fill}" d="${d}"/>${eyes}${logo}</svg>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${S} ${S}"${size}${o.body === 'square' ? ' shape-rendering="crispEdges"' : ''}>${defs ? '<defs>' + defs + '</defs>' : ''}${bg}${decor}${ghostSvg}${bodySvg}${eyes}${logo}</svg>`;
 }
 
 const esc = s => String(s || '').replace(/([\\;,:"])/g, '\\$1');
