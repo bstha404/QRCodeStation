@@ -1,16 +1,22 @@
+:root { --glow-layers: radial-gradient(70vw 55vh at 50% 30%, var(--glow), transparent 70%), radial-gradient(45vw 45vh at 90% 85%, var(--glow-soft), transparent 70%), radial-gradient(40vw 40vh at 5% 70%, var(--glow-soft), transparent 70%); }
 :root, [data-theme="dark"] {
   --ink: #0B0D0C; --panel: #171A19; --footer: #0A0C0B; --paper: #F8FAF8; --muted: #B8C1BC; --subtle: #6E7672;
   --line: #2A2F2D; --charge: #8EE36A; --charge-deep: #58AE37; --grad-start: #B8F39A; --on-charge: #0B0D0C; --well: #111413;
+  --glow: color-mix(in oklab, #8EE36A 10%, transparent); --glow-soft: color-mix(in oklab, #8EE36A 5%, transparent);
 }
 [data-theme="light"] {
   --ink: #F2F5F2; --panel: #FFFFFF; --footer: #E7ECE7; --paper: #0F1411; --muted: #5A655E; --subtle: #7A857C;
   --line: #D5DDD6; --charge: #3D8A20; --charge-deep: #2A6015; --grad-start: #58AE37; --on-charge: #FFFFFF; --well: #E8EEE8;
+  --glow: color-mix(in oklab, #58AE37 13%, transparent); --glow-soft: color-mix(in oklab, #58AE37 7%, transparent);
 }
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { color-scheme: dark; }
 [data-theme="light"] { color-scheme: light; }
 body { margin: 0; background: var(--ink); color: var(--paper); font-family: Manrope, system-ui, sans-serif; -webkit-font-smoothing: antialiased; transition: background-color .2s, color .2s; }
+/* Faint green glow behind the page (fixed, so it stays put while scrolling; cards and header stay solid). */
+body::before { content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: var(--glow-layers); }
+@media print { body::before { display: none; } }
 a { color: var(--charge); } a:hover { color: var(--charge-deep); }
 input, select, textarea, button { font: inherit; color: inherit; }
 ::selection { background: color-mix(in oklab, var(--charge) 35%, transparent); }
@@ -420,3 +426,6 @@ a.pill { text-decoration: none; }
 .qf-tiles + .colors { margin-top: 14px; }
 .qf-text { margin-top: 14px; }
 .qf-tiles .tile svg text { letter-spacing: -.2px; }
+
+/* The sticky header and tab bar repaint the same fixed glow so they blend into the page instead of showing a flat band. */
+.site-header, .tabs { background: var(--glow-layers), var(--ink); background-attachment: fixed; }
