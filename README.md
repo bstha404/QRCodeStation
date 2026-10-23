@@ -14,7 +14,7 @@ npm run icons        # rebuilds favicons, install icons and the share image from
 
 ## What is in the site
 
-- Home generator at `/` with 16 content types, colors, gradients, shapes, logo upload, 31 presets and PNG / SVG / JPG / WebP / copy / print-to-PDF.
+- Home generator at `/` with 16 content types, colors, gradients, shapes, QR frames, logo upload with sample and searchable brand icons (Simple Icons), presets and PNG / SVG / JPG / WebP / copy / print-to-PDF.
 - A landing page per content type (`/wifi-qr-code/`, `/vcard-qr-code/`, …) generated from `src/lib/seo.js`.
 - About, FAQ, Contact, Privacy policy, Terms and 404 / 500 pages.
 - 12 languages (English at `/`, others under `/es/`, `/ja/`, `/fr/`, `/de/`, `/pt/`, `/ko/`, `/it/`, `/id/`, `/ru/`, `/th/`, `/ar/`) with hreflang links and sitemap alternates.

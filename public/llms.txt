@@ -6,7 +6,7 @@ The site is available in 12 languages. English pages have no prefix; other langu
 
 ## Generator
 
-- [QR code generator (home)](https://qrcodestation.com/): all content types, design presets, logo upload, high-quality downloads
+- [QR code generator (home)](https://qrcodestation.com/): all content types, design presets, QR frames, logo upload or a sample / searchable brand icon, high-quality downloads
 
 ## QR code types
 

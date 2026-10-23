@@ -184,7 +184,7 @@ Borders over shadows. The only real shadows are the language dropdown, the mobil
 
 ### Option tabs
 
-- Full-width tab bar: 1 Content · 2 Colors · 3 Logo · 4 Design · 5 Encoding.
+- Full-width tab bar: 1 Content · 2 Design · 3 Logo · 4 Colors · 5 Encoding.
 - Step number in a mono circle, tab name, and (wide screens) a short summary of the current setting.
 - Selected tab: `--charge` text + 2px `--charge` underline. Scrolls sideways on narrow screens.
 - **Swipe** on the settings panel: left→right = previous, right→left = next (inverted in RTL). Swipes that start on sliders or text fields are ignored. Arrow keys also switch tabs.
@@ -209,14 +209,18 @@ Borders over shadows. The only real shadows are the language dropdown, the mobil
 
 ### Design presets and shapes
 
-- Preset grid (`.presets`): thumbnails of a real QR with each style; collapsed state shows **exactly two full rows**, then “Show all 31 presets”.
+- Preset grid (`.presets`): thumbnails of a real QR with each style; collapsed state shows **exactly two full rows**, then “Show all {n} presets” (77 today).
 - Mode pills: **Shapes + colors** / **Shapes only**, plus **⤮ Shuffle**.
+- **QR frame** row (26 frames: label, tag, box, bubble, phone, bag, gift, cup …) with an editable text (long text shrinks, then ends with “…”); Frame color, Frame inside and an optional custom text color live in the Colors tab and only appear once a frame is chosen.
 - Shape tiles (`.tile`): square, `14px` radius, selected = charge border + 12% fill.
 
 ### Logo uploader
 
 - Dashed `.upload` drop target with “or drag and drop”; dragover turns the border solid `--charge` with a tinted fill.
 - Uploaded logos are 64px thumbnails with a small round **−** at the top corner; selected thumbnail has a `--charge` border.
+- **Sample logos:** a "No logo" button (circle-slash) plus 12 brand icons from Simple Icons as 44px `.sample-logo` buttons (selected = charge border + 12% fill). Tapping the selected one again removes it.
+- **Icon shape** pills (Plain · Square · Rounded · Circle · Hexagon) and an optional **Custom icon color** apply to the samples and to search results. Icons are built by `iconLogo()` in `render.js`; their SVG id names the shape so the logo background / stroke follow it.
+- **Brand icon search:** a search field over 3,400+ Simple Icons. The list (`/brand-icons.json`, built from `src/pages/brand-icons.json.js`) loads on the first keystroke; up to 30 matches show; the query never leaves the browser.
 
 ### Preview card
 

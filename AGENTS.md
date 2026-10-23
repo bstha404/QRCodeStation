@@ -32,6 +32,7 @@ Always run `npm run build` and `npm run check:i18n` after changing copy, routes 
 | `src/components/Generator.astro` | The whole generator: markup (server) + one client `<script>` (state, render, export, print, tabs, presets, i18n) |
 | `src/components/HomePage.astro`, `LandingPage.astro`, `StaticPage.astro`, `ErrorPage.astro` | Page templates |
 | `src/pages/index.astro`, `[slug].astro`, `[lang]/index.astro`, `[lang]/[slug].astro`, `404.astro`, `500.astro` | Routes. `[slug]` serves type landing pages and static pages |
+| `src/pages/brand-icons.json.js` | Static `/brand-icons.json` (every Simple Icons brand as `[title, hex, path]`, ~4.7 MB) fetched only when someone types in the Logo tab's icon search |
 | `src/lib/render.js` | Content types (`TYPES`), field defaults, payload builders, SVG renderer, presets, print-sheet content (shared by build and browser) |
 | `src/lib/seo.js` | `BRAND`, `LANDINGS` (per-type SEO pages), `HOME_FAQ`, contact details, company links |
 | `src/i18n/` | `locales.js`, `index.js` (helpers: `useI18n`, `localizePath`, `alternatesFor`), `en.js` + one file per language (UI strings, home copy, FAQ) |

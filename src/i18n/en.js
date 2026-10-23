@@ -36,7 +36,7 @@ export const ui = {
   l_upload: 'Upload images', l_removeall: 'Remove all logos', l_hint: 'Tap a logo to preview it on the code. Tap − to remove one.',
   l_drop: 'or drag and drop',
   l_size: 'Size', l_clear: 'Clear modules behind logo', l_clear_s: 'Removes dots under the image for a clean edge',
-  l_bg: 'Logo background', l_bg_s: 'Place the logo on a colored rounded square', l_stroke: 'Logo stroke', l_stroke_s: 'Add an outline around the logo',
+  l_bg: 'Logo background', l_bg_s: 'Place the logo on a colored background', l_stroke: 'Logo stroke', l_stroke_s: 'Add an outline around the logo',
   l_width: 'Width', l_bgcolor: 'Background color', l_strokecolor: 'Stroke color',
   l_warn: 'A logo hides part of the code. Use error correction Q or H so it still scans.', l_high: 'Switch to High',
   // design
@@ -53,7 +53,7 @@ export const ui = {
   v_ppm: '≈ {n} px per module · SVG scales to any size', v_dl_png: 'Download PNG', v_copy: 'Copy SVG', v_copyimg: 'Copy image', v_copied: 'Copied!', v_copyfail: 'Copy failed',
   v_print: 'Print / PDF', v_details: 'QR details & code', v_version: 'Version', v_modules: 'Modules', v_mode: 'Encoding mode',
   ph_text: 'Any text up to ~2,900 characters',
-  v_chars: 'Characters', v_bits: 'Data bits', v_cap: 'Capacity used', v_enc: 'Encoded text', v_svgcode: 'SVG XML code',
+  qf_h: 'QR frame', qf_text_l: 'Frame text', qf_color_l: 'Frame color', qf_bg_l: 'Frame inside', qf_ctext: 'Custom text color', qf_ctext_s: 'Pick a color for the frame label text', qf_textcolor_l: 'Text color', logo_try: 'Or try a sample logo', logo_st_label: 'Icon shape', logo_st_plain: 'Plain', logo_st_square: 'Square', logo_st_rounded: 'Rounded', logo_st_circle: 'Circle', logo_st_hexagon: 'Hexagon', logo_icustom: 'Custom icon color', logo_icolor_l: 'Icon color', logo_none: 'No logo', logo_search_ph: 'Search 3,400+ brand icons', logo_search_load: 'Loading icons…', logo_search_none: 'No icons match that name.', logo_search_fail: 'Could not load the icons. Check your connection and try again.', logo_icons_note: 'Icons from Simple Icons. Brand names and logos belong to their owners.', qf_text: 'Scan me!', v_chars: 'Characters', v_bits: 'Data bits', v_cap: 'Capacity used', v_enc: 'Encoded text', v_svgcode: 'SVG XML code',
   // landing page templates ({x} = content type name)
   lp_h1: '{x} QR code generator', lp_title: '{x} QR Code Generator – Free & Custom', lp_eyebrow: 'Free · No sign-up · Never expires',
   lp_desc: 'Create a free {x} QR code online. Customize colors, add your logo and download as PNG, SVG, JPG or WebP. No sign-up, never expires.',

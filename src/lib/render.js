@@ -1,3 +1,5 @@
+import { QrCode } from './qrcodegen.js';
+
 // Shared, framework-free QR helpers. Used at build time (Astro frontmatter) and in the browser.
 
 export const TYPES = [
@@ -57,7 +59,9 @@ export const SOCIALS = [
 export const APP_LINKS = { play: 'https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME', apple: 'https://apps.apple.com/us/app/app-name/idYOUR_APP_ID' };
 
 export const FIELD_DEFAULTS = { url: 'https://example.com', text: 'Hello, world! Replace this with your own text.', to: 'name@example.com', subject: 'Hello from QR Code Station', body: 'Hi there, I scanned your QR code!', tel: '+1 202 555 0123', smsNum: '+1 202 555 0123', smsMsg: 'Hello! I scanned your QR code.', waNum: '12025550123', waMsg: 'Hello! I scanned your QR code.', ssid: 'MyHomeWiFi', wifiPass: 'my-wifi-password', wifiEnc: 'WPA', wifiHidden: false, vcFormat: 'vcard', first: 'John', last: 'Doe', org: 'Example Inc.', title: 'Software Engineer', mobile: '+1 202 555 0123', work: '+1 202 555 0147', vemail: 'john.doe@example.com', website: 'https://example.com', street: '123 Main Street', city: 'New York', zip: '10001', country: 'United States', lat: '40.7128', lng: '-74.0060', geoQ: 'New York, NY, USA', geoFmt: 'geo', evTitle: 'Team Meetup', evLoc: 'New York, NY, USA', evStart: '2026-12-01T10:00', evEnd: '2026-12-01T11:00', evDesc: 'Join us for our monthly team meetup.', coin: 'bitcoin', addr: 'bc1qar0srrr7xfkvy5l643lydnw9re59gtzzwf5mdq', amount: '0.001', clabel: 'Donation', cmsg: 'Thanks for your support', placeId: 'ChIJN1t_tDeuEmsRUsoyG83frY4', formUrl: 'https://forms.gle/abc123XYZ', appStore: 'play', appId: 'https://play.google.com/store/apps/details?id=YOUR_PACKAGE_NAME', cpTitle: 'Get 20% off your next order', cpCode: 'SAVE20', cpExpiry: '2026-12-31', cpTerms: 'Valid on orders over $25. One use per customer.', cpLink: 'https://example.com/shop', payMethod: 'paypal', payId: 'example', payName: 'Jane Doe', payAmt: '10', payCur: 'USD', payNote: 'Thank you' };
-export const DESIGN_DEFAULTS = { fg: '#0B0D0C', bg: '#FFFFFF', transparent: false, gradient: false, gradType: 'linear', grad2: '#58AE37', gradAngle: 45, customEyes: false, frameColor: '#0B0D0C', ballColor: '#0B0D0C', body: 'square', frame: 'square', ball: 'square', palette: null, ghost: null, backdrop: null };
+export const DESIGN_DEFAULTS = { fg: '#0B0D0C', bg: '#FFFFFF', transparent: false, gradient: false, gradType: 'linear', grad2: '#58AE37', gradAngle: 45, customEyes: false, frameColor: '#0B0D0C', ballColor: '#0B0D0C', body: 'square', frame: 'square', ball: 'square', palette: null, ghost: null, backdrop: null, qf: 'none', qfText: 'Scan me!', qfColor: '#0B0D0C', qfBg: '#FFFFFF', qfCustomText: false, qfTextColor: '#FFFFFF' };
+// Decorative frames around the whole QR code ("Scan me!" cards, tags, bubbles, objects).
+export const QFRAMES = [['none', 'No frame'], ['label', 'Label'], ['script', 'Script'], ['tag', 'Tag'], ['outline', 'Outline'], ['box', 'Box'], ['bar', 'Bar'], ['solid', 'Solid'], ['pointer', 'Pointer'], ['bubble', 'Bubble'], ['ticket', 'Ticket'], ['corners', 'Corners'], ['sparkle', 'Sparkle'], ['play', 'Play'], ['phone', 'Phone'], ['bag', 'Bag'], ['gift', 'Gift'], ['ribbon', 'Ribbon'], ['envelope', 'Envelope'], ['clipboard', 'Clipboard'], ['menu', 'Menu'], ['drink', 'Drink'], ['takeaway', 'Takeaway'], ['mug', 'Mug'], ['chef', 'Chef'], ['cup', 'Cup']];
 export const BODY = [['square', 'Square'], ['rounded', 'Rounded'], ['dots', 'Dots'], ['classy', 'Classy'], ['diamond', 'Diamond'], ['small', 'Small squares'], ['vertical', 'Vertical bars'], ['horizontal', 'Horizontal bars'], ['pixel', 'Pixel mix']];
 export const FRAME = [['square', 'Square'], ['rounded', 'Rounded'], ['extra', 'Extra rounded'], ['circle', 'Circle'], ['leaf', 'Leaf'], ['pointed', 'Pointed'], ['squircle', 'Squircle'], ['cookie', 'Cookie'], ['flower', 'Flower'], ['arch', 'Arch'], ['octagon', 'Octagon'], ['hexagon', 'Hexagon']];
 export const BALL = [['square', 'Square'], ['rounded', 'Rounded'], ['circle', 'Circle'], ['diamond', 'Diamond'], ['leaf', 'Leaf'], ['pointed', 'Pointed'], ['squircle', 'Squircle'], ['cookie', 'Cookie'], ['flower', 'Flower'], ['arch', 'Arch'], ['octagon', 'Octagon'], ['hexagon', 'Hexagon'], ['sparkle', 'Sparkle'], ['cross', 'Cross']];
@@ -238,6 +242,17 @@ export function bodyThumb(shape) {
   for (let y = 0; y < 5; y++) for (let x = 0; x < 5; x++) if (on(x, y)) d += bodyCell(shape, x, y, { T: on(x, y - 1), B: on(x, y + 1), L: on(x - 1, y), R: on(x + 1, y) });
   return `<svg viewBox="-.2 -.2 5.4 5.4" aria-hidden="true"><path fill="currentColor" d="${d}"/></svg>`;
 }
+// Picker preview for a QR frame, with a placeholder code inside. Uses currentColor so it follows the theme.
+export function qrFrameThumb(id, noneLabel = 'No frame') {
+  // A small generic-looking QR code (dark modules on white) inside the frame.
+  const S = 100, q = QrCode.encodeText('QR', QrCode.Ecc.LOW), n = q.size, soft = ['label', 'script', 'tag'].includes(id), pad = soft ? 3 : 1, cell = S / (n + 2 * pad);
+  let m = '';
+  for (let yy = 0; yy < n; yy++) for (let xx = 0; xx < n; xx++) if (q.getModule(xx, yy)) m += `M${n2((xx + pad) * cell)},${n2((yy + pad) * cell)}h${n2(cell)}v${n2(cell)}h${n2(-cell)}Z`;
+  const ph = `<rect width="${S}" height="${S}" rx="${soft ? 16 : 8}" fill="#FFFFFF"/><path fill="#0B0D0C" d="${m}"/>`;
+  if (id === 'none') return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="36" r="21" fill="none" stroke="currentColor" stroke-width="6"/><path d="M35 21L65 51" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><text x="50" y="86" text-anchor="middle" font-size="15" font-weight="800" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" fill="currentColor">${escXml(noneLabel)}</text></svg>`;
+  const f = qrFrame(id, S, { qfText: 'Scan me!', transparent: true }, true);
+  return `<svg viewBox="-4 -4 ${n2(f.W + 8)} ${n2(f.H + 8)}" aria-hidden="true">${f.pre}<g transform="translate(${n2(f.x)} ${n2(f.y)})${f.k !== 1 ? ` scale(${n2(f.k)})` : ''}">${ph}</g>${f.post}</svg>`;
+}
 export const frameThumb = s => `<svg viewBox="-.2 -.2 7.4 7.4" aria-hidden="true"><path fill-rule="evenodd" fill="currentColor" d="${framePath(s, 0, 0)}"/></svg>`;
 export const ballThumb = s => `<svg viewBox="-.5 -.5 4 4" aria-hidden="true"><path fill="currentColor" d="${ballPath(s, 0, 0)}"/></svg>`;
 
@@ -281,6 +296,142 @@ function pixelPaths(on, n, ox, oy, colors) {
   return out;
 }
 
+const escXml = v => String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+// Pixel width of `str` at 1px font-size, used to scale frame labels to fit their box exactly.
+// Uses a canvas (in the browser) for real glyph metrics; falls back to a flat estimate during the
+// server build, where frame text is always the short default ("Scan me!").
+let _measureCtx;
+function textPxWidth(str, font) {
+  if (typeof document !== 'undefined') {
+    if (_measureCtx === undefined) { try { _measureCtx = document.createElement('canvas').getContext('2d'); } catch { _measureCtx = null; } }
+    if (_measureCtx) { _measureCtx.font = `${font} 100px sans-serif`; return _measureCtx.measureText(str).width / 100; }
+  }
+  return str.length * .62;
+}
+// Picks the largest font size (up to maxSize, never below minSize) that keeps `str` within
+// maxWidth; if it still does not fit at minSize, truncates with an ellipsis so the label can never
+// spill outside its frame or push other elements off-center.
+function fitText(str, maxWidth, maxSize, minSize, font) {
+  if (!str || maxWidth <= 0) return { text: '', size: maxSize, width: 0 };
+  const w1 = textPxWidth(str, font) || str.length * .62;
+  if (maxWidth / w1 >= minSize) { const size = Math.min(maxSize, maxWidth / w1); return { text: str, size, width: w1 * size }; }
+  let text = str;
+  while (text.length > 1) {
+    text = text.slice(0, -1);
+    const w = (textPxWidth(text + '…', font) || (text.length + 1) * .62) * minSize;
+    if (w <= maxWidth) return { text: text + '…', size: minSize, width: w };
+  }
+  return { text: text + '…', size: minSize, width: maxWidth };
+}
+
+// Draws the decoration for a frame around a QR code of size S. Returns the canvas size (W × H), where the
+// code goes (x, y), and SVG to paint behind (pre) and over (post) it. `thumb` is for the small picker previews.
+function qrFrame(id, S, o, thumb) {
+  const u = S / 20, c = thumb ? 'currentColor' : (o.qfColor || '#0B0D0C');
+  const onC = thumb ? ' class="qf-on"' : ` fill="${lum(c) > .45 ? '#111111' : '#FFFFFF'}"`;   // text/shapes drawn on top of c
+  const inn0 = o.qfBg || '#FFFFFF', onIn = thumb ? c : (lum(o.transparent ? '#FFFFFF' : inn0) > .45 ? '#111111' : '#FFFFFF');   // text drawn on the inside color
+  const inn = o.qfBg || '#FFFFFF', card = o.transparent ? 'none' : (thumb ? 'none' : inn);
+  const raw = o.qfText || '', L = u * 3.4, minFs = u * .85;
+  const font = 'font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-weight="700"';
+  const scriptFont = 'font-family="Snell Roundhand, Brush Script MT, Segoe Script, cursive" font-style="italic" font-weight="400"';
+  // Fits `raw` into `width` at up to `size`, shrinking it and, if needed, truncating it with an
+  // ellipsis so it can never overflow its frame or (via a stale width estimate) land off-center.
+  const fitLabel = (size, width, style = '') => fitText(raw, width, size, minFs, style ? 'italic 400' : '700');
+  const txt = (cx, cy, fillAttr, size, width, style = '') => {
+    if (!raw) return '';
+    const f = fitLabel(size, width, style);
+    const fa = !thumb && o.qfCustomText && o.qfTextColor ? ` fill="${o.qfTextColor}"` : (fillAttr.startsWith(' ') ? fillAttr : ` fill="${fillAttr}"`);
+    return f.text ? `<text x="${n2(cx)}" y="${n2(cy + f.size * .35)}" text-anchor="middle" font-size="${n2(f.size)}" ${style || font}${fa}>${escXml(f.text)}</text>` : '';
+  };
+  const stroke = w => `stroke="${c}" stroke-width="${n2(w * u)}"`;
+  const fs = u * 2.5;
+  let W, H, x, y, k = 1, pre = '', post = '';
+  const bottomBar = (bx, by, bw, bh, r) => `<path fill="${c}" d="M${n2(bx)},${n2(by)}H${n2(bx + bw)}V${n2(by + bh - r)}Q${n2(bx + bw)},${n2(by + bh)} ${n2(bx + bw - r)},${n2(by + bh)}H${n2(bx + r)}Q${n2(bx)},${n2(by + bh)} ${n2(bx)},${n2(by + bh - r)}Z"/>`;
+  switch (id) {
+    case 'label': { const p = u; W = S + 2 * p; H = S + p + u * .6 + L; x = y = p; post = txt(W / 2, p + S + u * .6 + L / 2, c, fs, W * .9); break; }
+    case 'script': { const p = u; W = S + 2 * p; H = S + p + u * 5.4; x = y = p; post = txt(W / 2, p + S + u * 3, c, u * 3.6, W * .9, scriptFont); break; }
+    case 'tag': { const p = u, ph = u * 3, maxW = S + 2 * p; W = maxW; H = p + S + u + ph + u * .6; x = y = p;
+      const natural = (textPxWidth(raw, '700') || raw.length * .62) * (fs * .95);
+      const pw = Math.min(maxW, Math.max(9 * u, natural / .85 + u * 2));
+      post = `<rect x="${n2((W - pw) / 2)}" y="${n2(p + S + u)}" width="${n2(pw)}" height="${n2(ph)}" rx="${n2(ph / 2)}" fill="${c}"/>` + txt(W / 2, p + S + u + ph / 2, onC, fs * .95, pw * .85); break; }
+    case 'outline': { const p = u * 1.8; W = S + 2 * p; H = S + p + L + u * .6; x = y = p; pre = `<rect x="${n2(u * .3)}" y="${n2(u * .3)}" width="${n2(W - u * .6)}" height="${n2(H - u * .6)}" rx="${n2(u * 1.6)}" fill="${card}" ${stroke(.6)}/>`; post = txt(W / 2, p + S + L / 2 + u * .2, onIn, fs, W * .85); break; }
+    case 'box': { const p = u * 1.8; W = S + 2 * p; H = S + p + L + u * 1.4; x = y = p;
+      pre = `<rect x="${n2(u * .3)}" y="${n2(u * .3)}" width="${n2(W - u * .6)}" height="${n2(H - u * .6)}" rx="${n2(u * 1.6)}" fill="${card}"/>` + bottomBar(u * .3, H - L - u * .9, W - u * .6, L + u * .6, u * 1.6);
+      post = `<rect x="${n2(u * .3)}" y="${n2(u * .3)}" width="${n2(W - u * .6)}" height="${n2(H - u * .6)}" rx="${n2(u * 1.6)}" fill="none" ${stroke(.6)}/>` + txt(W / 2, H - L / 2 - u * .3, onC, fs, W * .85); break; }
+    case 'bar': { const p = u * 1.8, H1 = S + 2 * p; W = H1; x = y = p; H = H1 + u + L;
+      pre = `<rect x="${n2(u * .3)}" y="${n2(u * .3)}" width="${n2(W - u * .6)}" height="${n2(H1 - u * .6)}" rx="${n2(u * 1.6)}" fill="${card}" ${stroke(.6)}/><rect x="0" y="${n2(H1 + u * .6)}" width="${n2(W)}" height="${n2(L)}" rx="${n2(u * .9)}" fill="${c}"/>`;
+      post = txt(W / 2, H1 + u * .6 + L / 2, onC, fs, W * .85); break; }
+    case 'solid': { const p = u * 1.6; W = S + 2 * p; H = S + p + L + u * .8; x = y = p; pre = `<rect width="${n2(W)}" height="${n2(H)}" rx="${n2(u * 2)}" fill="${c}"/>`; post = txt(W / 2, p + S + (L + u * .8) / 2, onC, fs, W * .85); break; }
+    case 'pointer': { const p = u * 1.8, H1 = S + 2 * p; W = H1; x = y = p; const by = H1 + u * 1.2; H = by + L;
+      pre = `<rect x="${n2(u * .3)}" y="${n2(u * .3)}" width="${n2(W - u * .6)}" height="${n2(H1 - u * .6)}" rx="${n2(u * 1.6)}" fill="${card}" ${stroke(.6)}/><path fill="${c}" d="M${n2(W / 2 - u * 1.2)},${n2(by)}L${n2(W / 2)},${n2(by - u * 1.2)}L${n2(W / 2 + u * 1.2)},${n2(by)}Z"/><rect x="0" y="${n2(by)}" width="${n2(W)}" height="${n2(L)}" rx="${n2(u * .9)}" fill="${c}"/>`;
+      post = txt(W / 2, by + L / 2, onC, fs, W * .85); break; }
+    case 'bubble': { const p = u * 1.6; W = S + 2 * p; const top = L + u * 1.6; x = p; y = top + p; H = top + S + 2 * p;
+      const maxBw = W - u * .6; const f = fitLabel(fs, maxBw - u * 2.4); const bw = Math.min(maxBw, Math.max(S * .5, f.width + u * 2.4)); const bx = (W - bw) / 2;
+      pre = `<rect x="${n2(bx)}" y="0" width="${n2(bw)}" height="${n2(L)}" rx="${n2(u * 1.1)}" fill="${c}"/><path fill="${c}" d="M${n2(W / 2 - u * 1.1)},${n2(L - .2 * u)}L${n2(W / 2)},${n2(L + u * 1.1)}L${n2(W / 2 + u * 1.1)},${n2(L - .2 * u)}Z"/><rect x="${n2(u * .3)}" y="${n2(top + u * .3)}" width="${n2(W - u * .6)}" height="${n2(S + 2 * p - u * .6)}" rx="${n2(u * 1.6)}" fill="${card}" ${stroke(.6)}/>`;
+      post = txt(W / 2, L / 2, onC, fs, bw - u * 2.4); break; }
+    case 'ticket': { const p = u * 1.6, H1 = S + p + L + u * 1.2, k = Math.max(6, Math.round((S + 2 * p) / (u * 1.7))), amp = u * .9; W = S + 2 * p; x = y = p; H = H1 + amp + u * .4;
+      let d = `M${n2(u * .3)},${n2(u * .3)}H${n2(W - u * .3)}V${n2(H1)}`; for (let i = k - 1; i >= 0; i--) { const xx = (W - u * .6) * i / k + u * .3; d += `L${n2(xx + (W - u * .6) / k / 2)},${n2(H1 + amp)}L${n2(xx)},${n2(H1)}`; } d += 'Z';
+      pre = `<path d="${d}" fill="${card}" ${stroke(.6)} stroke-linejoin="round"/>`; post = txt(W / 2, p + S + (L + u * .6) / 2, onIn, fs, W * .85); break; }
+    case 'corners': { const p = u * 2.4, len = u * 4; W = S + 2 * p; H = S + 2 * p + L * .9; x = y = p; const a = u * .5, b = W - u * .5, d2 = S + 2 * p - u * .5;
+      pre = `<path fill="none" ${stroke(.8)} stroke-linecap="round" d="M${n2(a)},${n2(a + len)}V${n2(a)}H${n2(a + len)}M${n2(b - len)},${n2(a)}H${n2(b)}V${n2(a + len)}M${n2(b)},${n2(d2 - len)}V${n2(d2)}H${n2(b - len)}M${n2(a + len)},${n2(d2)}H${n2(a)}V${n2(d2 - len)}"/>`;
+      post = txt(W / 2, S + 2 * p + L * .35, c, fs, W * .85); break; }
+    case 'phone': { const side = u * 1.1, topH = u * 3, botH = u * 3.4, inW = S + u * 1.4; W = inW + 2 * side; x = side + u * .7; y = topH + u * .6; const lab = u * 3.2; H = topH + u * .6 + S + u * .8 + lab + botH;
+      pre = `<rect width="${n2(W)}" height="${n2(H)}" rx="${n2(u * 3)}" fill="${c}"/><rect x="${n2(side)}" y="${n2(topH)}" width="${n2(inW)}" height="${n2(H - topH - botH)}" rx="${n2(u * .9)}" fill="${thumb ? 'none' : inn}" ${thumb ? 'class="qf-screen"' : ''}/>`;
+      post = `<rect x="${n2(W / 2 - u * 1.6)}" y="${n2(topH / 2 - u * .3)}" width="${n2(u * 3.2)}" height="${n2(u * .6)}" rx="${n2(u * .3)}"${onC}/><circle cx="${n2(W / 2)}" cy="${n2(H - botH / 2)}" r="${n2(u * .8)}"${onC}/>` + txt(W / 2, topH + u * .6 + S + u * .8 + lab / 2, thumb ? ' class="qf-on"' : onIn, fs * .9, inW * .85); break; }
+    case 'bag': { const hh = u * 4.4, p = u * 1.8; W = S + 2 * p; x = p; y = hh + p * .8; H = y + S + p * .6 + L + u * .6;
+      pre = `<path fill="none" stroke="${c}" opacity=".55" stroke-width="${n2(u * 1.1)}" stroke-linecap="round" d="M${n2(W * .3)},${n2(hh + u * .6)}C${n2(W * .3)},${n2(u * .6)} ${n2(W * .7)},${n2(u * .6)} ${n2(W * .7)},${n2(hh + u * .6)}"/><rect x="${n2(u * .3)}" y="${n2(hh)}" width="${n2(W - u * .6)}" height="${n2(H - hh - u * .3)}" rx="${n2(u * 1.2)}" fill="${card}"/>` + bottomBar(u * .3, H - L - u * .9, W - u * .6, L + u * .6, u * 1.2);
+      post = `<rect x="${n2(u * .3)}" y="${n2(hh)}" width="${n2(W - u * .6)}" height="${n2(H - hh - u * .3)}" rx="${n2(u * 1.2)}" fill="none" ${stroke(.7)}/>` + txt(W / 2, H - L / 2 - u * .3, onC, fs, W * .85); break; }
+    case 'gift': { const bh = u * 5.2, p = u * 1.8; W = S + 2 * p; x = p; y = bh + p * .6; H = y + S + p * .6 + L + u * .6; const cx = W / 2, by = bh;
+      const petal = m => `M${n2(cx)},${n2(by)}C${n2(cx + m * u * 1)},${n2(by - u * 5.4)} ${n2(cx + m * u * 7)},${n2(by - u * 4.6)} ${n2(cx + m * u * 6)},${n2(by - u * .6)}C${n2(cx + m * u * 5.5)},${n2(by + u * .8)} ${n2(cx + m * u * 2)},${n2(by + u * .4)} ${n2(cx)},${n2(by)}Z`;
+      pre = `<rect x="${n2(u * .3)}" y="${n2(by)}" width="${n2(W - u * .6)}" height="${n2(H - by - u * .3)}" rx="${n2(u * 1)}" fill="${card}"/>` + bottomBar(u * .3, H - L - u * .9, W - u * .6, L + u * .6, u * 1) + `<path d="M${n2(cx - u * 3)},${n2(by + u * .4)}L${n2(cx - u * 7.4)},${n2(by + u * 3.2)}L${n2(cx - u * 6)},${n2(by + u * 3.8)}L${n2(cx - u * 2)},${n2(by + u * 1.4)}Z" fill="${c}" opacity=".55"/><path d="M${n2(cx + u * 3)},${n2(by + u * .4)}L${n2(cx + u * 7.4)},${n2(by + u * 3.2)}L${n2(cx + u * 6)},${n2(by + u * 3.8)}L${n2(cx + u * 2)},${n2(by + u * 1.4)}Z" fill="${c}" opacity=".55"/>`;
+      post = `<rect x="${n2(u * .3)}" y="${n2(by)}" width="${n2(W - u * .6)}" height="${n2(H - by - u * .3)}" rx="${n2(u * 1)}" fill="none" ${stroke(.7)}/><path fill="${c}" d="${petal(-1)}"/><path fill="${c}" d="${petal(1)}"/><rect x="${n2(cx - u * 1.2)}" y="${n2(by - u * 1.2)}" width="${n2(u * 2.4)}" height="${n2(u * 2.4)}" rx="${n2(u * .7)}" fill="${c}"/>` + txt(W / 2, H - L / 2 - u * .3, onC, fs, W * .85); break; }
+    case 'ribbon': { const p = u * 1.8, ox = u * 2.4; W = S + 2 * p + 2 * ox; x = ox + p; y = p; const cardH = S + 2 * p, by = cardH - L * .15, bh = L * 1.05; H = by + bh + u * 1.8;
+      pre = `<rect x="${n2(ox + u * .3)}" y="${n2(u * .3)}" width="${n2(W - 2 * ox - u * .6)}" height="${n2(cardH - u * .6)}" rx="${n2(u * 1.4)}" fill="${card}" ${stroke(.6)}/><path d="M${n2(ox)},${n2(by + bh)}L${n2(ox)},${n2(by + bh + u * 1.8)}L${n2(ox - u * 2.2)},${n2(by + bh)}Z" fill="${c}" opacity=".55"/><path d="M${n2(W - ox)},${n2(by + bh)}L${n2(W - ox)},${n2(by + bh + u * 1.8)}L${n2(W - ox + u * 2.2)},${n2(by + bh)}Z" fill="${c}" opacity=".55"/>`;
+      post = `<path fill="${c}" d="M0,${n2(by)}H${n2(W)}L${n2(W - u * 1.4)},${n2(by + bh / 2)}L${n2(W)},${n2(by + bh)}H0L${n2(u * 1.4)},${n2(by + bh / 2)}Z"/>` + txt(W / 2, by + bh / 2, onC, fs * .95, (W - u * 4) * .85); break; }
+    case 'envelope': { const p = u * 1.6, eh = u * 8.2; W = S + 2 * p; x = p; y = p; const ey = p + S + u * 1.2; H = ey + eh;
+      pre = `<rect x="${n2(u * .4)}" y="${n2(u * .4)}" width="${n2(W - u * .8)}" height="${n2(ey + u * 2)}" rx="${n2(u * 1.4)}" fill="${card}" ${stroke(.6)}/>`;
+      post = `<rect x="${n2(u * .4)}" y="${n2(ey)}" width="${n2(W - u * .8)}" height="${n2(eh - u * .4)}" rx="${n2(u * 1.2)}" fill="${card === 'none' ? (thumb ? 'var(--ink)' : inn) : card}" ${stroke(.7)} stroke-linejoin="round"/><path d="M${n2(u * .4)},${n2(ey)}L${n2(W / 2)},${n2(ey + eh * .48)}L${n2(W - u * .4)},${n2(ey)}" fill="none" ${stroke(.7)} stroke-linejoin="round"/>` + txt(W / 2, ey + eh * .74, onIn, fs * .95, W * .85); break; }
+    case 'drink': case 'takeaway': { const Sq = S * .74, take = id === 'takeaway', Wt = Sq + u * 6.4, lidH = take ? u * 2.2 : u * 1.4, top = take ? u * 1.6 : u * 3.6; W = Wt + 2 * u; const ox = u, ty = top + lidH, bodyH = u * 2.4 + Sq + u * 1.4 + L + u * .4; H = ty + bodyH; x = ox + (Wt - Sq) / 2; y = ty + u * 2.4;
+      const body = `M${n2(ox)},${n2(ty)}H${n2(ox + Wt)}L${n2(ox + Wt - u * 1.4)},${n2(H - u * 1.2)}Q${n2(ox + Wt - u * 1.6)},${n2(H)} ${n2(ox + Wt - u * 3)},${n2(H)}H${n2(ox + u * 3)}Q${n2(ox + u * 1.6)},${n2(H)} ${n2(ox + u * 1.4)},${n2(H - u * 1.2)}Z`;
+      pre = (take ? `<rect x="${n2(ox + Wt * .3)}" y="0" width="${n2(Wt * .4)}" height="${n2(u * 1.8)}" rx="${n2(u * .8)}" fill="${c}"/>` : `<path d="M${n2(W * .62)},${n2(top + u * .4)}L${n2(W * .8)},0" stroke="${c}" opacity=".55" stroke-width="${n2(u * 1)}" stroke-linecap="round"/>`) +
+        `<rect x="${n2(take ? ox - u * 1.2 : ox - u * .5)}" y="${n2(top)}" width="${n2(take ? Wt + u * 2.4 : Wt + u)}" height="${n2(lidH)}" rx="${n2(u * .7)}" fill="${c}"/><path d="${body}" fill="${c}" stroke="${c}" stroke-width="${n2(u * .4)}" stroke-linejoin="round"/><rect x="${n2(x - u * .8)}" y="${n2(y - u * .8)}" width="${n2(Sq + u * 1.6)}" height="${n2(Sq + u * 1.6)}" rx="${n2(u * .9)}"${thumb ? ' class="qf-on"' : ` fill="${inn}"`}/>`;
+      post = txt(W / 2, H - (L + u * .6) / 2, onC, fs * .9, Wt * .75); k = Sq / S; break; }
+    case 'mug': { const ox = u * 1.4, hand = u * 4.4, bw = S + u * 3.6, top = u * 3.2, pad = u * .4; W = ox + bw + hand + u; x = ox + u * 1.8; y = top + u * 3.6; const Hc = y + S + u * 1.2 + L + u * .4; H = Hc + pad;
+      const foam = [.16, .38, .62, .84].map(f => `<circle cx="${n2(ox + bw * f)}" cy="${n2(top)}" r="${n2(u * 2)}" fill="${card === 'none' ? (thumb ? 'var(--ink)' : inn) : card}" ${stroke(.6)}/>`).join('');
+      pre = `<rect x="${n2(ox)}" y="${n2(top)}" width="${n2(bw)}" height="${n2(Hc - top)}" rx="${n2(u * 1.4)}" fill="${card}" ${stroke(.7)}/>` + bottomBar(ox, Hc - L - u * .7, bw, L + u * .7, u * 1.4) + foam + `<path d="M${n2(ox + bw)},${n2(top + u * 2.6)}h${n2(u * 2)}a${n2(u * .8)},${n2(u * .8)} 0 0 1 ${n2(u * .8)},${n2(u * .8)}v${n2(u * 6)}a${n2(u * .8)},${n2(u * .8)} 0 0 1 ${n2(-u * .8)},${n2(u * .8)}h${n2(-u * 2)}" fill="none" ${stroke(.8)}/>`;
+      post = txt(ox + bw / 2, Hc - (L + u * .7) / 2 + u * .2, onC, fs * .9, bw * .85); break; }
+    case 'chef': { const hatH = u * 6.2, p = u * 1.6; W = S + 2 * p; x = p; y = hatH + p * .8; H = y + S + p * .6 + L + u * .3; const wf = thumb ? 'var(--ink)' : inn;
+      pre = [W * .36, W * .5, W * .64].map((cx, i) => `<circle cx="${n2(cx)}" cy="${n2(hatH - u * (i === 1 ? 2.6 : 1.9))}" r="${n2(u * (i === 1 ? 2.2 : 1.8))}" fill="${wf}" ${stroke(.7)}/>`).join('') + `<rect x="${n2(W * .3)}" y="${n2(hatH - u * 1.8)}" width="${n2(W * .4)}" height="${n2(u * 2.2)}" fill="${wf}" ${stroke(.7)}/><rect y="${n2(hatH)}" width="${n2(W)}" height="${n2(H - hatH)}" rx="${n2(u * 1.4)}" fill="${c}"/><rect x="${n2(x - u * .7)}" y="${n2(y - u * .7)}" width="${n2(S + u * 1.4)}" height="${n2(S + u * 1.4)}" rx="${n2(u * .9)}"${thumb ? ' class="qf-on"' : ` fill="${inn}"`}/>`;
+      post = txt(W / 2, H - (L + u * .3) / 2, onC, fs * .85, W * .8); break; }
+    case 'play': { const p = u * 1.8, H1 = S + 2 * p; W = H1; x = y = p; const by = H1 + u * .6; H = by + L;
+      const sz = fs * .95, iw = u * 3.2, gap = u * .9, margin = u * 1.4, avail = Math.max(u * 4, W - margin * 2 - iw - gap);
+      const f = fitLabel(sz, avail); const tot = iw + gap + f.width, sx = (W - tot) / 2;
+      pre = `<rect x="${n2(u * .3)}" y="${n2(u * .3)}" width="${n2(W - u * .6)}" height="${n2(H1 - u * .6)}" rx="${n2(u * 1.6)}" fill="${card}" ${stroke(.6)}/><rect x="0" y="${n2(by)}" width="${n2(W)}" height="${n2(L)}" rx="${n2(u * .9)}" fill="${c}"/>`;
+      post = `<rect x="${n2(sx)}" y="${n2(by + L / 2 - u * 1.1)}" width="${n2(iw)}" height="${n2(u * 2.2)}" rx="${n2(u * .7)}"${onC}/><path d="M${n2(sx + iw / 2 - u * .5)},${n2(by + L / 2 - u * .6)}L${n2(sx + iw / 2 + u * .7)},${n2(by + L / 2)}L${n2(sx + iw / 2 - u * .5)},${n2(by + L / 2 + u * .6)}Z" fill="${c}"/>` + txt(sx + iw + gap + f.width / 2, by + L / 2, onC, sz, avail); break; }
+    case 'sparkle': { const p = u * 1.8; W = S + 2 * p + u * 2; H = S + p + L + u * 3.2; x = p + u; y = p + u; const bx = u, bw2 = S + 2 * p;
+      const sl = (x1, y1) => `M${n2(x1)},${n2(y1)}l${n2(u * 2.2)},${n2(-u * 2.2)}`;
+      pre = `<rect x="${n2(bx + u * .3)}" y="${n2(u + u * .3)}" width="${n2(bw2 - u * .6)}" height="${n2(H - u * 2 - u * .6)}" rx="${n2(u * 1.2)}" fill="${card}"/>` + bottomBar(bx + u * .3, H - u - L - u * .6, bw2 - u * .6, L + u * .6, u * 1.2) + `<path fill="none" ${stroke(.5)} stroke-linecap="round" d="${sl(0, u * 4)}${sl(u * .2, u * 7)}${sl(u * 2.6, u * 2.2)}${sl(W - u * 4.8, H - u * 2.6)}${sl(W - u * 2.6, H - u * 4.6)}${sl(W - u * 6.4, H - u * .8)}"/>`;
+      post = `<rect x="${n2(bx + u * .3)}" y="${n2(u + u * .3)}" width="${n2(bw2 - u * .6)}" height="${n2(H - u * 2 - u * .6)}" rx="${n2(u * 1.2)}" fill="none" ${stroke(.7)}/>` + txt(bx + bw2 / 2, H - u - (L + u * .6) / 2 + u * .3, onC, fs, bw2 * .85); break; }
+    case 'clipboard': { const b = u * 1.2, p = u * 1.6, top = u * 3; W = S + 2 * (p + b); x = b + p; y = top + b + p; const pb = y + S + p, lab = L + u * .8; H = pb + lab;
+      pre = `<rect y="${n2(top)}" width="${n2(W)}" height="${n2(H - top)}" rx="${n2(u * 1.6)}" fill="${c}"/><rect x="${n2(b)}" y="${n2(top + b)}" width="${n2(W - 2 * b)}" height="${n2(pb - top - b)}" rx="${n2(u * 1.2)}" fill="${thumb ? 'none' : inn}"${thumb ? ' class="qf-screen"' : ''}/>`;
+      // Clip: a flat bar over the board's top edge with a rounded tab above it, drawn as one shape.
+      const cx = W / 2, bx0 = cx - u * 5, bx1 = cx + u * 5, by0 = top - u * 1.2, by1 = top + u * 1.2, r = u * .9, kx0 = cx - u * 2.8, kx1 = cx + u * 2.8, kr = u * 1.4;
+      const clip = `M${n2(bx0 + r)},${n2(by1)}H${n2(bx1 - r)}Q${n2(bx1)},${n2(by1)} ${n2(bx1)},${n2(by1 - r)}V${n2(by0 + r)}Q${n2(bx1)},${n2(by0)} ${n2(bx1 - r)},${n2(by0)}H${n2(kx1)}V${n2(kr)}Q${n2(kx1)},0 ${n2(kx1 - kr)},0H${n2(kx0 + kr)}Q${n2(kx0)},0 ${n2(kx0)},${n2(kr)}V${n2(by0)}H${n2(bx0 + r)}Q${n2(bx0)},${n2(by0)} ${n2(bx0)},${n2(by0 + r)}V${n2(by1 - r)}Q${n2(bx0)},${n2(by1)} ${n2(bx0 + r)},${n2(by1)}Z`;
+      post = `<path d="${clip}" fill="${thumb ? 'var(--ink)' : inn}"/><circle cx="${n2(cx)}" cy="${n2(u * 1.5)}" r="${n2(u * .75)}" fill="${c}"/>` + txt(W / 2, pb + lab / 2, onC, fs, (W - 2 * b) * .85); break; }
+    case 'menu': { const p = u * 1.8, off = u * 2; W = S + 2 * p + off; x = p + off; y = p; H = S + p + L + u * 1.6;
+      let rings = ''; for (let i = 0; i < 4; i++) rings += `<rect x="${n2(off - u * 1.6)}" y="${n2(u * 2.4 + i * (H - u * 6) / 3)}" width="${n2(u * 3)}" height="${n2(u * 1.1)}" rx="${n2(u * .55)}" fill="${c}" opacity=".55"/>`;
+      pre = `<rect x="${n2(off + u * .3)}" y="${n2(u * .3)}" width="${n2(W - off - u * .6)}" height="${n2(H - u * .6)}" rx="${n2(u * 1)}" fill="${card}" ${stroke(.6)}/>` + bottomBar(off + u * .3, H - L - u * .9, W - off - u * .6, L + u * .6, u * 1) + rings;
+      post = txt(off + (W - off) / 2, H - L / 2 - u * .3, onC, fs * .95, (W - off) * .85); break; }
+    case 'cup': { const bw = S + u * 3.6, hand = u * 4.4, ox = u * 1.2; W = ox + bw + hand + u; x = ox + u * 1.8; y = u * 6.2; const bodyH = S + u * 3.6 + u * .4; H = y - u * 1.8 + bodyH + u * 1.4 + u * 4.6; const by = y - u * 1.8;
+      let steam = ''; for (let i = 0; i < 3; i++) { const sx = ox + bw * (.3 + i * .2); steam += `<path d="M${n2(sx)},${n2(by - u * .6)}c${n2(-u * .9)},${n2(-u * 1.1)} ${n2(u * .9)},${n2(-u * 1.8)} 0,${n2(-u * 3.2)}" fill="none" ${stroke(.6)} stroke-linecap="round"/>`; }
+      pre = steam + `<path d="M${n2(ox)},${n2(by)}H${n2(ox + bw)}V${n2(by + bodyH - u * 3)}Q${n2(ox + bw)},${n2(by + bodyH)} ${n2(ox + bw - u * 3)},${n2(by + bodyH)}H${n2(ox + u * 3)}Q${n2(ox)},${n2(by + bodyH)} ${n2(ox)},${n2(by + bodyH - u * 3)}Z" fill="${card}" ${stroke(.7)} stroke-linejoin="round"/><path d="M${n2(ox + bw)},${n2(by + u * 2.2)}h${n2(u * 1.6)}a${n2(u * 2.4)},${n2(u * 2.4)} 0 0 1 0,${n2(u * 4.8)}h${n2(-u * 1.6)}" fill="none" ${stroke(.7)} stroke-linecap="round"/><rect x="${n2(ox - u * 1.4)}" y="${n2(by + bodyH + u * .4)}" width="${n2(bw + u * 2.8)}" height="${n2(u * .9)}" rx="${n2(u * .45)}" fill="${c}"/>`;
+      post = txt(ox + bw / 2, by + bodyH + u * 3.2, c, fs, bw * .9); break; }
+    default: return null;
+  }
+  return { W, H, x, y, k, pre, post };
+}
+
 export function buildSvg(qr, o, px) {
   const n = qr.size, b = o.border ?? 4, S = n + 2 * b;
   const eye = (x, y) => (x < 7 && y < 7) || (x >= n - 7 && y < 7) || (x < 7 && y >= n - 7);
@@ -313,8 +464,16 @@ export function buildSvg(qr, o, px) {
   let logo = '';
   if (o.logo) {
     const p = b + (n - ls) / 2, box = o.logoBg || o.logoStroke;
-    const w = o.logoStroke ? (o.logoStrokeW || 3) * .12 : 0, inset = box ? ls * .14 + w : 0, is = ls - 2 * inset;
-    if (box) logo = `<rect x="${n2(p + w / 2)}" y="${n2(p + w / 2)}" width="${n2(ls - w)}" height="${n2(ls - w)}" rx="${n2(ls * .24)}" fill="${o.logoBg ? o.logoBgColor : 'none'}"${w ? ` stroke="${o.logoStrokeColor}" stroke-width="${n2(w)}"` : ''}/>`;
+    const w = o.logoStroke ? (o.logoStrokeW || 3) * .12 : 0, inset = box ? ls * .09 + w : 0, is = ls - 2 * inset;
+    if (box) {
+      // The background / stroke follows the shape of a built-in icon; anything else gets a rounded square.
+      const shape = (/qcs-icon-(\w+)/.exec(o.logo) || [])[1], bx = p + w / 2, bs = ls - w;
+      const paint = ` fill="${o.logoBg ? o.logoBgColor : 'none'}"${w ? ` stroke="${o.logoStrokeColor}" stroke-width="${n2(w)}" stroke-linejoin="round"` : ''}`;
+      const hx = (X, Y) => `${n2(bx + X / 24 * bs)},${n2(bx + Y / 24 * bs)}`;
+      logo = shape === 'circle' ? `<circle cx="${n2(bx + bs / 2)}" cy="${n2(bx + bs / 2)}" r="${n2(bs / 2)}"${paint}/>`
+        : shape === 'hexagon' ? `<path d="M${hx(12, .6)}L${hx(22.2, 6.3)}L${hx(22.2, 17.7)}L${hx(12, 23.4)}L${hx(1.8, 17.7)}L${hx(1.8, 6.3)}Z"${paint}/>`
+        : `<rect x="${n2(bx)}" y="${n2(bx)}" width="${n2(bs)}" height="${n2(bs)}" rx="${n2(shape === 'square' ? 0 : ls * .24)}"${paint}/>`;
+    }
     logo += `<image href="${o.logo}" x="${n2(p + inset)}" y="${n2(p + inset)}" width="${n2(is)}" height="${n2(is)}" preserveAspectRatio="xMidYMid meet"/>`;
   }
   // Decoration: a soft cookie-shaped backdrop, faint ghost modules and scattered specks.
@@ -334,8 +493,12 @@ export function buildSvg(qr, o, px) {
   }
   const bodySvg = pix ? pixParts.map((p, i) => p ? `<path fill="${colors[i]}" d="${p}"/>` : '').join('') : `<path fill="${fill}" d="${d}"/>`;
   const bg = o.transparent || o.backdrop ? '' : `<rect width="${S}" height="${S}"${o.radius ? ` rx="${n2(S * o.radius / 100)}"` : ''} fill="${o.bg}"/>`;
-  const size = px ? ` width="${px}" height="${px}"` : '';
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${S} ${S}"${size}${o.body === 'square' ? ' shape-rendering="crispEdges"' : ''}>${defs ? '<defs>' + defs + '</defs>' : ''}${bg}${decor}${ghostSvg}${bodySvg}${eyes}${logo}</svg>`;
+  const fr = o.qf && o.qf !== 'none' ? qrFrame(o.qf, S, o) : null;
+  const VW = fr ? fr.W : S, VH = fr ? fr.H : S;
+  const size = px ? ` width="${px}" height="${Math.round(px * VH / VW)}"` : '';
+  const content = `${bg}${decor}${ghostSvg}${bodySvg}${eyes}${logo}`;
+  const body = fr ? `${fr.pre}<g transform="translate(${n2(fr.x)} ${n2(fr.y)})${fr.k !== 1 ? ` scale(${n2(fr.k)})` : ''}">${content}</g>${fr.post}` : content;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${n2(VW)} ${n2(VH)}"${size}${o.body === 'square' ? ' shape-rendering="crispEdges"' : ''}>${defs ? '<defs>' + defs + '</defs>' : ''}${body}</svg>`;
 }
 
 const esc = s => String(s || '').replace(/([\\;,:"])/g, '\\$1');
@@ -408,6 +571,23 @@ export function buildPayload(type, d) {
   }
   return '';
 }
+
+// A brand icon from Simple Icons as a logo, in one of ICON_STYLES (shapes): the bare glyph in its brand color,
+// or the glyph in white (near-black on very light colors) on a brand-colored square, rounded square, circle or
+// hexagon. `color` (optional) replaces the brand color. The id marks it as a built-in icon (not an upload) and
+// names its shape, so a logo background or stroke can follow that shape.
+export const ICON_STYLES = ['plain', 'square', 'rounded', 'circle', 'hexagon'];
+export function iconLogo(hex, path, style = 'rounded', color = '') {
+  const bg = color || '#' + hex, on = lum(bg) > .6 ? '#111111' : '#FFFFFF';
+  const g = (fill, k, t) => `<path transform="translate(${t} ${t}) scale(${k})" fill="${fill}" d="${path}"/>`;
+  const body = style === 'plain' ? g(!color && lum(bg) > .75 ? '#0B0D0C' : bg, .875, 1.5)
+    : style === 'square' ? `<rect width="24" height="24" fill="${bg}"/>` + g(on, .5833, 5)
+    : style === 'circle' ? `<circle cx="12" cy="12" r="12" fill="${bg}"/>` + g(on, .5417, 5.5)
+    : style === 'hexagon' ? `<path d="M12 1.2L21.6 6.6V17.4L12 22.8L2.4 17.4V6.6Z" fill="${bg}" stroke="${bg}" stroke-width="2" stroke-linejoin="round"/>` + g(on, .5, 6)
+    : `<rect width="24" height="24" rx="5.5" fill="${bg}"/>` + g(on, .5833, 5);
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" id="qcs-icon-${style}" viewBox="0 0 24 24">${body}</svg>`);
+}
+export const isIconLogo = u => typeof u === 'string' && u.startsWith('data:image/svg+xml;charset=utf-8,') && u.includes('qcs-icon');
 
 function lum(hex) {
   const m = /^#?([0-9a-f]{6})$/i.exec(hex || ''); if (!m) return 0;

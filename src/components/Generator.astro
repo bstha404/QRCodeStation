@@ -1,10 +1,10 @@
 ---
 import { QrCode } from '../lib/qrcodegen.js';
-import { siFacebook, siYoutube, siX, siInstagram, siTelegram, siSignal, siMastodon, siTiktok, siThreads, siBluesky, siPinterest, siSnapchat, siReddit, siGithub, siDiscord, siTwitch, siWhatsapp } from 'simple-icons';
+import { siFacebook, siYoutube, siX, siInstagram, siTelegram, siSignal, siMastodon, siTiktok, siThreads, siBluesky, siPinterest, siSnapchat, siReddit, siGithub, siDiscord, siTwitch, siWhatsapp, siSpotify, siGmail, siGooglemaps, siPaypal } from 'simple-icons';
 import ColorPresets from './ColorPresets.astro';
 import HelpBox from './HelpBox.astro';
 import { useI18n } from '../i18n/index.js';
-import { SOCIALS, TYPES, BODY, FRAME, BALL, ECC, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, bodyThumb, frameThumb, ballThumb } from '../lib/render.js';
+import { SOCIALS, TYPES, BODY, FRAME, BALL, ECC, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, bodyThumb, frameThumb, ballThumb, QFRAMES, qrFrameThumb, iconLogo, isIconLogo, ICON_STYLES } from '../lib/render.js';
 
 const ICONS: Record<string, string> = Object.fromEntries(Object.entries({
   facebook: siFacebook, youtube: siYoutube, x: siX, instagram: siInstagram, telegram: siTelegram, signal: siSignal, mastodon: siMastodon,
@@ -13,6 +13,8 @@ const ICONS: Record<string, string> = Object.fromEntries(Object.entries({
 }).map(([k, v]) => [k, v.path]));
 // simple-icons dropped the LinkedIn logo, so it is drawn from its own path (24×24 viewBox).
 ICONS.linkedin = 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 1 1 0-4.125 2.062 2.062 0 0 1 0 4.125zM7.119 20.452H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z';
+// Sample logos people can try before uploading their own: the brand glyph in white on its brand color.
+const SAMPLE_LOGOS = [siInstagram, siFacebook, siYoutube, siWhatsapp, siX, siTiktok, { title: 'LinkedIn', hex: '0A66C2', path: ICONS.linkedin }, siTelegram, siSpotify, siGmail, siGooglemaps, siPaypal].map(i => ({ title: i.title, hex: i.hex, path: i.path, url: iconLogo(i.hex, i.path) }));
 const { initialType = 'url', locale = 'en' } = Astro.props;
 const I = useI18n(locale);
 const x = I.x;
@@ -32,9 +34,9 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   </div>
   <div class="tabs" role="tablist" aria-label="QR code options">
     <button type="button" class="tab" role="tab" id="tab-content" aria-controls="panel-content" data-tab="content" aria-selected="true"><span class="step">1</span><span class="tab-name">{x("Content")}</span></button>
-    <button type="button" class="tab" role="tab" id="tab-colors" aria-controls="panel-colors" data-tab="colors" aria-selected="false"><span class="step">2</span><span class="tab-name">{x("Colors")}</span><span class="card-sum" data-summary="colors">{x("Solid")}</span></button>
+    <button type="button" class="tab" role="tab" id="tab-design" aria-controls="panel-design" data-tab="design" aria-selected="false"><span class="step">2</span><span class="tab-name">{x("Design")}</span><span class="card-sum" data-summary="design"></span></button>
     <button type="button" class="tab" role="tab" id="tab-logo" aria-controls="panel-logo" data-tab="logo" aria-selected="false"><span class="step">3</span><span class="tab-name">{x("Logo")}</span><span class="card-sum" data-summary="logo">{x("None")}</span></button>
-    <button type="button" class="tab" role="tab" id="tab-design" aria-controls="panel-design" data-tab="design" aria-selected="false"><span class="step">4</span><span class="tab-name">{x("Design")}</span><span class="card-sum" data-summary="design"></span></button>
+    <button type="button" class="tab" role="tab" id="tab-colors" aria-controls="panel-colors" data-tab="colors" aria-selected="false"><span class="step">4</span><span class="tab-name">{x("Colors")}</span><span class="card-sum" data-summary="colors">{x("Solid")}</span></button>
     <button type="button" class="tab" role="tab" id="tab-encoding" aria-controls="panel-encoding" data-tab="encoding" aria-selected="false"><span class="step">5</span><span class="tab-name">{x("Encoding")}</span><span class="card-sum" data-summary="encoding">ECC M · v1–40</span></button>
   </div>
   <div class="gen-body">
@@ -90,66 +92,6 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     {TYPES.map(ty => <HelpBox id={ty.id} helpFor={ty.id} initialHidden={ty.id !== initialType} title={c.help.title_type.replace('{t}', I.t('p_' + ty.id))} items={c.help[ty.id]} />)}
     </div>
 
-    <div class="panel panel-stack" role="tabpanel" id="panel-colors" aria-labelledby="tab-colors" data-panel="colors" hidden>
-    <section class="card">
-      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
-      <div class="card-body">
-        <div class="group">
-          <label class="switch-row"><span><b>{x("Gradient")}</b><small>{x("Blend two colors across the code")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="gradient" /></label>
-          <label class="switch-row"><span><b>{x("Transparent background")}</b><small>{x("PNG, SVG and WebP keep transparency")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="transparent" /></label>
-          <label class="switch-row"><span><b>{x("Custom eye colors")}</b><small>{x("Color the three corner markers separately")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="customEyes" /></label>
-        </div>
-        <div class="logo-row" data-show="gradient" hidden>
-          <div class="pills" role="group" aria-label="Gradient type">
-            <button type="button" class="pill" data-opt="gradType" data-value="linear" aria-pressed="true">{x("Linear")}</button>
-            <button type="button" class="pill" data-opt="gradType" data-value="radial" aria-pressed="false">{x("Radial")}</button>
-          </div>
-          <label class="range" data-show="linear" style="flex:1 1 200px"><span>{x("Angle")}</span><input type="range" min="0" max="360" step="5" data-num="gradAngle" value="45" /><output data-out="gradAngle" data-suffix="°">45°</output></label>
-        </div>
-        <div class="colors">
-          <label class="color"><span class="label" data-fg-label>{x("Code color")}</span><span class="color-box"><input type="color" data-color="fg" value={DESIGN_DEFAULTS.fg} aria-label={x("Code color")} /><input type="text" data-hex="fg" maxlength="7" value={DESIGN_DEFAULTS.fg} /></span></label>
-          <label class="color" data-show="gradient" hidden><span class="label">{x("Gradient end")}</span><span class="color-box"><input type="color" data-color="grad2" value={DESIGN_DEFAULTS.grad2} aria-label={x("Gradient end")} /><input type="text" data-hex="grad2" maxlength="7" value={DESIGN_DEFAULTS.grad2} /></span></label>
-          <label class="color" data-show="bg"><span class="label">{x("Background")}</span><span class="color-box"><input type="color" data-color="bg" value={DESIGN_DEFAULTS.bg} aria-label={x("Background color")} /><input type="text" data-hex="bg" maxlength="7" value={DESIGN_DEFAULTS.bg} /></span></label>
-          <label class="color" data-show="eyes" hidden><span class="label">{x("Eye frame")}</span><span class="color-box"><input type="color" data-color="frameColor" value={DESIGN_DEFAULTS.frameColor} aria-label="Eye frame color" /><input type="text" data-hex="frameColor" maxlength="7" value={DESIGN_DEFAULTS.frameColor} /></span></label>
-          <label class="color" data-show="eyes" hidden><span class="label">{x("Eye ball")}</span><span class="color-box"><input type="color" data-color="ballColor" value={DESIGN_DEFAULTS.ballColor} aria-label="Eye ball color" /><input type="text" data-hex="ballColor" maxlength="7" value={DESIGN_DEFAULTS.ballColor} /></span></label>
-        </div>
-        <ColorPresets scope="colors" targets={[['fg', 'Code'], ['grad2', 'Gradient end', 'gradient'], ['bg', 'Background', 'bg'], ['frameColor', 'Eye frame', 'eyes'], ['ballColor', 'Eye ball', 'eyes']]} />
-        <p class="warn" data-show="lowContrast" hidden>{x("Low contrast between code and background. Some scanners may fail — keep the code darker than the background.")}</p>
-      </div>
-    </section>
-    <HelpBox id="colors" title={c.help.colors.title} items={c.help.colors.items} />
-    </div>
-
-    <div class="panel panel-stack" role="tabpanel" id="panel-logo" aria-labelledby="tab-logo" data-panel="logo" hidden>
-    <section class="card">
-      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
-      <div class="card-body">
-        <div class="logo-row">
-          <div class="logo-list" data-logo-list></div>
-          <label class="upload" data-dropzone><span class="upload-main">{x("Upload images")}</span><small class="upload-hint">{x("or drag and drop")}</small><input type="file" accept="image/*" multiple data-logo-file hidden /></label>
-          <button type="button" class="link-btn" data-action="removeLogo" data-show="logo" hidden>{x("Remove all logos")}</button>
-        </div>
-        <p class="hint" data-show="logoMany" hidden>{x("Tap a logo to preview it on the code. Tap − to remove one.")}</p>
-        <div class="group" data-show="logo" hidden>
-          <label class="range"><span>{x("Size")}</span><input type="range" min="10" max="35" step="1" data-num="logoPct" value="22" /><output data-out="logoPct" data-suffix="%">22%</output></label>
-          <label class="switch-row"><span><b>{x("Clear modules behind logo")}</b><small>{x("Removes dots under the image for a clean edge")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="clearLogo" checked /></label>
-          <label class="switch-row"><span><b>{x("Logo background")}</b><small>{x("Place the logo on a colored rounded square")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="logoBg" /></label>
-          <div class="colors" data-show="logoBg" hidden><label class="color"><span class="label">{x("Background color")}</span><span class="color-box"><input type="color" data-color="logoBgColor" value="#FFFFFF" aria-label={x("Background color")} /><input type="text" data-hex="logoBgColor" maxlength="7" value="#FFFFFF" /></span></label></div>
-          <label class="switch-row"><span><b>{x("Logo stroke")}</b><small>{x("Add an outline around the logo")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="logoStroke" /></label>
-          <div class="logo-row" data-show="logoStroke" hidden>
-            <div class="colors" style="flex:1 1 190px"><label class="color"><span class="label">{x("Stroke color")}</span><span class="color-box"><input type="color" data-color="logoStrokeColor" value="#FFFFFF" aria-label={x("Stroke color")} /><input type="text" data-hex="logoStrokeColor" maxlength="7" value="#FFFFFF" /></span></label></div>
-            <label class="range" style="flex:1 1 200px"><span>{x("Width")}</span><input type="range" min="1" max="10" step="1" data-num="logoStrokeW" value="3" /><output data-out="logoStrokeW">3</output></label>
-          </div>
-          <div data-show="logoStyle" hidden>
-            <ColorPresets scope="logo" targets={[['logoBgColor', 'Logo background', 'logoBg'], ['logoStrokeColor', 'Logo stroke', 'logoStroke']]} />
-          </div>
-          <p class="warn" data-show="logoWarn" hidden>{x("A logo hides part of the code. Use error correction Q or H so it still scans.")} <button type="button" data-action="eccHigh">{x("Switch to High")}</button></p>
-        </div>
-      </div>
-    </section>
-    <HelpBox id="logo" title={c.help.logo.title} items={c.help.logo.items} />
-    </div>
-
     <div class="panel panel-stack" role="tabpanel" id="panel-design" aria-labelledby="tab-design" data-panel="design" hidden>
     <section class="card">
       <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
@@ -175,9 +117,91 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
         <div class="group"><span class="label">{x("Eye ball")}</span>
           <div class="tiles">{BALL.map(([id, l]) => <button type="button" class="tile" style="padding:14px" data-opt="ball" data-value={id} title={N(l)} aria-label={N(l)} aria-pressed={id === 'square' ? 'true' : 'false'} set:html={ballThumb(id)} />)}</div>
         </div>
+        <div class="group"><span class="label">{x("QR frame")}</span>
+          <div class="tiles qf-tiles">{QFRAMES.map(([id, l]) => <button type="button" class="tile" data-opt="qf" data-value={id} title={N(l)} aria-label={N(l)} aria-pressed={id === 'none' ? 'true' : 'false'} set:html={qrFrameThumb(id, N(l))} />)}</div>
+          <label class="field qf-text" data-show="qfOn" hidden><span class="label">{x("Frame text")}</span><input class="input" type="text" data-str="qfText" maxlength="28" value={I.t('qf_text')} /></label>
+        </div>
       </div>
     </section>
     <HelpBox id="design" title={c.help.design.title} items={c.help.design.items} />
+    </div>
+
+    <div class="panel panel-stack" role="tabpanel" id="panel-logo" aria-labelledby="tab-logo" data-panel="logo" hidden>
+    <section class="card">
+      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
+      <div class="card-body">
+        <div class="logo-row">
+          <div class="logo-list" data-logo-list></div>
+          <label class="upload" data-dropzone><span class="upload-main">{x("Upload images")}</span><small class="upload-hint">{x("or drag and drop")}</small><input type="file" accept="image/*" multiple data-logo-file hidden /></label>
+          <button type="button" class="link-btn" data-action="removeLogo" data-show="logo" hidden>{x("Remove all logos")}</button>
+        </div>
+        <div class="sample-logos">
+          <span class="label">{I.t('logo_try')}</span>
+          <div class="pills" role="group" aria-label={I.t('logo_st_label')}>{ICON_STYLES.map(st => <button type="button" class="pill" data-opt="iconStyle" data-value={st} aria-pressed={st === 'rounded' ? 'true' : 'false'}>{I.t('logo_st_' + st)}</button>)}</div>
+          <label class="switch-row"><span><b>{I.t('logo_icustom')}</b></span><input type="checkbox" class="switch" role="switch" data-bool="iconCustom" /></label>
+          <div class="icon-color" data-show="iconCustom" hidden>
+            <div class="colors"><label class="color"><span class="label">{x("Icon color")}</span><span class="color-box"><input type="color" data-color="iconColor" value="#0B0D0C" aria-label={x("Icon color")} /><input type="text" data-hex="iconColor" maxlength="7" value="#0B0D0C" /></span></label></div>
+            <ColorPresets scope="icon" targets={[['iconColor', 'Icon color']]} />
+          </div>
+          <div class="sample-row"><button type="button" class="sample-logo sample-none" data-action="noLogo" title={I.t('logo_none')} aria-label={I.t('logo_none')} aria-pressed="true"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg></button>{SAMPLE_LOGOS.map(l => <button type="button" class="sample-logo" data-sample-logo={l.url} data-ihex={l.hex} data-ipath={l.path} title={l.title} aria-label={l.title} aria-pressed="false"><img src={l.url} alt="" width="28" height="28" /></button>)}</div>
+          <input class="input" type="search" data-icon-search placeholder={I.t('logo_search_ph')} aria-label={I.t('logo_search_ph')} autocomplete="off" spellcheck="false" />
+          <div class="sample-row" data-icon-results hidden></div>
+          <p class="hint" data-icon-status hidden></p>
+          <p class="hint">{I.t('logo_icons_note')}</p>
+        </div>
+        <p class="hint" data-show="logoMany" hidden>{x("Tap a logo to preview it on the code. Tap − to remove one.")}</p>
+        <div class="group" data-show="logo" hidden>
+          <label class="range"><span>{x("Size")}</span><input type="range" min="10" max="35" step="1" data-num="logoPct" value="22" /><output data-out="logoPct" data-suffix="%">22%</output></label>
+          <label class="switch-row"><span><b>{x("Clear modules behind logo")}</b><small>{x("Removes dots under the image for a clean edge")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="clearLogo" checked /></label>
+          <label class="switch-row"><span><b>{x("Logo background")}</b><small>{x("Place the logo on a colored rounded square")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="logoBg" /></label>
+          <div class="colors" data-show="logoBg" hidden><label class="color"><span class="label">{x("Background color")}</span><span class="color-box"><input type="color" data-color="logoBgColor" value="#FFFFFF" aria-label={x("Background color")} /><input type="text" data-hex="logoBgColor" maxlength="7" value="#FFFFFF" /></span></label></div>
+          <label class="switch-row"><span><b>{x("Logo stroke")}</b><small>{x("Add an outline around the logo")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="logoStroke" /></label>
+          <div class="logo-row" data-show="logoStroke" hidden>
+            <div class="colors" style="flex:1 1 190px"><label class="color"><span class="label">{x("Stroke color")}</span><span class="color-box"><input type="color" data-color="logoStrokeColor" value="#FFFFFF" aria-label={x("Stroke color")} /><input type="text" data-hex="logoStrokeColor" maxlength="7" value="#FFFFFF" /></span></label></div>
+            <label class="range" style="flex:1 1 200px"><span>{x("Width")}</span><input type="range" min="1" max="10" step="1" data-num="logoStrokeW" value="3" /><output data-out="logoStrokeW">3</output></label>
+          </div>
+          <div data-show="logoStyle" hidden>
+            <ColorPresets scope="logo" targets={[['logoBgColor', 'Logo background', 'logoBg'], ['logoStrokeColor', 'Logo stroke', 'logoStroke']]} />
+          </div>
+          <p class="warn" data-show="logoWarn" hidden>{x("A logo hides part of the code. Use error correction Q or H so it still scans.")} <button type="button" data-action="eccHigh">{x("Switch to High")}</button></p>
+        </div>
+      </div>
+    </section>
+    <HelpBox id="logo" title={c.help.logo.title} items={c.help.logo.items} />
+    </div>
+
+    <div class="panel panel-stack" role="tabpanel" id="panel-colors" aria-labelledby="tab-colors" data-panel="colors" hidden>
+    <section class="card">
+      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
+      <div class="card-body">
+        <div class="group">
+          <label class="switch-row"><span><b>{x("Gradient")}</b><small>{x("Blend two colors across the code")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="gradient" /></label>
+          <label class="switch-row"><span><b>{x("Transparent background")}</b><small>{x("PNG, SVG and WebP keep transparency")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="transparent" /></label>
+          <label class="switch-row"><span><b>{x("Custom eye colors")}</b><small>{x("Color the three corner markers separately")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="customEyes" /></label>
+          <label class="switch-row" data-show="qfOn" hidden><span><b>{I.t('qf_ctext')}</b><small>{I.t('qf_ctext_s')}</small></span><input type="checkbox" class="switch" role="switch" data-bool="qfCustomText" /></label>
+        </div>
+        <div class="logo-row" data-show="gradient" hidden>
+          <div class="pills" role="group" aria-label="Gradient type">
+            <button type="button" class="pill" data-opt="gradType" data-value="linear" aria-pressed="true">{x("Linear")}</button>
+            <button type="button" class="pill" data-opt="gradType" data-value="radial" aria-pressed="false">{x("Radial")}</button>
+          </div>
+          <label class="range" data-show="linear" style="flex:1 1 200px"><span>{x("Angle")}</span><input type="range" min="0" max="360" step="5" data-num="gradAngle" value="45" /><output data-out="gradAngle" data-suffix="°">45°</output></label>
+        </div>
+        <div class="colors">
+          <label class="color"><span class="label" data-fg-label>{x("Code color")}</span><span class="color-box"><input type="color" data-color="fg" value={DESIGN_DEFAULTS.fg} aria-label={x("Code color")} /><input type="text" data-hex="fg" maxlength="7" value={DESIGN_DEFAULTS.fg} /></span></label>
+          <label class="color" data-show="gradient" hidden><span class="label">{x("Gradient end")}</span><span class="color-box"><input type="color" data-color="grad2" value={DESIGN_DEFAULTS.grad2} aria-label={x("Gradient end")} /><input type="text" data-hex="grad2" maxlength="7" value={DESIGN_DEFAULTS.grad2} /></span></label>
+          <label class="color" data-show="bg"><span class="label">{x("Background")}</span><span class="color-box"><input type="color" data-color="bg" value={DESIGN_DEFAULTS.bg} aria-label={x("Background color")} /><input type="text" data-hex="bg" maxlength="7" value={DESIGN_DEFAULTS.bg} /></span></label>
+          <label class="color" data-show="eyes" hidden><span class="label">{x("Eye frame")}</span><span class="color-box"><input type="color" data-color="frameColor" value={DESIGN_DEFAULTS.frameColor} aria-label="Eye frame color" /><input type="text" data-hex="frameColor" maxlength="7" value={DESIGN_DEFAULTS.frameColor} /></span></label>
+          <label class="color" data-show="eyes" hidden><span class="label">{x("Eye ball")}</span><span class="color-box"><input type="color" data-color="ballColor" value={DESIGN_DEFAULTS.ballColor} aria-label="Eye ball color" /><input type="text" data-hex="ballColor" maxlength="7" value={DESIGN_DEFAULTS.ballColor} /></span></label>
+          <label class="color" data-show="qfOn" hidden><span class="label">{x("Frame color")}</span><span class="color-box"><input type="color" data-color="qfColor" value={DESIGN_DEFAULTS.qfColor} aria-label={x("Frame color")} /><input type="text" data-hex="qfColor" maxlength="7" value={DESIGN_DEFAULTS.qfColor} /></span></label>
+          <label class="color" data-show="qfOn" hidden><span class="label">{x("Frame inside")}</span><span class="color-box"><input type="color" data-color="qfBg" value={DESIGN_DEFAULTS.qfBg} aria-label={x("Frame inside")} /><input type="text" data-hex="qfBg" maxlength="7" value={DESIGN_DEFAULTS.qfBg} /></span></label>
+          <label class="color" data-show="qfTextColor" hidden><span class="label">{I.t('qf_textcolor_l')}</span><span class="color-box"><input type="color" data-color="qfTextColor" value={DESIGN_DEFAULTS.qfTextColor} aria-label={I.t('qf_textcolor_l')} /><input type="text" data-hex="qfTextColor" maxlength="7" value={DESIGN_DEFAULTS.qfTextColor} /></span></label>
+        </div>
+        <ColorPresets scope="colors" targets={[['fg', 'Code'], ['grad2', 'Gradient end', 'gradient'], ['bg', 'Background', 'bg'], ['frameColor', 'Eye frame', 'eyes'], ['ballColor', 'Eye ball', 'eyes'], ['qfColor', 'QR frame', 'qfOn'], ['qfBg', 'Frame inside', 'qfOn'], ['qfTextColor', 'Text color', 'qfTextColor']]} />
+        <p class="warn" data-show="lowContrast" hidden>{x("Low contrast between code and background. Some scanners may fail — keep the code darker than the background.")}</p>
+      </div>
+    </section>
+    <HelpBox id="colors" title={c.help.colors.title} items={c.help.colors.items} />
     </div>
 
     <div class="panel panel-stack" role="tabpanel" id="panel-encoding" aria-labelledby="tab-encoding" data-panel="encoding" hidden>
@@ -257,7 +281,8 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
 
 <script>
   import { QrCode, QrSegment } from '../lib/qrcodegen.js';
-  import { TYPES, BODY, FRAME, BALL, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, buildPayload, buildSheet, contrast, COLOR_FAMILIES, APP_LINKS } from '../lib/render.js';
+  import { TYPES, BODY, FRAME, BALL, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, buildPayload, buildSheet, contrast, COLOR_FAMILIES, APP_LINKS, iconLogo, isIconLogo, ICON_STYLES } from '../lib/render.js';
+  let shownIconStyle = 'rounded|';
 
   const I18N = JSON.parse(document.getElementById('i18n-data')!.textContent || '{}');
   const T = (id: string, v?: Record<string, any>) => { const s0: string = (I18N.ui && I18N.ui[id]) ?? id; return v ? s0.replace(/\{(\w+)\}/g, (_: string, k: string) => String(v[k] ?? '')) : s0; };
@@ -267,7 +292,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   const $ = (sel: string) => root.querySelector(sel) as any;
   const $$ = (sel: string) => Array.from(root.querySelectorAll(sel)) as any[];
 
-  const defaults = () => ({ type: 'url', data: { ...FIELD_DEFAULTS, ...(I18N.defs || {}) }, ...DESIGN_DEFAULTS, logo: null as string | null, logos: [] as string[], logoBg: false, logoBgColor: '#FFFFFF', logoStroke: false, logoStrokeColor: '#FFFFFF', logoStrokeW: 3, logoPct: 22, clearLogo: true, ecc: 'M', boost: true, mask: -1, border: 4, radius: 0, presetMode: 'all', minVer: 1, maxVer: 40, exportSize: 1024, showCode: false });
+  const defaults = () => ({ type: 'url', data: { ...FIELD_DEFAULTS, ...(I18N.defs || {}) }, ...DESIGN_DEFAULTS, qfText: T('qf_text'), logo: null as string | null, logos: [] as string[], logoBg: false, logoBgColor: '#FFFFFF', logoStroke: false, logoStrokeColor: '#FFFFFF', logoStrokeW: 3, logoPct: 22, clearLogo: true, iconStyle: 'rounded', iconCustom: false, iconColor: '#0B0D0C', ecc: 'M', boost: true, mask: -1, border: 4, radius: 0, presetMode: 'all', minVer: 1, maxVer: 40, exportSize: 1024, showCode: false });
   let s: any = defaults();
   try {
     const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
@@ -279,7 +304,8 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   } catch (e) {}
   // Landing pages (e.g. /wifi-qr-code/) always open on their own content type.
   if (!Array.isArray(s.logos)) s.logos = [];
-  if (s.logo && !s.logos.includes(s.logo)) s.logos = [...s.logos, s.logo];
+  if (!ICON_STYLES.includes(s.iconStyle)) s.iconStyle = s.iconStyle === 'brand' || s.iconStyle === 'mono' ? 'plain' : 'rounded';   // older saved styles
+  if (s.logo && !s.logos.includes(s.logo) && !isIconLogo(s.logo)) s.logos = [...s.logos, s.logo];
   if (root.dataset.initialType) s.type = root.dataset.initialType;
 
   let last: any = null, saveT: any;
@@ -289,6 +315,8 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   const SHOW: Record<string, () => boolean> = {
     gradient: () => s.gradient, linear: () => s.gradient && s.gradType === 'linear', bg: () => !s.transparent,
     eyes: () => s.customEyes, logo: () => !!s.logo, logoMany: () => s.logos.length > 0, logoBg: () => s.logoBg, logoStyle: () => s.logoBg || s.logoStroke, logoStroke: () => s.logoStroke, logoWarn: () => !!s.logo && (s.ecc === 'L' || s.ecc === 'M'),
+    qfOn: () => s.qf !== 'none', iconCustom: () => s.iconCustom,
+    qfTextColor: () => s.qf !== 'none' && s.qfCustomText,
     lowContrast: () => contrast(s.fg, s.transparent ? '#FFFFFF' : s.bg) < 3,
   };
 
@@ -310,11 +338,11 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   const pick = (o: any, ks: string[]) => Object.fromEntries(ks.map(k => [k, o[k]]));
   let lastPreset = -1;
   function applyPreset(i: number) {
-    const p = PRESETS[i]; lastPreset = i;
+    const { qf, qfText, qfColor, qfBg, qfCustomText, qfTextColor, ...p } = PRESETS[i] as any; lastPreset = i;
     set(s.presetMode === 'shape' ? { body: p.body, frame: p.frame, ball: p.ball } : { ...p });
   }
   const pal: Record<string, { fam: string; target: string }> = {};
-  const palOK = (k: string) => ({ grad2: s.gradient, bg: !s.transparent, frameColor: s.customEyes, ballColor: s.customEyes, logoBgColor: s.logoBg, logoStrokeColor: s.logoStroke } as Record<string, boolean>)[k] ?? true;
+  const palOK = (k: string) => ({ grad2: s.gradient, bg: !s.transparent, frameColor: s.customEyes, ballColor: s.customEyes, qfColor: s.qf !== 'none', qfBg: s.qf !== 'none', qfTextColor: s.qf !== 'none' && s.qfCustomText, iconColor: s.iconCustom, logoBgColor: s.logoBg, logoStrokeColor: s.logoStroke } as Record<string, boolean>)[k] ?? true;
   function syncPalette() {
     $$('[data-palette]').forEach(root => {
       const sc = root.dataset.palette!, st = pal[sc] ||= { fam: '', target: root.dataset.default! };
@@ -347,6 +375,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     $$('[data-field-bool]').forEach(el => { el.checked = !!s.data[el.dataset.fieldBool]; });
     $$('[data-opt]').forEach(b => b.setAttribute('aria-pressed', String(String(s[b.dataset.opt]) === b.dataset.value)));
     $$('[data-bool]').forEach(el => { el.checked = !!s[el.dataset.bool]; });
+    $$('[data-str]').forEach(el => { if (el !== active && el.value !== s[el.dataset.str]) el.value = s[el.dataset.str] ?? ''; });
     $$('[data-num]').forEach(el => { if (el !== active) el.value = s[el.dataset.num]; });
     $$('[data-out]').forEach(el => { const k = el.dataset.out; el.textContent = k === 'exportSize' ? `${s[k]} × ${s[k]}` : s[k] + (el.dataset.suffix || ''); });
     $$('[data-color]').forEach(el => { if (/^#[0-9a-f]{6}$/i.test(s[el.dataset.color])) el.value = s[el.dataset.color].toLowerCase(); });
@@ -363,6 +392,19 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
       });
     }
     $('[data-fg-label]').textContent = s.gradient ? T('c_gstart') : T('c_code');
+    const iconKey = s.iconStyle + '|' + (s.iconCustom ? s.iconColor : '');
+    if (iconKey !== shownIconStyle) {
+      // Redraw the icon buttons in the chosen style and color; if the code shows one of them, switch it too.
+      shownIconStyle = iconKey; let swap: string | null = null;
+      $$('[data-sample-logo][data-ihex]').forEach(b => {
+        const url = iconLogo(b.dataset.ihex, b.dataset.ipath, s.iconStyle, s.iconCustom ? s.iconColor : '');
+        if (b.dataset.sampleLogo === s.logo) swap = url;
+        b.dataset.sampleLogo = url; b.querySelector('img').src = url;
+      });
+      if (swap) { set({ logo: swap }); return; }
+    }
+    $$('[data-sample-logo]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.sampleLogo === s.logo)));
+    $('[data-action="noLogo"]').setAttribute('aria-pressed', String(!s.logo));
     const lkey = s.logos.length + '|' + s.logos.indexOf(s.logo);
     const list = $('[data-logo-list]');
     if (list.dataset.key !== lkey) {
@@ -418,14 +460,14 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   }
   function download(fmt: string) {
     if (!last || !last.qr) return;
-    const px = s.exportSize, svg = buildSvg(last.qr, svgOpts(), px);
+    const px = s.exportSize, svg = buildSvg(last.qr, svgOpts(), px), ph = +(svg.match(/ height="(\d+)"/)?.[1] ?? px);
     if (fmt === 'svg') return saveBlob(new Blob([svg], { type: 'image/svg+xml' }), 'qr-code-station.svg');
     const img = new Image();
     img.onload = () => {
-      const c = document.createElement('canvas'); c.width = c.height = px;
+      const c = document.createElement('canvas'); c.width = px; c.height = ph;
       const ctx = c.getContext('2d')!;
-      if (fmt === 'jpeg') { ctx.fillStyle = s.transparent || s.radius > 0 || s.backdrop ? '#FFFFFF' : s.bg; ctx.fillRect(0, 0, px, px); }
-      ctx.drawImage(img, 0, 0, px, px);
+      if (fmt === 'jpeg') { ctx.fillStyle = s.transparent || s.radius > 0 || s.backdrop ? '#FFFFFF' : s.bg; ctx.fillRect(0, 0, px, ph); }
+      ctx.drawImage(img, 0, 0, px, ph);
       c.toBlob(b => b && saveBlob(b, 'qr-code-station.' + (fmt === 'jpeg' ? 'jpg' : fmt)), 'image/' + fmt, .95);
     };
     img.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
@@ -461,7 +503,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     </style></head><body><div class="page"><div class="fit" id="fit"><div class="sheet" id="sheet">
       ${sh.heading ? `<h1>${esc(sh.heading)}</h1>` : ''}
       ${rows ? `<div class="rows">${rows}</div>` : ''}
-      <div class="qr">${buildSvg(last.qr, svgOpts())}</div>
+      <div class="qr">${buildSvg(last.qr, { ...svgOpts(), qf: 'none' })}</div>
       <div class="cap">${esc(sh.caption)}</div>
       <div class="foot">${esc(TS('Created with QR Code Station'))} (<a href="${site}" dir="ltr">${site}</a>)</div>
     </div></div></div><script>
@@ -489,14 +531,14 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   const actions: Record<string, (b: HTMLElement) => void> = {
     copyImg: (b) => {
       if (!last || !last.qr) return;
-      const px = Math.min(s.exportSize, 2048), svg = buildSvg(last.qr, svgOpts(), px);
+      const px = Math.min(s.exportSize, 2048), svg = buildSvg(last.qr, svgOpts(), px), ph = +(svg.match(/ height="(\d+)"/)?.[1] ?? px);
       const label = T('v_copyimg');
       const done = (ok: boolean) => { b.textContent = ok ? T('v_copied') : T('v_copyfail'); clearTimeout((b as any)._t); (b as any)._t = setTimeout(() => { b.textContent = label; }, 1800); };
       const toPng = () => new Promise<Blob>((res, rej) => {
         const img = new Image();
         img.onload = () => {
-          const c = document.createElement('canvas'); c.width = c.height = px;
-          c.getContext('2d')!.drawImage(img, 0, 0, px, px);
+          const c = document.createElement('canvas'); c.width = px; c.height = ph;
+          c.getContext('2d')!.drawImage(img, 0, 0, px, ph);
           c.toBlob(bl => bl ? res(bl) : rej(new Error('png')), 'image/png');
         };
         img.onerror = () => rej(new Error('img'));
@@ -522,8 +564,9 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
       if (c) root.querySelector('.tabs')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     },
     removeLogo: () => set({ logo: null, logos: [] }),
+    noLogo: () => set({ logo: null }),
     eccHigh: () => set({ ecc: 'H' }),
-    resetDesign: () => set({ ...DESIGN_DEFAULTS }),
+    resetDesign: () => set({ ...DESIGN_DEFAULTS, qfText: T('qf_text') }),
     copySvg: (b) => {
       if (!last || !last.qr) return;
       const text = buildSvg(last.qr, svgOpts(), s.exportSize);
@@ -553,6 +596,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
       if (inp) { inp.focus(); inp.setSelectionRange(d.prefix!.length, url.length); }
     }
     else if (d.logoPick) set({ logo: s.logos[+d.logoPick] });
+    else if (d.sampleLogo) set(s.logo === d.sampleLogo ? { logo: null } : { logo: d.sampleLogo, ecc: s.ecc === 'L' || s.ecc === 'M' ? 'H' : s.ecc });
     else if (d.logoDel) {
       const i = +d.logoDel, gone = s.logos[i], logos = s.logos.filter((_: string, j: number) => j !== i);
       set({ logos, logo: gone === s.logo ? (logos[Math.min(i, logos.length - 1)] ?? null) : s.logo });
@@ -575,8 +619,31 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     const t = e.target as any, d = t.dataset;
     if (d.field) setField(d.field, t.value);
     else if (d.num) set({ [d.num]: +t.value });
+    else if (d.str) set({ [d.str]: t.value });
     else if (d.color) set({ [d.color]: t.value.toUpperCase() });
     else if (d.hex) { let v = t.value.trim(); if (v && v[0] !== '#') v = '#' + v; if (/^#[0-9a-f]{6}$/i.test(v)) set({ [d.hex]: v.toUpperCase() }); }
+  });
+  // Brand icon search: the Simple Icons list (/brand-icons.json, a static file on this site) loads on first use.
+  // The search itself runs in the browser; nothing typed here is sent anywhere.
+  let iconList: [string, string, string][] | null = null, iconLoad: Promise<void> | null = null;
+  const iconBox = $('[data-icon-results]'), iconMsg = $('[data-icon-status]');
+  const norm = (v: string) => v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9+]/g, '');
+  function showIcons(q: string) {
+    const n = norm(q);
+    if (!n) { iconBox.hidden = iconMsg.hidden = true; return; }
+    if (!iconList) { iconMsg.textContent = T('logo_search_load'); iconMsg.hidden = false; return; }
+    const hits = iconList.filter(i => norm(i[0]).includes(n)).sort((a, b) => +!norm(a[0]).startsWith(n) - +!norm(b[0]).startsWith(n) || a[0].length - b[0].length).slice(0, 30);
+    iconBox.replaceChildren(...hits.map(([title, hex, path]) => {
+      const url = iconLogo(hex, path, s.iconStyle, s.iconCustom ? s.iconColor : ''), b = document.createElement('button');
+      b.type = 'button'; b.className = 'sample-logo'; b.dataset.sampleLogo = url; b.dataset.ihex = hex; b.dataset.ipath = path; b.title = title; b.setAttribute('aria-label', title); b.setAttribute('aria-pressed', String(url === s.logo));
+      const img = document.createElement('img'); img.src = url; img.alt = ''; b.appendChild(img); return b;
+    }));
+    iconBox.hidden = !hits.length; iconMsg.hidden = !!hits.length; iconMsg.textContent = hits.length ? '' : T('logo_search_none');
+  }
+  const iconInput = $('[data-icon-search]') as HTMLInputElement;
+  iconInput.addEventListener('input', () => {
+    showIcons(iconInput.value);
+    if (!iconList) iconLoad ||= fetch('/brand-icons.json').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then(j => { iconList = j; }, () => { iconLoad = null; iconMsg.textContent = T('logo_search_fail'); iconMsg.hidden = false; }).then(() => { if (iconList) showIcons(iconInput.value); });
   });
   function addLogoFiles(all: File[]) {
     const files = all.filter(f => f.type.startsWith('image/')); if (!files.length) return;
