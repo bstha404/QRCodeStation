@@ -57,7 +57,7 @@ All colors are CSS custom properties on `:root` / `[data-theme]`. Components onl
 | `--charge-deep` | `#58AE37` | Accent hover / gradient end |
 | `--grad-start` | `#B8F39A` | Gradient highlight start |
 | `--on-charge` | `#0B0D0C` | Text and icons on a green fill |
-| `--well` | `#111413` | QR preview well |
+| `--well` | `#2C322F` | QR preview well (a lighter gray than `--panel`, so dark codes and frames stand out) |
 
 ### Light theme (`[data-theme="light"]`)
 

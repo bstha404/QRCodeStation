@@ -1,7 +1,7 @@
 :root { --glow-layers: radial-gradient(70vw 55vh at 50% 30%, var(--glow), transparent 70%), radial-gradient(45vw 45vh at 90% 85%, var(--glow-soft), transparent 70%), radial-gradient(40vw 40vh at 5% 70%, var(--glow-soft), transparent 70%); }
 :root, [data-theme="dark"] {
   --ink: #0B0D0C; --panel: #171A19; --footer: #0A0C0B; --paper: #F8FAF8; --muted: #B8C1BC; --subtle: #6E7672;
-  --line: #2A2F2D; --charge: #8EE36A; --charge-deep: #58AE37; --grad-start: #B8F39A; --on-charge: #0B0D0C; --well: #111413;
+  --line: #2A2F2D; --charge: #8EE36A; --charge-deep: #58AE37; --grad-start: #B8F39A; --on-charge: #0B0D0C; --well: #2C322F;
   --glow: color-mix(in oklab, #8EE36A 10%, transparent); --glow-soft: color-mix(in oklab, #8EE36A 5%, transparent);
 }
 [data-theme="light"] {
@@ -426,6 +426,12 @@ a.pill { text-decoration: none; }
 .qf-tiles + .colors { margin-top: 14px; }
 .qf-text { margin-top: 14px; }
 .qf-tiles .tile svg text { letter-spacing: -.2px; }
+/* Dark theme: frame previews in layered grays instead of stark white (frame, inside, sample code, dots). */
+[data-theme="dark"] .qf-tiles .tile { color: var(--subtle); }
+[data-theme="dark"] .qf-tiles .tile[aria-pressed="true"] { color: var(--charge); }
+[data-theme="dark"] .qf-tiles .qf-screen { fill: var(--panel); }
+[data-theme="dark"] .qf-tiles .qf-qbg { fill: var(--muted); }
+[data-theme="dark"] .qf-tiles .qf-qfg { fill: var(--ink); }
 
 /* The sticky header and tab bar repaint the same fixed glow so they blend into the page instead of showing a flat band. */
 .site-header, .tabs { background: var(--glow-layers), var(--ink); background-attachment: fixed; }

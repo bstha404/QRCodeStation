@@ -244,11 +244,11 @@ export function bodyThumb(shape) {
 }
 // Picker preview for a QR frame, with a placeholder code inside. Uses currentColor so it follows the theme.
 export function qrFrameThumb(id, noneLabel = 'No frame') {
-  // A small generic-looking QR code (dark modules on white) inside the frame.
+  // A small generic-looking QR code (dark modules on white) inside the frame; the qf-q* classes let the dark theme tone it down.
   const S = 100, q = QrCode.encodeText('QR', QrCode.Ecc.LOW), n = q.size, soft = ['label', 'script', 'tag'].includes(id), pad = soft ? 3 : 1, cell = S / (n + 2 * pad);
   let m = '';
   for (let yy = 0; yy < n; yy++) for (let xx = 0; xx < n; xx++) if (q.getModule(xx, yy)) m += `M${n2((xx + pad) * cell)},${n2((yy + pad) * cell)}h${n2(cell)}v${n2(cell)}h${n2(-cell)}Z`;
-  const ph = `<rect width="${S}" height="${S}" rx="${soft ? 16 : 8}" fill="#FFFFFF"/><path fill="#0B0D0C" d="${m}"/>`;
+  const ph = `<rect class="qf-qbg" width="${S}" height="${S}" rx="${soft ? 16 : 8}" fill="#FFFFFF"/><path class="qf-qfg" fill="#0B0D0C" d="${m}"/>`;
   if (id === 'none') return `<svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="36" r="21" fill="none" stroke="currentColor" stroke-width="6"/><path d="M35 21L65 51" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><text x="50" y="86" text-anchor="middle" font-size="15" font-weight="800" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" fill="currentColor">${escXml(noneLabel)}</text></svg>`;
   const f = qrFrame(id, S, { qfText: 'Scan me!', transparent: true }, true);
   return `<svg viewBox="-4 -4 ${n2(f.W + 8)} ${n2(f.H + 8)}" aria-hidden="true">${f.pre}<g transform="translate(${n2(f.x)} ${n2(f.y)})${f.k !== 1 ? ` scale(${n2(f.k)})` : ''}">${ph}</g>${f.post}</svg>`;
