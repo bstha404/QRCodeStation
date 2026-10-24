@@ -144,10 +144,10 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
             <ColorPresets scope="icon" targets={[['iconColor', 'Icon color']]} />
           </div>
           <div class="sample-row"><button type="button" class="sample-logo sample-none" data-action="noLogo" title={I.t('logo_none')} aria-label={I.t('logo_none')} aria-pressed="true"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg></button>{SAMPLE_LOGOS.map(l => <button type="button" class="sample-logo" data-sample-logo={l.url} data-ihex={l.hex} data-ipath={l.path} title={l.title} aria-label={l.title} aria-pressed="false"><img src={l.url} alt="" width="28" height="28" /></button>)}</div>
-          <input class="input" type="search" data-icon-search placeholder={I.t('logo_search_ph')} aria-label={I.t('logo_search_ph')} autocomplete="off" spellcheck="false" />
+          <input class="input" type="search" data-icon-search data-kbd placeholder={`${I.t('logo_search_ph')} · ${I.t('kbd_press', { key: '/' })}`} aria-label={I.t('logo_search_ph')} aria-keyshortcuts="/ Control+K Meta+K" autocomplete="off" spellcheck="false" />
           <div class="sample-row" data-icon-results hidden></div>
           <p class="hint" data-icon-status hidden></p>
-          <p class="hint">{I.t('logo_icons_note')}</p>
+          {/* <p class="hint">{I.t('logo_icons_note')}</p> */}
         </div>
         <p class="hint" data-show="logoMany" hidden>{x("Tap a logo to preview it on the code. Tap − to remove one.")}</p>
         <div class="group" data-show="logo" hidden>
@@ -644,6 +644,21 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   iconInput.addEventListener('input', () => {
     showIcons(iconInput.value);
     if (!iconList) iconLoad ||= fetch('/brand-icons.json').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then(j => { iconList = j; }, () => { iconLoad = null; iconMsg.textContent = T('logo_search_fail'); iconMsg.hidden = false; }).then(() => { if (iconList) showIcons(iconInput.value); });
+  });
+  // Keyboard shortcut for search fields marked data-kbd: "/" (or Ctrl/⌘+K) opens the tab that holds the field
+  // and focuses it, so you can start typing at once. Escape clears the field, then leaves it.
+  document.addEventListener('keydown', (e: KeyboardEvent) => {
+    const t = e.target as HTMLElement;
+    if (t?.matches?.('[data-kbd]') && e.key === 'Escape') { const i = t as HTMLInputElement; if (i.value) { i.value = ''; i.dispatchEvent(new Event('input', { bubbles: true })); } else i.blur(); return; }
+    const slash = e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey, cmdK = (e.ctrlKey || e.metaKey) && !e.altKey && e.key.toLowerCase() === 'k';
+    if (!slash && !cmdK) return;
+    if (slash && t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
+    const field = $('[data-kbd]') as HTMLInputElement | null; if (!field) return;
+    e.preventDefault();
+    const panel = field.closest('[role="tabpanel"]') as HTMLElement | null;
+    if (panel?.hidden) (document.getElementById(panel.getAttribute('aria-labelledby') || '') as HTMLElement | null)?.click();
+    if (root.hasAttribute('data-collapsed')) actions.togglePanel(field);
+    field.focus({ preventScroll: true }); field.scrollIntoView({ block: 'center', behavior: 'smooth' }); field.select();
   });
   function addLogoFiles(all: File[]) {
     const files = all.filter(f => f.type.startsWith('image/')); if (!files.length) return;
