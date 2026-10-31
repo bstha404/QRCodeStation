@@ -63,8 +63,8 @@ export const DESIGN_DEFAULTS = { fg: '#0B0D0C', bg: '#FFFFFF', transparent: fals
 // Decorative frames around the whole QR code ("Scan me!" cards, tags, bubbles, objects).
 export const QFRAMES = [['none', 'No frame'], ['label', 'Label'], ['script', 'Script'], ['tag', 'Tag'], ['outline', 'Outline'], ['box', 'Box'], ['bar', 'Bar'], ['solid', 'Solid'], ['pointer', 'Pointer'], ['bubble', 'Bubble'], ['ticket', 'Ticket'], ['corners', 'Corners'], ['sparkle', 'Sparkle'], ['play', 'Play'], ['phone', 'Phone'], ['bag', 'Bag'], ['gift', 'Gift'], ['ribbon', 'Ribbon'], ['envelope', 'Envelope'], ['clipboard', 'Clipboard'], ['menu', 'Menu'], ['drink', 'Drink'], ['takeaway', 'Takeaway'], ['mug', 'Mug'], ['chef', 'Chef'], ['cup', 'Cup']];
 export const BODY = [['square', 'Square'], ['rounded', 'Rounded'], ['dots', 'Dots'], ['classy', 'Classy'], ['diamond', 'Diamond'], ['small', 'Small squares'], ['vertical', 'Vertical bars'], ['horizontal', 'Horizontal bars'], ['pixel', 'Pixel mix']];
-export const FRAME = [['square', 'Square'], ['rounded', 'Rounded'], ['extra', 'Extra rounded'], ['circle', 'Circle'], ['leaf', 'Leaf'], ['pointed', 'Pointed'], ['squircle', 'Squircle'], ['cookie', 'Cookie'], ['flower', 'Flower'], ['arch', 'Arch'], ['octagon', 'Octagon'], ['hexagon', 'Hexagon']];
-export const BALL = [['square', 'Square'], ['rounded', 'Rounded'], ['circle', 'Circle'], ['diamond', 'Diamond'], ['leaf', 'Leaf'], ['pointed', 'Pointed'], ['squircle', 'Squircle'], ['cookie', 'Cookie'], ['flower', 'Flower'], ['arch', 'Arch'], ['octagon', 'Octagon'], ['hexagon', 'Hexagon'], ['sparkle', 'Sparkle'], ['cross', 'Cross']];
+export const FRAME = [['square', 'Square'], ['subtle', 'Slightly rounded'], ['rounded', 'Rounded'], ['extra', 'Extra rounded'], ['circle', 'Circle'], ['leaf', 'Leaf'], ['pointed', 'Pointed'], ['squircle', 'Squircle'], ['cookie', 'Cookie'], ['flower', 'Flower'], ['arch', 'Arch'], ['octagon', 'Octagon'], ['hexagon', 'Hexagon']];
+export const BALL = [['square', 'Square'], ['subtle', 'Slightly rounded'], ['rounded', 'Rounded'], ['circle', 'Circle'], ['diamond', 'Diamond'], ['leaf', 'Leaf'], ['pointed', 'Pointed'], ['squircle', 'Squircle'], ['cookie', 'Cookie'], ['flower', 'Flower'], ['arch', 'Arch'], ['octagon', 'Octagon'], ['hexagon', 'Hexagon'], ['sparkle', 'Sparkle'], ['cross', 'Cross']];
 export const ECC = [['L', 'Low', '~7% recovery'], ['M', 'Medium', '~15% recovery'], ['Q', 'Quartile', '~25% recovery'], ['H', 'High', '~30% recovery']];
 export const PRESETS = [
   { name: 'Classic', ...DESIGN_DEFAULTS },
@@ -205,6 +205,7 @@ const ring = (outer, inner) => outer + inner;
 function framePath(shape, x, y) {
   const pair = (o, i) => rr(x, y, 7, 7, o) + rr(x + 1, y + 1, 5, 5, i);
   switch (shape) {
+    case 'subtle': return pair([1, 1, 1, 1], [.5, .5, .5, .5]);
     case 'rounded': return pair([2, 2, 2, 2], [1.2, 1.2, 1.2, 1.2]);
     case 'extra': return pair([3, 3, 3, 3], [2, 2, 2, 2]);
     case 'circle': return circ(x + 3.5, y + 3.5, 3.5) + circ(x + 3.5, y + 3.5, 2.5);
@@ -219,6 +220,7 @@ function framePath(shape, x, y) {
 }
 function ballPath(shape, x, y) {
   switch (shape) {
+    case 'subtle': return rr(x, y, 3, 3, [.45, .45, .45, .45]);
     case 'rounded': return rr(x, y, 3, 3, [.9, .9, .9, .9]);
     case 'circle': return circ(x + 1.5, y + 1.5, 1.5);
     case 'diamond': return diamond(x - .3, y - .3, 3.6);
@@ -464,17 +466,21 @@ export function buildSvg(qr, o, px) {
   let logo = '';
   if (o.logo) {
     const p = b + (n - ls) / 2, box = o.logoBg || o.logoStroke;
+    const im = /qcs-icon-(\w+?)(?:-(\d+))?%22/.exec(o.logo.slice(0, 400)), upload = !im;
+    const shape = im ? im[1] : (LOGO_SHAPES.includes(o.iconStyle) ? o.iconStyle : 'plain'), rnd = im && im[2] != null ? +im[2] : (o.logoRound ?? 48);
     const w = o.logoStroke ? (o.logoStrokeW || 3) * .12 : 0, inset = box ? ls * .09 + w : 0, is = ls - 2 * inset;
     if (box) {
-      // The background / stroke follows the shape of a built-in icon; anything else gets a rounded square.
-      const shape = (/qcs-icon-(\w+)/.exec(o.logo) || [])[1], bx = p + w / 2, bs = ls - w;
+      // The background / stroke follows the logo shape (a built-in icon's own shape, else the chosen one).
+      const bx = p + w / 2, bs = ls - w;
       const paint = ` fill="${o.logoBg ? o.logoBgColor : 'none'}"${w ? ` stroke="${o.logoStrokeColor}" stroke-width="${n2(w)}" stroke-linejoin="round"` : ''}`;
-      const hx = (X, Y) => `${n2(bx + X / 24 * bs)},${n2(bx + Y / 24 * bs)}`;
-      logo = shape === 'circle' ? `<circle cx="${n2(bx + bs / 2)}" cy="${n2(bx + bs / 2)}" r="${n2(bs / 2)}"${paint}/>`
-        : shape === 'hexagon' ? `<path d="M${hx(12, .6)}L${hx(22.2, 6.3)}L${hx(22.2, 17.7)}L${hx(12, 23.4)}L${hx(1.8, 17.7)}L${hx(1.8, 6.3)}Z"${paint}/>`
-        : `<rect x="${n2(bx)}" y="${n2(bx)}" width="${n2(bs)}" height="${n2(bs)}" rx="${n2(shape === 'square' ? 0 : ls * .24)}"${paint}/>`;
+      logo = `<path d="${shapeD(shape === 'plain' ? 'round' : shape, bx, bx, bs, shape === 'plain' ? 48 : rnd)}"${paint}/>`;
     }
-    logo += `<image href="${o.logo}" x="${n2(p + inset)}" y="${n2(p + inset)}" width="${n2(is)}" height="${n2(is)}" preserveAspectRatio="xMidYMid meet"/>`;
+    const ix = p + inset;
+    // An uploaded image is cut to the chosen shape; built-in icons already carry theirs.
+    let clip = '';
+    if (upload && shape !== 'plain') { const cid = `qc${gradPrefix}${++gradN}`; logo += `<clipPath id="${cid}"><path d="${shapeD(shape, ix, ix, is, rnd)}"/></clipPath>`; clip = ` clip-path="url(#${cid})"`; }
+    const href = upload && /^data:image\/svg\+xml/.test(o.logo) ? recolorSvg(o.logo, o.iconCustom ? o.iconColor : '', o.iconFgCustom ? o.iconFg : '') : o.logo;
+    logo += `<image href="${href}" x="${n2(ix)}" y="${n2(ix)}" width="${n2(is)}" height="${n2(is)}" preserveAspectRatio="${upload && shape !== 'plain' ? 'xMidYMid slice' : 'xMidYMid meet'}"${clip}/>`;
   }
   // Decoration: a soft cookie-shaped backdrop, faint ghost modules and scattered specks.
   let decor = '', ghostSvg = '';
@@ -576,16 +582,47 @@ export function buildPayload(type, d) {
 // or the glyph in white (near-black on very light colors) on a brand-colored square, rounded square, circle or
 // hexagon. `color` (optional) replaces the brand color. The id marks it as a built-in icon (not an upload) and
 // names its shape, so a logo background or stroke can follow that shape.
-export const ICON_STYLES = ['plain', 'square', 'rounded', 'circle', 'hexagon'];
-export function iconLogo(hex, path, style = 'rounded', color = '') {
-  const bg = color || '#' + hex, on = lum(bg) > .6 ? '#111111' : '#FFFFFF';
-  const g = (fill, k, t) => `<path transform="translate(${t} ${t}) scale(${k})" fill="${fill}" d="${path}"/>`;
-  const body = style === 'plain' ? g(!color && lum(bg) > .75 ? '#0B0D0C' : bg, .875, 1.5)
-    : style === 'square' ? `<rect width="24" height="24" fill="${bg}"/>` + g(on, .5833, 5)
-    : style === 'circle' ? `<circle cx="12" cy="12" r="12" fill="${bg}"/>` + g(on, .5417, 5.5)
-    : style === 'hexagon' ? `<path d="M12 1.2L21.6 6.6V17.4L12 22.8L2.4 17.4V6.6Z" fill="${bg}" stroke="${bg}" stroke-width="2" stroke-linejoin="round"/>` + g(on, .5, 6)
-    : `<rect width="24" height="24" rx="5.5" fill="${bg}"/>` + g(on, .5833, 5);
-  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" id="qcs-icon-${style}" viewBox="0 0 24 24">${body}</svg>`);
+export const LOGO_SHAPES = ['plain', 'round', 'hexagon', 'pentagon', 'octagon'];
+export const ICON_STYLES = LOGO_SHAPES;
+const SIDES = { hexagon: [6, -90], pentagon: [5, -90], octagon: [8, -112.5] };
+// Path of a logo shape inside the box (x, y, size s). 'round' is a square whose corners curve gradually
+// into a circle: t = 0 (square) to 100 (circle).
+export function shapeD(shape, x, y, s, t = 48) {
+  const h = s / 2, cx = x + h, cy = y + h;
+  if (SIDES[shape]) {
+    const [k, r0] = SIDES[shape], r = h * (shape === 'hexagon' ? 1 : .98);
+    return 'M' + Array.from({ length: k }, (_, i) => { const a = (r0 + 360 / k * i) * Math.PI / 180; return `${n2(cx + r * Math.cos(a))} ${n2(cy + r * Math.sin(a))}`; }).join('L') + 'Z';
+  }
+  const r = h * Math.min(100, Math.max(0, t)) / 100;
+  if (r < .001) return `M${n2(x)} ${n2(y)}H${n2(x + s)}V${n2(y + s)}H${n2(x)}Z`;
+  return `M${n2(x + r)} ${n2(y)}H${n2(x + s - r)}A${n2(r)} ${n2(r)} 0 0 1 ${n2(x + s)} ${n2(y + r)}V${n2(y + s - r)}A${n2(r)} ${n2(r)} 0 0 1 ${n2(x + s - r)} ${n2(y + s)}H${n2(x + r)}A${n2(r)} ${n2(r)} 0 0 1 ${n2(x)} ${n2(y + s - r)}V${n2(y + r)}A${n2(r)} ${n2(r)} 0 0 1 ${n2(x + r)} ${n2(y)}Z`;
+}
+// `color` replaces the brand color (the shape), `glyph` replaces the automatic glyph color.
+export function iconLogo(hex, path, style = 'round', color = '', glyph = '', round = 48) {
+  const bg = color || '#' + hex, on = glyph || (lum(bg) > .6 ? '#111111' : '#FFFFFF');
+  const g = (fill, k, t) => `<path transform="translate(${n2(t)} ${n2(t)}) scale(${n2(k)})" fill="${fill}" d="${path}"/>`;
+  const poly = SIDES[style], k = .5833 - (.5833 - .5417) * round / 100;
+  const body = style === 'plain' ? g(glyph || (!color && lum(bg) > .75 ? '#0B0D0C' : bg), .875, 1.5)
+    : poly ? `<path d="${shapeD(style, 1, 1, 22)}" fill="${bg}" stroke="${bg}" stroke-width="2" stroke-linejoin="round"/>` + g(on, .5, 6)
+    : `<path d="${shapeD('round', 0, 0, 24, round)}" fill="${bg}"/>` + g(on, k, 12 * (1 - k));
+  const id = style === 'round' ? `round-${Math.round(round)}` : style;
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" id="qcs-icon-${id}" viewBox="0 0 24 24">${body}</svg>`);
+}
+// Recolors an uploaded SVG logo. With two or more colors the first one drawn is treated as the background (shape)
+// and the rest as the glyph; with one color (or none, which draws black) `bg` wins over `glyph`.
+export function recolorSvg(url, bg, glyph) {
+  const m = /^data:image\/svg\+xml([^,]*),/.exec(url || ''); if (!m || (!bg && !glyph)) return url;
+  let t; try { const body = url.slice(m[0].length); t = /;base64/.test(m[1]) ? decodeURIComponent(escape(atob(body))) : decodeURIComponent(body); } catch (e) { return url; }
+  const re = /(fill|stroke)(=["']|:\s*)(#[0-9a-fA-F]{3,8}|rgba?\([^)]*\)|[a-zA-Z]+(?![\w(]))/g, skip = /^(none|transparent|inherit|currentcolor)$/i;
+  const found = []; t.replace(re, (_, _a, _b, c) => { if (!skip.test(c)) found.push(c.toLowerCase()); return _; });
+  const distinct = [...new Set(found)];
+  if (!distinct.length) t = t.replace(/<svg\b/, `<svg fill="${bg || glyph}"`);
+  else t = t.replace(re, (all, a, b, c) => {
+    if (skip.test(c)) return all;
+    const to = distinct.length > 1 ? (c.toLowerCase() === distinct[0] ? bg : glyph) : (bg || glyph);
+    return to ? a + b + to : all;
+  });
+  return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(t);
 }
 export const isIconLogo = u => typeof u === 'string' && u.startsWith('data:image/svg+xml;charset=utf-8,') && u.includes('qcs-icon');
 

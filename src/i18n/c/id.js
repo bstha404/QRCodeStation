@@ -118,7 +118,7 @@ export const help = {
 };
 export const names = {
   'Square': 'Persegi', 'Rounded': 'Membulat', 'Dots': 'Titik', 'Classy': 'Elegan', 'Diamond': 'Belah ketupat', 'Small squares': 'Persegi kecil',
-  'Vertical bars': 'Batang vertikal', 'Horizontal bars': 'Batang horizontal', 'Extra rounded': 'Sangat membulat', 'Circle': 'Lingkaran', 'Leaf': 'Daun', 'Pointed': 'Runcing',
+  'Vertical bars': 'Batang vertikal', 'Horizontal bars': 'Batang horizontal', 'Extra rounded': 'Sangat membulat', 'Slightly rounded': 'Sedikit membulat', 'Circle': 'Lingkaran', 'Leaf': 'Daun', 'Pointed': 'Runcing',
   'Classic': 'Klasik', 'Charge': 'Energi', 'Ocean': 'Samudra', 'Bars': 'Batang', 'Ember': 'Bara', 'Inverse': 'Terbalik', 'Soft': 'Lembut', 'Bubble': 'Gelembung',
   'Sunset': 'Senja', 'Berry': 'Beri', 'Forest': 'Hutan', 'Diamonds': 'Belah ketupat', 'Stripes': 'Garis', 'Lines': 'Garis tipis', 'Pixel': 'Piksel', 'Candy': 'Permen',
   'Gold': 'Emas', 'Sky': 'Langit', 'Mint': 'Mint', 'Crimson': 'Merah tua', 'Slate': 'Batu tulis', 'Retro': 'Retro', 'Ink drop': 'Tetes tinta', 'Arrow': 'Panah',
@@ -313,6 +313,12 @@ export const pages = {
     waBtn: 'Chat di WhatsApp',
     waScan: 'Pindai untuk chat',
     waMsg: 'Halo {brand}! Saya punya pertanyaan.',
+    includeCredit: 'Membuat kode QR dengan {brand}? Jika bisa, mohon beri kredit, misalnya dengan menyebut {brand} atau menautkan ke qrcodestation.com. Ini membantu lebih banyak orang menemukan situs ini. Terima kasih!',
+    moreEyebrow: 'Lainnya dari saya',
+    moreTitle: 'Lihat proyek saya yang lain yang',
+    moreHighlight: 'keren',
+    evDesc: 'Direktori gratis berbasis peta untuk stasiun pengisian kendaraan listrik umum di seluruh Nepal. Temukan dan filter pengisi daya di dekat Anda, dapatkan petunjuk arah, dan rencanakan perjalanan antarkota.',
+    moreCta: 'Pindai atau klik untuk berkunjung',
     includeTitle: 'Saat menghubungi kami, mohon sertakan:',
     include: [
       'Apa yang Anda butuhkan, atau masukan atau ide yang ingin Anda bagikan',
@@ -343,7 +349,7 @@ export const pages = {
       ['h2', 'Data yang disimpan di browser Anda (penyimpanan lokal)'],
       ['p', 'Untuk mengingat pekerjaan Anda di antara kunjungan, {brand} menyimpan sebagian informasi di penyimpanan lokal browser Anda. Informasi itu tetap di perangkat Anda: tidak dikirim ke server kami, tidak dibagikan, dan tidak dipakai untuk pelacakan. Yang disimpan adalah:'],
       ['ul', ['<strong>Konten Anda:</strong> teks, tautan, dan detail lain yang Anda ubah dari nilai contoh.', '<strong>Desain Anda:</strong> warna, bentuk, preset, pengaturan logo, dan opsi kualitas.', '<strong>Logo Anda:</strong> gambar yang Anda unggah (hanya gambar di bawah sekitar 400 KB yang disimpan).', '<strong>Tema Anda:</strong> mode terang atau gelap, disimpan sebagai <code>theme</code>.']],
-      ['p', 'Konten dan desain Anda disimpan dengan satu kunci, <code>qrcodestation-state-v1</code>. Penyimpanan lokal tidak punya tanggal kedaluwarsa, jadi data ini bertahan sampai Anda menghapusnya. Jendela pribadi atau penyamaran menghapusnya otomatis saat ditutup.'],
+      ['p', 'Konten dan desain Anda disimpan dengan satu kunci, <code>qrcodestation-state-v1</code>. Penyimpanan lokal tidak punya tanggal kedaluwarsa, jadi data ini bertahan sampai Anda menghapusnya. Jendela pribadi atau penyamaran menghapusnya otomatis saat ditutup. Favorit yang Anda simpan disimpan dengan cara yang sama, dengan kunci <code>qrcodestation-favs-v1</code>.'],
       ['h2', 'Cara menghapus data tersimpan Anda'],
       ['p', 'Pilih salah satu opsi. Nama menu bisa sedikit berbeda antarversi browser.'],
       ['ul', ['<strong>Satu klik:</strong> tekan tombol di bawah. Tombol ini menghapus semua yang disimpan {brand} di perangkat dan browser ini.', '<strong>Chrome atau Edge (komputer):</strong> buka Setelan → Privasi dan keamanan → Hapus data penjelajahan (atau Cookie dan data situs lainnya → Lihat semua data dan izin situs), cari situs ini dan hapus. Atau tekan F12 → Application → Local storage → klik kanan situs ini → Clear.', '<strong>Firefox:</strong> Setelan → Privasi & Keamanan → Cookie dan Data Situs → Kelola Data, cari situs ini dan klik Hapus yang Dipilih.', '<strong>Safari (Mac):</strong> Setelan → Privasi → Kelola Data Situs Web, cari situs ini dan klik Hapus.', '<strong>iPhone dan iPad:</strong> Setelan → Apps → Safari → Lanjutan → Data Situs Web (di versi lama: Setelan → Safari → Lanjutan), cari situs ini dan geser ke kiri untuk menghapus.', '<strong>Android (Chrome):</strong> ketuk ⋮ → Setelan → Privasi dan keamanan → Hapus data penjelajahan, pilih “Cookie dan data situs”, lalu ketuk Hapus data.']],

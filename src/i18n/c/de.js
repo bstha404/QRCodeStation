@@ -118,7 +118,7 @@ export const help = {
 };
 export const names = {
   'Square': 'Quadrat', 'Rounded': 'Abgerundet', 'Dots': 'Punkte', 'Classy': 'Elegant', 'Diamond': 'Raute', 'Small squares': 'Kleine Quadrate',
-  'Vertical bars': 'Senkrechte Balken', 'Horizontal bars': 'Waagerechte Balken', 'Extra rounded': 'Stark abgerundet', 'Circle': 'Kreis', 'Leaf': 'Blatt', 'Pointed': 'Spitz',
+  'Vertical bars': 'Senkrechte Balken', 'Horizontal bars': 'Waagerechte Balken', 'Extra rounded': 'Stark abgerundet', 'Slightly rounded': 'Leicht abgerundet', 'Circle': 'Kreis', 'Leaf': 'Blatt', 'Pointed': 'Spitz',
   'Classic': 'Klassisch', 'Charge': 'Energie', 'Ocean': 'Ozean', 'Bars': 'Balken', 'Ember': 'Glut', 'Inverse': 'Invers', 'Soft': 'Sanft', 'Bubble': 'Blase',
   'Sunset': 'Sonnenuntergang', 'Berry': 'Beere', 'Forest': 'Wald', 'Diamonds': 'Rauten', 'Stripes': 'Streifen', 'Lines': 'Linien', 'Pixel': 'Pixel', 'Candy': 'Bonbon',
   'Gold': 'Gold', 'Sky': 'Himmel', 'Mint': 'Minze', 'Crimson': 'Karmesin', 'Slate': 'Schiefer', 'Retro': 'Retro', 'Ink drop': 'Tintentropfen', 'Arrow': 'Pfeil',
@@ -313,6 +313,12 @@ export const pages = {
     waBtn: 'Auf WhatsApp chatten',
     waScan: 'Scannen, um zu chatten',
     waMsg: 'Hallo {brand}! Ich habe eine Frage.',
+    includeCredit: 'Du hast einen QR-Code mit {brand} erstellt? Wenn es dir möglich ist, nenne uns bitte als Quelle, zum Beispiel mit einer Erwähnung von {brand} oder einem Link zu qrcodestation.com. So finden mehr Menschen die Seite. Danke!',
+    moreEyebrow: 'Mehr von mir',
+    moreTitle: 'Schau dir meine anderen',
+    moreHighlight: 'coolen Projekte an',
+    evDesc: 'Ein kostenloses, kartenbasiertes Verzeichnis öffentlicher Ladestationen für Elektrofahrzeuge in ganz Nepal. Finde und filtere Ladepunkte in deiner Nähe, lass dir den Weg anzeigen und plane Fahrten zwischen Städten.',
+    moreCta: 'Scannen oder klicken zum Besuch',
     includeTitle: 'Bitte gib bei deiner Nachricht Folgendes an:',
     include: [
       'Wobei du Hilfe brauchst oder welches Feedback bzw. welche Idee du teilen möchtest',
@@ -343,7 +349,7 @@ export const pages = {
       ['h2', 'Im Browser gespeicherte Daten (lokaler Speicher)'],
       ['p', 'Damit deine Arbeit zwischen Besuchen erhalten bleibt, speichert {brand} einige Informationen im lokalen Speicher deines Browsers. Sie bleiben auf deinem Gerät: Sie werden nicht an unsere Server gesendet, nicht weitergegeben und nicht zum Tracking verwendet. Das wird gespeichert:'],
       ['ul', ['<strong>Dein Inhalt:</strong> Texte, Links und andere Angaben, die du gegenüber den Beispielwerten geändert hast.', '<strong>Dein Design:</strong> Farben, Formen, Vorlagen, Logo‑Einstellungen und Qualitätsoptionen.', '<strong>Deine Logos:</strong> hochgeladene Bilder (nur Bilder unter etwa 400 KB bleiben erhalten).', '<strong>Dein Design‑Modus:</strong> hell oder dunkel, gespeichert als <code>theme</code>.']],
-      ['p', 'Inhalt und Design liegen unter einem einzigen Schlüssel, <code>qrcodestation-state-v1</code>. Der lokale Speicher hat kein Ablaufdatum – die Daten bleiben, bis du sie löschst. Private Fenster löschen sie beim Schließen automatisch.'],
+      ['p', 'Inhalt und Design liegen unter einem einzigen Schlüssel, <code>qrcodestation-state-v1</code>. Der lokale Speicher hat kein Ablaufdatum – die Daten bleiben, bis du sie löschst. Private Fenster löschen sie beim Schließen automatisch. Gespeicherte Favoriten liegen auf dieselbe Weise unter <code>qrcodestation-favs-v1</code>.'],
       ['h2', 'So löschst du deine gespeicherten Daten'],
       ['p', 'Wähle eine der Möglichkeiten. Menünamen können sich je nach Browserversion leicht unterscheiden.'],
       ['ul', ['<strong>Mit einem Klick:</strong> Drücke die Schaltfläche unten. Sie entfernt alles, was {brand} auf diesem Gerät und in diesem Browser gespeichert hat.', '<strong>Chrome oder Edge (Computer):</strong> Öffne Einstellungen → Datenschutz und Sicherheit → Browserdaten löschen (oder Cookies und andere Websitedaten → Alle Websitedaten und Berechtigungen ansehen), suche diese Website und lösche sie. Oder drücke F12 → Anwendung → Lokaler Speicher → Rechtsklick auf diese Website → Löschen.', '<strong>Firefox:</strong> Einstellungen → Datenschutz & Sicherheit → Cookies und Website‑Daten → Daten verwalten, suche diese Website und klicke auf „Auswahl entfernen“.', '<strong>Safari (Mac):</strong> Einstellungen → Datenschutz → Websitedaten verwalten, suche diese Website und klicke auf „Entfernen“.', '<strong>iPhone und iPad:</strong> Einstellungen → Apps → Safari → Erweitert → Websitedaten (bei älteren Versionen: Einstellungen → Safari → Erweitert), suche diese Website und wische nach links zum Löschen.', '<strong>Android (Chrome):</strong> Tippe auf ⋮ → Einstellungen → Datenschutz und Sicherheit → Browserdaten löschen, wähle „Cookies und Websitedaten“ und tippe auf „Daten löschen“.']],

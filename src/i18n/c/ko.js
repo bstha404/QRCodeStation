@@ -118,7 +118,7 @@ export const help = {
 };
 export const names = {
   'Square': '사각형', 'Rounded': '둥근 모서리', 'Dots': '점', 'Classy': '클래시', 'Diamond': '마름모', 'Small squares': '작은 사각형',
-  'Vertical bars': '세로 막대', 'Horizontal bars': '가로 막대', 'Extra rounded': '아주 둥글게', 'Circle': '원', 'Leaf': '잎', 'Pointed': '뾰족하게',
+  'Vertical bars': '세로 막대', 'Horizontal bars': '가로 막대', 'Extra rounded': '아주 둥글게', 'Slightly rounded': '살짝 둥글게', 'Circle': '원', 'Leaf': '잎', 'Pointed': '뾰족하게',
   'Classic': '클래식', 'Charge': '차지', 'Ocean': '오션', 'Bars': '막대', 'Ember': '잔불', 'Inverse': '반전', 'Soft': '소프트', 'Bubble': '버블',
   'Sunset': '선셋', 'Berry': '베리', 'Forest': '숲', 'Diamonds': '다이아', 'Stripes': '줄무늬', 'Lines': '선', 'Pixel': '픽셀', 'Candy': '캔디',
   'Gold': '골드', 'Sky': '하늘', 'Mint': '민트', 'Crimson': '크림슨', 'Slate': '슬레이트', 'Retro': '레트로', 'Ink drop': '잉크 방울', 'Arrow': '화살',
@@ -313,6 +313,12 @@ export const pages = {
     waBtn: 'WhatsApp으로 채팅',
     waScan: '스캔하여 채팅',
     waMsg: '안녕하세요 {brand}! 문의가 있습니다.',
+    includeCredit: '{brand}로 QR 코드를 만드셨나요? 가능하다면 {brand}를 언급하거나 qrcodestation.com 링크를 넣어 출처를 표시해 주세요. 더 많은 분들이 사이트를 찾는 데 큰 도움이 됩니다. 감사합니다!',
+    moreEyebrow: '제 다른 프로젝트',
+    moreTitle: '제가 만든 다른',
+    moreHighlight: '멋진 프로젝트도 확인해 보세요',
+    evDesc: '네팔 전역의 공공 전기차 충전소를 지도에서 찾을 수 있는 무료 디렉터리입니다. 가까운 충전기를 검색하고 필터링하며, 길 안내를 받고 도시 간 여행을 계획해 보세요.',
+    moreCta: '스캔하거나 클릭해서 방문하기',
     includeTitle: '문의하실 때 다음 내용을 포함해 주세요.',
     include: [
       '도움이 필요한 내용 또는 공유하고 싶은 의견이나 아이디어',
@@ -343,7 +349,7 @@ export const pages = {
       ['h2', '브라우저에 저장되는 데이터(로컬 스토리지)'],
       ['p', '다음 방문 때 작업을 기억할 수 있도록 {brand}는 브라우저의 로컬 스토리지에 일부 정보를 저장합니다. 이 정보는 기기에만 남으며, 서버로 전송되거나 누구와도 공유되거나 추적에 사용되지 않습니다. 저장되는 내용은 다음과 같습니다.'],
       ['ul', ['<strong>내용:</strong> 예시 값에서 바꾼 텍스트, 링크 등 정보.', '<strong>디자인:</strong> 색상, 모양, 프리셋, 로고 설정, 품질 옵션.', '<strong>로고:</strong> 업로드한 이미지(약 400KB 미만만 보관됩니다).', '<strong>테마:</strong> 밝은 모드 또는 어두운 모드로, <code>theme</code>로 저장됩니다.']],
-      ['p', '내용과 디자인은 하나의 키 <code>qrcodestation-state-v1</code>로 저장됩니다. 로컬 스토리지에는 만료일이 없으므로 삭제하기 전까지 데이터가 남습니다. 시크릿(비공개) 창은 닫을 때 자동으로 삭제합니다.'],
+      ['p', '내용과 디자인은 하나의 키 <code>qrcodestation-state-v1</code>로 저장됩니다. 로컬 스토리지에는 만료일이 없으므로 삭제하기 전까지 데이터가 남습니다. 시크릿(비공개) 창은 닫을 때 자동으로 삭제합니다. 저장한 즐겨찾기도 같은 방식으로 <code>qrcodestation-favs-v1</code> 키에 저장됩니다.'],
       ['h2', '저장된 데이터를 삭제하는 방법'],
       ['p', '원하는 방법을 선택하세요. 메뉴 이름은 브라우저 버전에 따라 조금 다를 수 있습니다.'],
       ['ul', ['<strong>한 번에 삭제:</strong> 아래 버튼을 누르세요. 이 기기와 브라우저에 {brand}가 저장한 모든 것이 삭제됩니다.', '<strong>Chrome 또는 Edge(컴퓨터):</strong> 설정 → 개인정보 및 보안 → 인터넷 사용 기록 삭제(또는 쿠키 및 기타 사이트 데이터 → 모든 사이트 데이터 및 권한 보기)를 열고 이 사이트를 찾아 삭제하세요. 또는 F12 → 애플리케이션 → 로컬 스토리지 → 이 사이트를 마우스 오른쪽 버튼으로 클릭 → 지우기.', '<strong>Firefox:</strong> 설정 → 개인정보 및 보안 → 쿠키 및 사이트 데이터 → 데이터 관리에서 이 사이트를 검색하고 ‘선택 항목 삭제’를 클릭하세요.', '<strong>Safari(Mac):</strong> 설정 → 개인정보 보호 → 웹사이트 데이터 관리에서 이 사이트를 검색하고 ‘제거’를 클릭하세요.', '<strong>iPhone 및 iPad:</strong> 설정 → 앱 → Safari → 고급 → 웹사이트 데이터(이전 버전: 설정 → Safari → 고급)에서 이 사이트를 검색하고 왼쪽으로 밀어 삭제하세요.', '<strong>Android(Chrome):</strong> ⋮ → 설정 → 개인정보 보호 및 보안 → 인터넷 사용 기록 삭제를 누르고 ‘쿠키 및 사이트 데이터’를 선택한 뒤 ‘데이터 삭제’를 누르세요.']],

@@ -118,7 +118,7 @@ export const help = {
 };
 export const names = {
   'Square': 'Quadrado', 'Rounded': 'Arredondado', 'Dots': 'Pontos', 'Classy': 'Elegante', 'Diamond': 'Losango', 'Small squares': 'Quadrados pequenos',
-  'Vertical bars': 'Barras verticais', 'Horizontal bars': 'Barras horizontais', 'Extra rounded': 'Muito arredondado', 'Circle': 'Círculo', 'Leaf': 'Folha', 'Pointed': 'Pontiagudo',
+  'Vertical bars': 'Barras verticais', 'Horizontal bars': 'Barras horizontais', 'Extra rounded': 'Muito arredondado', 'Slightly rounded': 'Levemente arredondado', 'Circle': 'Círculo', 'Leaf': 'Folha', 'Pointed': 'Pontiagudo',
   'Classic': 'Clássico', 'Charge': 'Energia', 'Ocean': 'Oceano', 'Bars': 'Barras', 'Ember': 'Brasa', 'Inverse': 'Invertido', 'Soft': 'Suave', 'Bubble': 'Bolha',
   'Sunset': 'Pôr do sol', 'Berry': 'Frutas vermelhas', 'Forest': 'Floresta', 'Diamonds': 'Losangos', 'Stripes': 'Listras', 'Lines': 'Linhas', 'Pixel': 'Pixel', 'Candy': 'Doce',
   'Gold': 'Ouro', 'Sky': 'Céu', 'Mint': 'Menta', 'Crimson': 'Carmesim', 'Slate': 'Ardósia', 'Retro': 'Retrô', 'Ink drop': 'Gota de tinta', 'Arrow': 'Seta',
@@ -313,6 +313,12 @@ export const pages = {
     waBtn: 'Conversar no WhatsApp',
     waScan: 'Escaneie para conversar',
     waMsg: 'Olá {brand}! Tenho uma dúvida.',
+    includeCredit: 'Criou um código QR com {brand}? Se puder, dê-nos o crédito, por exemplo mencionando {brand} ou linkando para qrcodestation.com. Isso ajuda mais pessoas a encontrar o site. Obrigado!',
+    moreEyebrow: 'Mais de mim',
+    moreTitle: 'Conheça meus outros',
+    moreHighlight: 'projetos legais',
+    evDesc: 'Um diretório gratuito, com mapa, de estações públicas de recarga para veículos elétricos em todo o Nepal. Encontre e filtre carregadores perto de você, veja o caminho e planeje uma viagem entre cidades.',
+    moreCta: 'Escaneie ou clique para visitar',
     includeTitle: 'Ao entrar em contato, inclua por favor:',
     include: [
       'Em que você precisa de ajuda, ou o feedback ou ideia que quer compartilhar',
@@ -343,7 +349,7 @@ export const pages = {
       ['h2', 'Dados guardados no seu navegador (armazenamento local)'],
       ['p', 'Para lembrar do seu trabalho entre visitas, o {brand} guarda algumas informações no armazenamento local do seu navegador. Elas ficam no seu dispositivo: não são enviadas aos nossos servidores, não são compartilhadas e não são usadas para rastreamento. Isto é o que é guardado:'],
       ['ul', ['<strong>Seu conteúdo:</strong> os textos, links e outros dados que você alterou em relação aos valores de exemplo.', '<strong>Seu design:</strong> cores, formas, estilos prontos, configurações do logo e opções de qualidade.', '<strong>Seus logos:</strong> as imagens enviadas (apenas as com menos de cerca de 400 KB são mantidas).', '<strong>Seu tema:</strong> modo claro ou escuro, guardado como <code>theme</code>.']],
-      ['p', 'Seu conteúdo e design ficam sob uma única chave, <code>qrcodestation-state-v1</code>. O armazenamento local não tem data de validade, então esses dados ficam até você apagá‑los. Janelas privadas ou anônimas os apagam automaticamente ao serem fechadas.'],
+      ['p', 'Seu conteúdo e design ficam sob uma única chave, <code>qrcodestation-state-v1</code>. O armazenamento local não tem data de validade, então esses dados ficam até você apagá‑los. Janelas privadas ou anônimas os apagam automaticamente ao serem fechadas. Os favoritos que você salva são armazenados da mesma forma, sob <code>qrcodestation-favs-v1</code>.'],
       ['h2', 'Como apagar seus dados guardados'],
       ['p', 'Escolha qualquer opção. Os nomes dos menus podem variar um pouco entre versões do navegador.'],
       ['ul', ['<strong>Com um clique:</strong> toque no botão abaixo. Ele remove tudo o que o {brand} guardou neste dispositivo e navegador.', '<strong>Chrome ou Edge (computador):</strong> abra Configurações → Privacidade e segurança → Limpar dados de navegação (ou Cookies e outros dados do site → Ver todos os dados e permissões do site), encontre este site e exclua. Ou pressione F12 → Aplicativo → Armazenamento local → clique com o botão direito neste site → Limpar.', '<strong>Firefox:</strong> Configurações → Privacidade e Segurança → Cookies e dados de sites → Gerenciar dados, procure este site e clique em Remover selecionados.', '<strong>Safari (Mac):</strong> Ajustes → Privacidade → Gerenciar dados de sites, procure este site e clique em Remover.', '<strong>iPhone e iPad:</strong> Ajustes → Apps → Safari → Avançado → Dados de sites (em versões antigas: Ajustes → Safari → Avançado), procure este site e deslize para a esquerda para apagar.', '<strong>Android (Chrome):</strong> toque em ⋮ → Configurações → Privacidade e segurança → Limpar dados de navegação, escolha “Cookies e dados do site” e toque em Limpar dados.']],

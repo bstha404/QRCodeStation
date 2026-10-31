@@ -5,11 +5,16 @@ const locale = getLocale(Astro.url.pathname);
 const I = useI18n(locale);
 const typeName = (l) => locale === 'en' ? l.nav + ' QR code' : I.t('ft_qr', { x: I.t('p_' + l.type) });
 const tagline = locale === 'en' ? 'Free QR Code Generator' : I.home.eyebrow;
+const pv = I.c.pages.privacy, tok = (s) => s.replaceAll('{brand}', BRAND);
 const year = new Date().getFullYear();
 const coLabel = { '/about/': 'nav_about', '/faq/': 'nav_faq', '/contact/': 'nav_contact', '/privacy-policy/': 'privacy', '/terms-and-conditions/': 'terms' };
 ---
 <footer class="site-footer">
   <div class="wrap">
+    <div class="footer-top">
+      <a class="brand" href={localizePath(locale, '/')}><img src="/favicon.svg" alt="" width="30" height="30" /><span>{BRAND}</span></a>
+      <div class="footer-clear"><button type="button" class="btn ghost" data-footer-clear>{pv.clearBtn}</button><span class="hint" data-footer-status role="status" aria-live="polite"></span></div>
+    </div>
     <nav class="footer-links" aria-label="QR code types">
       <span class="label">{I.t('ft_types')}</span>
       <ul>{LANDINGS.map(l => <li><a href={localizePath(locale, `/${l.slug}/`)}>{typeName(l)}</a></li>)}</ul>
@@ -24,3 +29,12 @@ const coLabel = { '/about/': 'nav_about', '/faq/': 'nav_faq', '/contact/': 'nav_
     </div>
   </div>
 </footer>
+<script define:vars={{ done: tok(pv.clearDone) }}>
+  document.querySelectorAll('[data-footer-clear]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      ['qrcodestation-state-v1', 'qrcodestation-favs-v1', 'qrstudio-state-v2', 'theme'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+      document.dispatchEvent(new Event('favs-changed'));
+      var st = document.querySelector('[data-footer-status]'); if (st) st.textContent = done;
+    });
+  });
+</script>

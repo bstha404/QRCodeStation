@@ -118,7 +118,7 @@ export const help = {
 };
 export const names = {
   'Square': 'Carré', 'Rounded': 'Arrondi', 'Dots': 'Points', 'Classy': 'Élégant', 'Diamond': 'Losange', 'Small squares': 'Petits carrés',
-  'Vertical bars': 'Barres verticales', 'Horizontal bars': 'Barres horizontales', 'Extra rounded': 'Très arrondi', 'Circle': 'Cercle', 'Leaf': 'Feuille', 'Pointed': 'Pointu',
+  'Vertical bars': 'Barres verticales', 'Horizontal bars': 'Barres horizontales', 'Extra rounded': 'Très arrondi', 'Slightly rounded': 'Légèrement arrondi', 'Circle': 'Cercle', 'Leaf': 'Feuille', 'Pointed': 'Pointu',
   'Classic': 'Classique', 'Charge': 'Énergie', 'Ocean': 'Océan', 'Bars': 'Barres', 'Ember': 'Braise', 'Inverse': 'Inversé', 'Soft': 'Doux', 'Bubble': 'Bulle',
   'Sunset': 'Coucher de soleil', 'Berry': 'Fruits rouges', 'Forest': 'Forêt', 'Diamonds': 'Losanges', 'Stripes': 'Rayures', 'Lines': 'Lignes', 'Pixel': 'Pixel', 'Candy': 'Bonbon',
   'Gold': 'Or', 'Sky': 'Ciel', 'Mint': 'Menthe', 'Crimson': 'Cramoisi', 'Slate': 'Ardoise', 'Retro': 'Rétro', 'Ink drop': 'Goutte d’encre', 'Arrow': 'Flèche',
@@ -313,6 +313,12 @@ export const pages = {
     waBtn: 'Discuter sur WhatsApp',
     waScan: 'Scannez pour discuter',
     waMsg: 'Bonjour {brand} ! J’ai une question.',
+    includeCredit: 'Vous avez créé un code QR avec {brand} ? Si vous le pouvez, mentionnez-nous, par exemple en citant {brand} ou en ajoutant un lien vers qrcodestation.com. Cela aide plus de personnes à découvrir le site. Merci !',
+    moreEyebrow: 'Plus de ma part',
+    moreTitle: 'Découvrez mes autres',
+    moreHighlight: 'projets sympas',
+    evDesc: 'Un annuaire gratuit, avec carte, des bornes de recharge publiques pour véhicules électriques au Népal. Trouvez et filtrez les bornes près de vous, obtenez l’itinéraire et planifiez un trajet entre villes.',
+    moreCta: 'Scannez ou cliquez pour visiter',
     includeTitle: 'Quand vous nous contactez, merci d’indiquer :',
     include: [
       'De quoi vous avez besoin, ou le retour ou l’idée que vous voulez partager',
@@ -343,7 +349,7 @@ export const pages = {
       ['h2', 'Données stockées dans votre navigateur (stockage local)'],
       ['p', 'Pour retrouver votre travail d’une visite à l’autre, {brand} enregistre quelques informations dans le stockage local de votre navigateur. Elles restent sur votre appareil : elles ne sont pas envoyées à nos serveurs, ni partagées, ni utilisées pour vous suivre. Voici ce qui est enregistré :'],
       ['ul', ['<strong>Votre contenu :</strong> les textes, liens et autres informations que vous avez modifiés par rapport aux valeurs d’exemple.', '<strong>Votre design :</strong> couleurs, formes, styles prédéfinis, réglages du logo et options de qualité.', '<strong>Vos logos :</strong> les images importées (seules celles de moins d’environ 400 Ko sont conservées).', '<strong>Votre thème :</strong> mode clair ou sombre, enregistré sous <code>theme</code>.']],
-      ['p', 'Votre contenu et votre design sont enregistrés sous une seule clé, <code>qrcodestation-state-v1</code>. Le stockage local n’a pas de date d’expiration : ces données restent jusqu’à ce que vous les supprimiez. Les fenêtres privées les suppriment automatiquement à la fermeture.'],
+      ['p', 'Votre contenu et votre design sont enregistrés sous une seule clé, <code>qrcodestation-state-v1</code>. Le stockage local n’a pas de date d’expiration : ces données restent jusqu’à ce que vous les supprimiez. Les fenêtres privées les suppriment automatiquement à la fermeture. Les favoris que vous enregistrez sont stockés de la même façon, sous <code>qrcodestation-favs-v1</code>.'],
       ['h2', 'Comment supprimer vos données enregistrées'],
       ['p', 'Choisissez l’une des options. Les noms des menus peuvent varier légèrement selon la version du navigateur.'],
       ['ul', ['<strong>En un clic :</strong> appuyez sur le bouton ci‑dessous. Il supprime tout ce que {brand} a enregistré sur cet appareil et ce navigateur.', '<strong>Chrome ou Edge (ordinateur) :</strong> ouvrez Paramètres → Confidentialité et sécurité → Effacer les données de navigation (ou Cookies et autres données de sites → Afficher toutes les données et autorisations), trouvez ce site et supprimez‑le. Ou appuyez sur F12 → Application → Stockage local → clic droit sur ce site → Effacer.', '<strong>Firefox :</strong> Paramètres → Vie privée et sécurité → Cookies et données de sites → Gérer les données, recherchez ce site et cliquez sur Supprimer la sélection.', '<strong>Safari (Mac) :</strong> Réglages → Confidentialité → Gérer les données de sites web, recherchez ce site et cliquez sur Supprimer.', '<strong>iPhone et iPad :</strong> Réglages → Apps → Safari → Avancé → Données de sites web (sur les versions plus anciennes : Réglages → Safari → Avancé), recherchez ce site et balayez vers la gauche pour supprimer.', '<strong>Android (Chrome) :</strong> touchez ⋮ → Paramètres → Confidentialité et sécurité → Effacer les données de navigation, choisissez « Cookies et données de sites », puis touchez Effacer les données.']],

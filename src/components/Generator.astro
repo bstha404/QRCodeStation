@@ -4,7 +4,7 @@ import { siFacebook, siYoutube, siX, siInstagram, siTelegram, siSignal, siMastod
 import ColorPresets from './ColorPresets.astro';
 import HelpBox from './HelpBox.astro';
 import { useI18n } from '../i18n/index.js';
-import { SOCIALS, TYPES, BODY, FRAME, BALL, ECC, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, bodyThumb, frameThumb, ballThumb, QFRAMES, qrFrameThumb, iconLogo, isIconLogo, ICON_STYLES } from '../lib/render.js';
+import { SOCIALS, TYPES, BODY, FRAME, BALL, ECC, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, bodyThumb, frameThumb, ballThumb, QFRAMES, qrFrameThumb, iconLogo, isIconLogo, ICON_STYLES, LOGO_SHAPES } from '../lib/render.js';
 
 const ICONS: Record<string, string> = Object.fromEntries(Object.entries({
   facebook: siFacebook, youtube: siYoutube, x: siX, instagram: siInstagram, telegram: siTelegram, signal: siSignal, mastodon: siMastodon,
@@ -32,6 +32,10 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   <div class="type-bar pills" role="group" aria-label="Content type">
     {TYPES.map(t => <button type="button" class="pill" data-type={t.id} aria-pressed={t.id === initialType ? 'true' : 'false'}>{x(t.label)}</button>)}
   </div>
+  <button type="button" class="view-fab" data-action="toggleView" data-view="settings" aria-label={I.t('view_qr')} title={I.t('view_qr')}>
+    <svg class="fab-qr" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3.500" y="3.500" width="7" height="7" rx="1"/><rect x="13.500" y="3.500" width="7" height="7" rx="1"/><rect x="3.500" y="13.500" width="7" height="7" rx="1"/><path d="M14 14h2.500v2.500H14zM18 18h2.500v2.500H18zM18 14h2.500M14 18h2.500" stroke-linecap="round"/></svg>
+    <svg class="fab-set" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
+  </button>
   <div class="tabs" role="tablist" aria-label="QR code options">
     <button type="button" class="tab" role="tab" id="tab-content" aria-controls="panel-content" data-tab="content" aria-selected="true"><span class="step">1</span><span class="tab-name">{x("Content")}</span></button>
     <button type="button" class="tab" role="tab" id="tab-design" aria-controls="panel-design" data-tab="design" aria-selected="false"><span class="step">2</span><span class="tab-name">{x("Design")}</span><span class="card-sum" data-summary="design"></span></button>
@@ -43,8 +47,15 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   <div class="gen-main" data-panels>
     <div class="panel panel-stack" role="tabpanel" id="panel-content" aria-labelledby="tab-content" data-panel="content">
     <section class="card">
-      <div class="card-bar"><span>{x("Settings")}</span><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></div>
+      <div class="card-bar"><span>{x("Settings")}</span><span class="bar-actions"><button type="button" class="icon-btn" data-action="toggleDefaults" aria-pressed="false" aria-label={I.t('hide_defaults')} title={I.t('hide_defaults')}>
+          <svg class="eye-on" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.500-7 10-7 10 7 10 7-3.500 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-off" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.600 6.100A10 10 0 0 1 12 5c6.500 0 10 7 10 7a17 17 0 0 1-3.200 4.200M6.600 6.600A17 17 0 0 0 2 12s3.500 7 10 7c1.700 0 3.200-.4 4.500-1.100M9.900 9.900a3 3 0 0 0 4.200 4.200"/></svg>
+        </button><button type="button" class="collapse-btn" data-action="togglePanel" aria-expanded="true" aria-label={x("Collapse settings")}>−</button></span></div>
       <div class="card-body" style="padding-top:20px">
+        <div class="eye-row"><button type="button" class="icon-btn" data-action="toggleDefaults" aria-pressed="false" aria-label={I.t('hide_defaults')} title={I.t('hide_defaults')}>
+          <svg class="eye-on" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.500-7 10-7 10 7 10 7-3.500 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          <svg class="eye-off" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.600 6.100A10 10 0 0 1 12 5c6.500 0 10 7 10 7a17 17 0 0 1-3.200 4.200M6.600 6.600A17 17 0 0 0 2 12s3.500 7 10 7c1.700 0 3.200-.4 4.500-1.100M9.900 9.900a3 3 0 0 0 4.200 4.200"/></svg>
+        </button></div>
         {TYPES.map(t => (
           <div class="fields" data-fields={t.id} hidden={t.id !== initialType}>
             {t.fields.map(f => (
@@ -133,23 +144,29 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
         <div class="logo-row">
           <div class="logo-list" data-logo-list></div>
           <label class="upload" data-dropzone><span class="upload-main">{x("Upload images")}</span><small class="upload-hint">{x("or drag and drop")}</small><input type="file" accept="image/*" multiple data-logo-file hidden /></label>
+          <button type="button" class="sample-logo sample-none" data-action="noLogo" title={I.t('logo_none')} aria-label={I.t('logo_none')} aria-pressed="true"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg></button>
           <button type="button" class="link-btn" data-action="removeLogo" data-show="logo" hidden>{x("Remove all logos")}</button>
         </div>
         <div class="sample-logos">
           <span class="label">{I.t('logo_try')}</span>
-          <div class="pills" role="group" aria-label={I.t('logo_st_label')}>{ICON_STYLES.map(st => <button type="button" class="pill" data-opt="iconStyle" data-value={st} aria-pressed={st === 'rounded' ? 'true' : 'false'}>{I.t('logo_st_' + st)}</button>)}</div>
+          <div class="pills" role="group" aria-label={I.t('logo_shape')}>{LOGO_SHAPES.map(st => <button type="button" class="pill" data-opt="iconStyle" data-value={st} aria-pressed={st === 'round' ? 'true' : 'false'}>{I.t('logo_st_' + (st === 'round' ? 'rounded' : st))}</button>)}</div>
+          <label class="range" data-show="iconRound" hidden><span>{I.t('logo_round')}</span><input type="range" min="0" max="100" step="1" data-num="logoRound" value="48" /><output data-out="logoRound" data-suffix="%">48%</output></label>
           <label class="switch-row"><span><b>{I.t('logo_icustom')}</b></span><input type="checkbox" class="switch" role="switch" data-bool="iconCustom" /></label>
           <div class="icon-color" data-show="iconCustom" hidden>
             <div class="colors"><label class="color"><span class="label">{x("Icon color")}</span><span class="color-box"><input type="color" data-color="iconColor" value="#0B0D0C" aria-label={x("Icon color")} /><input type="text" data-hex="iconColor" maxlength="7" value="#0B0D0C" /></span></label></div>
-            <ColorPresets scope="icon" targets={[['iconColor', 'Icon color']]} />
           </div>
-          <div class="sample-row"><button type="button" class="sample-logo sample-none" data-action="noLogo" title={I.t('logo_none')} aria-label={I.t('logo_none')} aria-pressed="true"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M6 6l12 12"/></svg></button>{SAMPLE_LOGOS.map(l => <button type="button" class="sample-logo" data-sample-logo={l.url} data-ihex={l.hex} data-ipath={l.path} title={l.title} aria-label={l.title} aria-pressed="false"><img src={l.url} alt="" width="28" height="28" /></button>)}</div>
+          <label class="switch-row"><span><b>{I.t('logo_gcustom')}</b></span><input type="checkbox" class="switch" role="switch" data-bool="iconFgCustom" /></label>
+          <div class="icon-color" data-show="iconFgCustom" hidden>
+            <div class="colors"><label class="color"><span class="label">{x("Glyph color")}</span><span class="color-box"><input type="color" data-color="iconFg" value="#FFFFFF" aria-label={x("Glyph color")} /><input type="text" data-hex="iconFg" maxlength="7" value="#FFFFFF" /></span></label></div>
+          </div>
+          <div data-show="iconAny" hidden><ColorPresets scope="icon" targets={[['iconColor', 'Icon color', 'iconCustom'], ['iconFg', 'Glyph color', 'iconFgCustom']]} /></div>
+          <div class="sample-row">{SAMPLE_LOGOS.map(l => <button type="button" class="sample-logo" data-sample-logo={l.url} data-ihex={l.hex} data-ipath={l.path} title={l.title} aria-label={l.title} aria-pressed="false"><img src={l.url} alt="" width="28" height="28" /></button>)}</div>
           <input class="input" type="search" data-icon-search data-kbd placeholder={`${I.t('logo_search_ph')} · ${I.t('kbd_press', { key: '/' })}`} aria-label={I.t('logo_search_ph')} aria-keyshortcuts="/ Control+K Meta+K" autocomplete="off" spellcheck="false" />
           <div class="sample-row" data-icon-results hidden></div>
           <p class="hint" data-icon-status hidden></p>
           {/* <p class="hint">{I.t('logo_icons_note')}</p> */}
         </div>
-        <p class="hint" data-show="logoMany" hidden>{x("Tap a logo to preview it on the code. Tap − to remove one.")}</p>
+        {/* <p class="hint" data-show="logoMany" hidden>{x("Tap a logo to preview it on the code. Tap − to remove one.")}</p> */}
         <div class="group" data-show="logo" hidden>
           <label class="range"><span>{x("Size")}</span><input type="range" min="10" max="35" step="1" data-num="logoPct" value="22" /><output data-out="logoPct" data-suffix="%">22%</output></label>
           <label class="switch-row"><span><b>{x("Clear modules behind logo")}</b><small>{x("Removes dots under the image for a clean edge")}</small></span><input type="checkbox" class="switch" role="switch" data-bool="clearLogo" checked /></label>
@@ -163,7 +180,6 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
           <div data-show="logoStyle" hidden>
             <ColorPresets scope="logo" targets={[['logoBgColor', 'Logo background', 'logoBg'], ['logoStrokeColor', 'Logo stroke', 'logoStroke']]} />
           </div>
-          <p class="warn" data-show="logoWarn" hidden>{x("A logo hides part of the code. Use error correction Q or H so it still scans.")} <button type="button" data-action="eccHigh">{x("Switch to High")}</button></p>
         </div>
       </div>
     </section>
@@ -198,7 +214,6 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
           <label class="color" data-show="qfTextColor" hidden><span class="label">{I.t('qf_textcolor_l')}</span><span class="color-box"><input type="color" data-color="qfTextColor" value={DESIGN_DEFAULTS.qfTextColor} aria-label={I.t('qf_textcolor_l')} /><input type="text" data-hex="qfTextColor" maxlength="7" value={DESIGN_DEFAULTS.qfTextColor} /></span></label>
         </div>
         <ColorPresets scope="colors" targets={[['fg', 'Code'], ['grad2', 'Gradient end', 'gradient'], ['bg', 'Background', 'bg'], ['frameColor', 'Eye frame', 'eyes'], ['ballColor', 'Eye ball', 'eyes'], ['qfColor', 'QR frame', 'qfOn'], ['qfBg', 'Frame inside', 'qfOn'], ['qfTextColor', 'Text color', 'qfTextColor']]} />
-        <p class="warn" data-show="lowContrast" hidden>{x("Low contrast between code and background. Some scanners may fail — keep the code darker than the background.")}</p>
       </div>
     </section>
     <HelpBox id="colors" title={c.help.colors.title} items={c.help.colors.items} />
@@ -233,12 +248,23 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
           <p class="qr-msg" data-qr-msg hidden={isUrl}>{x("Fill in the content fields to generate your QR code.")}</p>
         </div>
       </div>
+      <div class="qr-actions">
+        <button type="button" class="btn ghost fav-btn" data-action="fav" aria-pressed="false"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 20.5s-7.5-4.6-9.2-9.4C1.7 7.900 3.900 5 6.900 5c2 0 3.800 1.100 5.100 3 1.300-1.900 3.100-3 5.100-3 3 0 5.200 2.900 4.100 6.100-1.700 4.800-9.200 9.400-9.200 9.400z"/></svg><span data-fav-label>{I.t('fav_add')}</span></button>
+        <button type="button" class="btn ghost" data-action="resetAll"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.700"/><path d="M3 4v5h5"/></svg>{I.t('reset_all')}</button>
+        <div class="warn-wrap" data-show="anyWarn" hidden>
+          <button type="button" class="btn ghost warn-btn" data-action="toggleWarn" aria-expanded="false" aria-label={I.t('warn_l')} title={I.t('warn_l')}><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.500M12 17.200v.1"/></svg></button>
+          <div class="warn-pop" role="status">
+            <p class="warn" data-show="lowContrast" hidden>{x("Low contrast between code and background. Some scanners may fail — keep the code darker than the background.")}</p>
+            <p class="warn" data-show="logoWarn" hidden>{x("A logo hides part of the code. Use error correction Q or H so it still scans.")} <button type="button" data-action="eccHigh">{x("Switch to High")}</button></p>
+          </div>
+        </div>
+      </div>
       <div class="group tweak">
         <label class="range"><span>{x("Margin")}</span><input type="range" min="0" max="10" data-num="border" value="4" /><output data-out="border">4</output></label>
         <label class="range"><span>{x("Rounded corners")}</span><input type="range" min="0" max="35" step="1" data-num="radius" value="0" /><output data-out="radius" data-suffix="%">0%</output></label>
       </div>
       <div class="group" style="gap:8px">
-        <label class="range"><span>{x("Quality")}</span><input type="range" min="200" max="4000" step="100" data-num="exportSize" value="1024" /><output data-out="exportSize">1024 × 1024</output></label>
+        <label class="range"><span>{x("Quality")}</span><input type="range" min="4" max="12" step="1" data-pow="exportSize" value="10" /><output data-out="exportSize">1024 × 1024</output></label>
         <span class="hint" data-scale-hint>{x("SVG scales to any size")}</span>
       </div>
       <div class="btns">
@@ -277,12 +303,21 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   </div>
 </div>
 
+<dialog class="crop-dlg" data-crop aria-labelledby="crop-title">
+  <h3 id="crop-title">{I.t('crop_title')}</h3>
+  <p class="hint">{I.t('crop_hint')}</p>
+  <div class="crop-stage"><canvas width="320" height="320" data-crop-canvas></canvas></div>
+  <label class="range"><span>{I.t('crop_zoom')}</span><input type="range" min="100" max="400" step="1" value="100" data-crop-zoom /></label>
+  <div class="crop-btns"><button type="button" class="btn ghost" data-crop-act="cancel">{I.t('crop_cancel')}</button><button type="button" class="btn ghost" data-crop-act="skip">{I.t('crop_skip')}</button><button type="button" class="btn primary" data-crop-act="ok">{I.t('crop_ok')}</button></div>
+</dialog>
+
 <script id="i18n-data" type="application/json" set:html={JSON.stringify({ ui: I.ui, sheet: I.sheet, names: c.names, defs: c.defs, locale, dir: I.dir, site: Astro.site?.origin })}></script>
 
 <script>
   import { QrCode, QrSegment } from '../lib/qrcodegen.js';
-  import { TYPES, BODY, FRAME, BALL, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, buildPayload, buildSheet, contrast, COLOR_FAMILIES, APP_LINKS, iconLogo, isIconLogo, ICON_STYLES } from '../lib/render.js';
-  let shownIconStyle = 'rounded|';
+  import { TYPES, BODY, FRAME, BALL, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, buildPayload, buildSheet, contrast, COLOR_FAMILIES, APP_LINKS, iconLogo, isIconLogo, ICON_STYLES, LOGO_SHAPES } from '../lib/render.js';
+  let shownIconStyle = 'round|48||';
+  const mkIcon = (hex: string, path: string) => iconLogo(hex, path, s.iconStyle, s.iconCustom ? s.iconColor : '', s.iconFgCustom ? s.iconFg : '', s.logoRound);
 
   const I18N = JSON.parse(document.getElementById('i18n-data')!.textContent || '{}');
   const T = (id: string, v?: Record<string, any>) => { const s0: string = (I18N.ui && I18N.ui[id]) ?? id; return v ? s0.replace(/\{(\w+)\}/g, (_: string, k: string) => String(v[k] ?? '')) : s0; };
@@ -292,7 +327,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   const $ = (sel: string) => root.querySelector(sel) as any;
   const $$ = (sel: string) => Array.from(root.querySelectorAll(sel)) as any[];
 
-  const defaults = () => ({ type: 'url', data: { ...FIELD_DEFAULTS, ...(I18N.defs || {}) }, ...DESIGN_DEFAULTS, qfText: T('qf_text'), logo: null as string | null, logos: [] as string[], logoBg: false, logoBgColor: '#FFFFFF', logoStroke: false, logoStrokeColor: '#FFFFFF', logoStrokeW: 3, logoPct: 22, clearLogo: true, iconStyle: 'rounded', iconCustom: false, iconColor: '#0B0D0C', ecc: 'M', boost: true, mask: -1, border: 4, radius: 0, presetMode: 'all', minVer: 1, maxVer: 40, exportSize: 1024, showCode: false });
+  const defaults = () => ({ type: 'url', data: { ...FIELD_DEFAULTS, ...(I18N.defs || {}) }, ...DESIGN_DEFAULTS, qfText: T('qf_text'), logo: null as string | null, logos: [] as string[], logoBg: false, logoBgColor: '#FFFFFF', logoStroke: false, logoStrokeColor: '#FFFFFF', logoStrokeW: 3, logoPct: 22, clearLogo: true, iconStyle: 'round', logoRound: 48, iconCustom: false, iconColor: '#0B0D0C', iconFgCustom: false, iconFg: '#FFFFFF', ecc: 'M', boost: true, mask: -1, border: 4, radius: 0, presetMode: 'all', minVer: 1, maxVer: 40, exportSize: 1024, showCode: false, defHidden: false, stash: {} as Record<string, string> });
   let s: any = defaults();
   try {
     const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
@@ -304,7 +339,13 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   } catch (e) {}
   // Landing pages (e.g. /wifi-qr-code/) always open on their own content type.
   if (!Array.isArray(s.logos)) s.logos = [];
-  if (!ICON_STYLES.includes(s.iconStyle)) s.iconStyle = s.iconStyle === 'brand' || s.iconStyle === 'mono' ? 'plain' : 'rounded';   // older saved styles
+  s.exportSize = 2 ** Math.min(12, Math.max(4, Math.round(Math.log2(+s.exportSize || 1024))));   // sizes are powers of two
+  // Older saved styles: square / rounded / circle became one 'round' shape with a roundness value.
+  if (s.iconStyle === 'brand' || s.iconStyle === 'mono') s.iconStyle = 'plain';
+  else if (s.iconStyle === 'square') { s.iconStyle = 'round'; s.logoRound = 0; }
+  else if (s.iconStyle === 'rounded') { s.iconStyle = 'round'; s.logoRound = 48; }
+  else if (s.iconStyle === 'circle') { s.iconStyle = 'round'; s.logoRound = 100; }
+  else if (!ICON_STYLES.includes(s.iconStyle)) s.iconStyle = 'round';
   if (s.logo && !s.logos.includes(s.logo) && !isIconLogo(s.logo)) s.logos = [...s.logos, s.logo];
   if (root.dataset.initialType) s.type = root.dataset.initialType;
 
@@ -315,8 +356,9 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   const SHOW: Record<string, () => boolean> = {
     gradient: () => s.gradient, linear: () => s.gradient && s.gradType === 'linear', bg: () => !s.transparent,
     eyes: () => s.customEyes, logo: () => !!s.logo, logoMany: () => s.logos.length > 0, logoBg: () => s.logoBg, logoStyle: () => s.logoBg || s.logoStroke, logoStroke: () => s.logoStroke, logoWarn: () => !!s.logo && (s.ecc === 'L' || s.ecc === 'M'),
-    qfOn: () => s.qf !== 'none', iconCustom: () => s.iconCustom,
+    qfOn: () => s.qf !== 'none', iconCustom: () => s.iconCustom, iconFgCustom: () => s.iconFgCustom, iconAny: () => s.iconCustom || s.iconFgCustom, iconRound: () => s.iconStyle === 'round',
     qfTextColor: () => s.qf !== 'none' && s.qfCustomText,
+    anyWarn: () => SHOW.lowContrast() || SHOW.logoWarn(),
     lowContrast: () => contrast(s.fg, s.transparent ? '#FFFFFF' : s.bg) < 3,
   };
 
@@ -342,7 +384,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     set(s.presetMode === 'shape' ? { body: p.body, frame: p.frame, ball: p.ball } : { ...p });
   }
   const pal: Record<string, { fam: string; target: string }> = {};
-  const palOK = (k: string) => ({ grad2: s.gradient, bg: !s.transparent, frameColor: s.customEyes, ballColor: s.customEyes, qfColor: s.qf !== 'none', qfBg: s.qf !== 'none', qfTextColor: s.qf !== 'none' && s.qfCustomText, iconColor: s.iconCustom, logoBgColor: s.logoBg, logoStrokeColor: s.logoStroke } as Record<string, boolean>)[k] ?? true;
+  const palOK = (k: string) => ({ grad2: s.gradient, bg: !s.transparent, frameColor: s.customEyes, ballColor: s.customEyes, qfColor: s.qf !== 'none', qfBg: s.qf !== 'none', qfTextColor: s.qf !== 'none' && s.qfCustomText, iconColor: s.iconCustom, iconFg: s.iconFgCustom, logoBgColor: s.logoBg, logoStrokeColor: s.logoStroke } as Record<string, boolean>)[k] ?? true;
   function syncPalette() {
     $$('[data-palette]').forEach(root => {
       const sc = root.dataset.palette!, st = pal[sc] ||= { fam: '', target: root.dataset.default! };
@@ -363,6 +405,17 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     });
   }
 
+  // What is saved in the browser: only values that differ from the defaults, and logos under ~400 KB.
+  function snapshot() {
+    const dd = defaults().data as Record<string, any>; const out: any = { ...s, showCode: false, data: Object.fromEntries(Object.entries(s.data).filter(([k, v]) => v !== dd[k])) };
+    out.logos = s.logos.filter((l: string) => l.length <= 400000); if (out.logo && out.logo.length > 400000) out.logo = null;
+    return out;
+  }
+  const FAVS = 'qrcodestation-favs-v1';
+  const loadFavs = (): any[] => { try { const v = JSON.parse(localStorage.getItem(FAVS) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } };
+  const hashOf = (t: string) => { let h = 5381; for (let i = 0; i < t.length; i++) h = (h * 33 + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36) + t.length.toString(36); };
+  let favId = '';
+
   function render() {
     const active = document.activeElement;
     $$('[data-type]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.type === s.type)));
@@ -377,6 +430,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     $$('[data-bool]').forEach(el => { el.checked = !!s[el.dataset.bool]; });
     $$('[data-str]').forEach(el => { if (el !== active && el.value !== s[el.dataset.str]) el.value = s[el.dataset.str] ?? ''; });
     $$('[data-num]').forEach(el => { if (el !== active) el.value = s[el.dataset.num]; });
+    $$('[data-pow]').forEach(el => { if (el !== active) el.value = String(Math.log2(s[el.dataset.pow])); });
     $$('[data-out]').forEach(el => { const k = el.dataset.out; el.textContent = k === 'exportSize' ? `${s[k]} × ${s[k]}` : s[k] + (el.dataset.suffix || ''); });
     $$('[data-color]').forEach(el => { if (/^#[0-9a-f]{6}$/i.test(s[el.dataset.color])) el.value = s[el.dataset.color].toLowerCase(); });
     $$('[data-hex]').forEach(el => { if (el !== active) el.value = s[el.dataset.hex]; });
@@ -392,12 +446,12 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
       });
     }
     $('[data-fg-label]').textContent = s.gradient ? T('c_gstart') : T('c_code');
-    const iconKey = s.iconStyle + '|' + (s.iconCustom ? s.iconColor : '');
+    const iconKey = [s.iconStyle, s.logoRound, s.iconCustom ? s.iconColor : '', s.iconFgCustom ? s.iconFg : ''].join('|');
     if (iconKey !== shownIconStyle) {
       // Redraw the icon buttons in the chosen style and color; if the code shows one of them, switch it too.
       shownIconStyle = iconKey; let swap: string | null = null;
       $$('[data-sample-logo][data-ihex]').forEach(b => {
-        const url = iconLogo(b.dataset.ihex, b.dataset.ipath, s.iconStyle, s.iconCustom ? s.iconColor : '');
+        const url = mkIcon(b.dataset.ihex, b.dataset.ipath);
         if (b.dataset.sampleLogo === s.logo) swap = url;
         b.dataset.sampleLogo = url; b.querySelector('img').src = url;
       });
@@ -432,6 +486,11 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     $('[data-qr]').innerHTML = svg; $('[data-qr]').hidden = !svg;
     $('[data-qr-msg]').textContent = r.msg || ''; $('[data-qr-msg]').hidden = !!svg;
     $('[data-qr-box]').classList.toggle('checker', !!s.transparent);
+    const el0 = T(s.defHidden ? 'show_defaults' : 'hide_defaults');
+    $$('[data-action="toggleDefaults"]').forEach(eb => { eb.setAttribute('aria-pressed', String(!!s.defHidden)); eb.setAttribute('aria-label', el0); eb.title = el0; });
+    favId = r.qr ? hashOf(JSON.stringify(snapshot())) : '';
+    const faved = !!favId && loadFavs().some(f => f.id === favId), fb = $('[data-action="fav"]');
+    fb.setAttribute('aria-pressed', String(faved)); fb.disabled = !r.qr; $('[data-fav-label]').textContent = T(faved ? 'fav_on' : 'fav_add');
     $$('[data-dl], [data-action="copySvg"], [data-action="copyImg"], [data-action="printPdf"]').forEach(b => { b.disabled = !r.qr; });
 
     const E = r.qr ? 'LMQH'[r.qr.errorCorrectionLevel.ordinal] : '';
@@ -448,10 +507,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     if (s.showCode) { $('[data-payload]').value = payload; $('[data-svg-code]').value = svg; }
 
     clearTimeout(saveT);
-    saveT = setTimeout(() => {
-      const dd = defaults().data as Record<string, any>; const out: any = { ...s, data: Object.fromEntries(Object.entries(s.data).filter(([k, v]) => v !== dd[k])) }; out.logos = s.logos.filter((l: string) => l.length <= 400000); if (out.logo && out.logo.length > 400000) out.logo = null;
-      try { localStorage.setItem(STORE, JSON.stringify(out)); } catch (e) {}
-    }, 300);
+    saveT = setTimeout(() => { try { localStorage.setItem(STORE, JSON.stringify(snapshot())); } catch (e) {} }, 300);
   }
 
   function saveBlob(blob: Blob, filename: string) {
@@ -566,6 +622,35 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     removeLogo: () => set({ logo: null, logos: [] }),
     noLogo: () => set({ logo: null }),
     eccHigh: () => set({ ecc: 'H' }),
+    toggleWarn: (b) => { const w = b.closest('.warn-wrap')!; const o = !w.hasAttribute('data-open'); w.toggleAttribute('data-open', o); b.setAttribute('aria-expanded', String(o)); },
+    toggleDefaults: () => {
+      const dd = defaults().data as Record<string, any>, keys = TYPES.flatMap((t: any) => t.fields.filter((f: any) => f.type !== 'select').map((f: any) => f.k));
+      const data = { ...s.data };
+      if (!s.defHidden) {
+        // Blank only the example values nobody has edited; anything the visitor typed stays.
+        const stash: Record<string, string> = {};
+        for (const k of keys) if (typeof data[k] === 'string' && data[k] !== '' && data[k] === dd[k]) { stash[k] = data[k]; data[k] = ''; }
+        s = { ...s, data, stash, defHidden: true };
+      } else {
+        for (const [k, v] of Object.entries(s.stash || {})) if (!data[k]) data[k] = v;
+        s = { ...s, data, stash: {}, defHidden: false };
+      }
+      render();
+    },
+    resetAll: () => { s = { ...defaults(), type: s.type }; render(); },
+    fav: (b) => {
+      if (!last || !last.qr || !favId) return;
+      const favs = loadFavs(), i = favs.findIndex(f => f.id === favId);
+      if (i >= 0) favs.splice(i, 1);
+      else {
+        const svg = buildSvg(last.qr, svgOpts()), label = buildPayload(s.type, s.data).replace(/\s+/g, ' ').trim();
+        favs.unshift({ id: favId, t: Date.now(), type: s.type, label: label.length > 90 ? label.slice(0, 90) + '…' : label, svg, state: snapshot() });
+      }
+      try { localStorage.setItem(FAVS, JSON.stringify(favs.slice(0, 100))); } catch (e) {
+        const el = $('[data-fav-label]'); el.textContent = T('fav_fail'); setTimeout(render, 2500); return;
+      }
+      document.dispatchEvent(new Event('favs-changed')); render();
+    },
     resetDesign: () => set({ ...DESIGN_DEFAULTS, qfText: T('qf_text') }),
     copySvg: (b) => {
       if (!last || !last.qr) return;
@@ -619,6 +704,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     const t = e.target as any, d = t.dataset;
     if (d.field) setField(d.field, t.value);
     else if (d.num) set({ [d.num]: +t.value });
+    else if (d.pow) set({ [d.pow]: 2 ** +t.value });
     else if (d.str) set({ [d.str]: t.value });
     else if (d.color) set({ [d.color]: t.value.toUpperCase() });
     else if (d.hex) { let v = t.value.trim(); if (v && v[0] !== '#') v = '#' + v; if (/^#[0-9a-f]{6}$/i.test(v)) set({ [d.hex]: v.toUpperCase() }); }
@@ -634,7 +720,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     if (!iconList) { iconMsg.textContent = T('logo_search_load'); iconMsg.hidden = false; return; }
     const hits = iconList.filter(i => norm(i[0]).includes(n)).sort((a, b) => +!norm(a[0]).startsWith(n) - +!norm(b[0]).startsWith(n) || a[0].length - b[0].length).slice(0, 30);
     iconBox.replaceChildren(...hits.map(([title, hex, path]) => {
-      const url = iconLogo(hex, path, s.iconStyle, s.iconCustom ? s.iconColor : ''), b = document.createElement('button');
+      const url = mkIcon(hex, path), b = document.createElement('button');
       b.type = 'button'; b.className = 'sample-logo'; b.dataset.sampleLogo = url; b.dataset.ihex = hex; b.dataset.ipath = path; b.title = title; b.setAttribute('aria-label', title); b.setAttribute('aria-pressed', String(url === s.logo));
       const img = document.createElement('img'); img.src = url; img.alt = ''; b.appendChild(img); return b;
     }));
@@ -660,13 +746,52 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     if (root.hasAttribute('data-collapsed')) actions.togglePanel(field);
     field.focus({ preventScroll: true }); field.scrollIntoView({ block: 'center', behavior: 'smooth' }); field.select();
   });
-  function addLogoFiles(all: File[]) {
+  // 1:1 crop dialog shown before a logo is added: drag to move, slider to zoom.
+  const dlg = document.querySelector('[data-crop]') as HTMLDialogElement, cv = dlg.querySelector('canvas') as HTMLCanvasElement, zoomEl = dlg.querySelector('[data-crop-zoom]') as HTMLInputElement;
+  const CS = cv.width; let cr = { img: null as HTMLImageElement | null, ox: 0, oy: 0, z: 1, done: (_: string | null) => {} };
+  const crScale = () => cr.img ? CS / Math.min(cr.img.naturalWidth, cr.img.naturalHeight) * cr.z : 1;
+  const crClamp = () => { if (!cr.img) return; const k = crScale(); cr.ox = Math.min(0, Math.max(CS - cr.img.naturalWidth * k, cr.ox)); cr.oy = Math.min(0, Math.max(CS - cr.img.naturalHeight * k, cr.oy)); };
+  function crDraw(c: HTMLCanvasElement) {
+    const g = c.getContext('2d')!, f = c.width / CS, k = crScale() * f; g.clearRect(0, 0, c.width, c.height);
+    if (cr.img) g.drawImage(cr.img, cr.ox * f, cr.oy * f, cr.img.naturalWidth * k, cr.img.naturalHeight * k);
+  }
+  function cropLogo(url: string): Promise<string | null> {
+    return new Promise(res => {
+      const img = new Image();
+      img.onload = () => {
+        if (!img.naturalWidth || !img.naturalHeight) { res(url); return; }
+        cr = { img, ox: 0, oy: 0, z: 1, done: res }; zoomEl.value = '100';
+        const k = crScale(); cr.ox = (CS - img.naturalWidth * k) / 2; cr.oy = (CS - img.naturalHeight * k) / 2; crDraw(cv);
+        dlg.dataset.url = url; dlg.showModal();
+      };
+      img.onerror = () => res(null);
+      img.src = url;
+    });
+  }
+  const crEnd = (v: string | null) => { const d = cr.done; cr.done = () => {}; if (dlg.open) dlg.close(); d(v); };
+  zoomEl.addEventListener('input', () => {
+    if (!cr.img) return; const old = crScale(), nz = +zoomEl.value / 100, cx = (CS / 2 - cr.ox) / old, cy = (CS / 2 - cr.oy) / old;
+    cr.z = nz; const k = crScale(); cr.ox = CS / 2 - cx * k; cr.oy = CS / 2 - cy * k; crClamp(); crDraw(cv);
+  });
+  let drag: { x: number; y: number; ox: number; oy: number } | null = null;
+  cv.addEventListener('pointerdown', (e) => { cv.setPointerCapture(e.pointerId); drag = { x: e.clientX, y: e.clientY, ox: cr.ox, oy: cr.oy }; });
+  cv.addEventListener('pointermove', (e) => { if (!drag) return; const f = CS / cv.getBoundingClientRect().width; cr.ox = drag.ox + (e.clientX - drag.x) * f; cr.oy = drag.oy + (e.clientY - drag.y) * f; crClamp(); crDraw(cv); });
+  ['pointerup', 'pointercancel'].forEach(ev => cv.addEventListener(ev, () => { drag = null; }));
+  dlg.addEventListener('click', (e) => {
+    const a = (e.target as HTMLElement).closest('[data-crop-act]') as HTMLElement | null; if (!a) return;
+    if (a.dataset.cropAct === 'ok') {
+      const out = document.createElement('canvas'); out.width = out.height = 512; crDraw(out);
+      crEnd(out.toDataURL('image/webp', .92));
+    } else crEnd(a.dataset.cropAct === 'skip' ? dlg.dataset.url! : null);
+  });
+  dlg.addEventListener('cancel', (e) => { e.preventDefault(); crEnd(null); });
+  async function addLogoFiles(all: File[]) {
     const files = all.filter(f => f.type.startsWith('image/')); if (!files.length) return;
-    Promise.all(files.map(f => new Promise<string>(res => { const rd = new FileReader(); rd.onload = () => res(rd.result as string); rd.readAsDataURL(f); })))
-      .then(urls => {
-        const logos = [...s.logos, ...urls.filter(u => !s.logos.includes(u))];
-        set({ logos, logo: urls[urls.length - 1], ecc: s.ecc === 'L' || s.ecc === 'M' ? 'H' : s.ecc });
-      });
+    const urls = await Promise.all(files.map(f => new Promise<string>(res => { const rd = new FileReader(); rd.onload = () => res(rd.result as string); rd.readAsDataURL(f); })));
+    const out: string[] = [];
+    for (const u of urls) { const c = u.startsWith('data:image/svg+xml') ? u : await cropLogo(u); if (c) out.push(c); }   // SVG stays vector
+    if (!out.length) return;
+    set({ logos: [...s.logos, ...out.filter(u => !s.logos.includes(u))], logo: out[out.length - 1], ecc: s.ecc === 'L' || s.ecc === 'M' ? 'H' : s.ecc });
   }
   // Drag and drop images onto the upload button / logo row.
   const dz = (e: DragEvent) => ((e.target as HTMLElement).closest('[data-dropzone]') as HTMLElement | null);
@@ -682,6 +807,24 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   });
 
   render();
+
+  // Small screens: one floating button jumps between the settings and the QR code.
+  const fab = $('[data-action="toggleView"]'), sideEl = root.querySelector('.gen-side') as HTMLElement;
+  let fabT = 0; const stackMq = window.matchMedia('(max-width: 971px)');
+  function syncFab() {
+    fabT = 0; const r = sideEl.getBoundingClientRect(), vh = window.innerHeight;
+    const qr = stackMq.matches && r.top < vh * .45 && r.bottom > vh * .25;
+    fab.dataset.view = qr ? 'qr' : 'settings';
+    const l = T(qr ? 'view_settings' : 'view_qr'); fab.setAttribute('aria-label', l); fab.title = l;
+  }
+  const queueFab = () => { if (!fabT) fabT = requestAnimationFrame(syncFab); };
+  window.addEventListener('scroll', queueFab, { passive: true }); window.addEventListener('resize', queueFab); syncFab();
+  actions.toggleView = () => {
+    if (fab.dataset.view === 'qr') {
+      if (root.hasAttribute('data-collapsed')) actions.togglePanel(fab);
+      (root.querySelector('.type-bar') as HTMLElement).scrollIntoView({ block: 'start', behavior: 'smooth' });
+    } else sideEl.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  };
 
   // Presets: when collapsed show exactly two full rows, whatever the number of columns at this width.
   let presetsOpen = false;
@@ -762,14 +905,44 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
         else if (e.key === 'ArrowLeft') { e.preventDefault(); show(cur - 1, true); }
       });
     });
-    let x0 = 0, y0 = 0, tracking = false;
+    // Swipe: the panel follows the finger; letting go past a third of the width (or with a quick flick) switches tab.
+    let x0 = 0, y0 = 0, t0 = 0, tracking = false, lock = '', W = 360;
+    const rtl = () => document.documentElement.dir === 'rtl';
+    const kids = () => Array.from(panels[cur].children) as HTMLElement[];
+    const move = (dx: number, ease: string, op = 1) => kids().forEach(k => { k.style.transition = ease; k.style.transform = dx ? `translateX(${dx}px)` : ''; k.style.opacity = op === 1 ? '' : String(op); });
+    const dirOf = (dx: number) => (dx < 0 ? 1 : -1) * (rtl() ? -1 : 1);
     const skip = (el: EventTarget | null) => el instanceof HTMLElement && !!el.closest('input[type="range"], input[type="text"], textarea');
-    host.addEventListener('touchstart', e => { tracking = !skip(e.target); x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; }, { passive: true });
-    host.addEventListener('touchend', e => {
-      if (!tracking) return; tracking = false;
-      const dx = e.changedTouches[0].clientX - x0, dy = e.changedTouches[0].clientY - y0;
-      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) show(cur + (dx < 0 ? 1 : -1) * (document.documentElement.dir === 'rtl' ? -1 : 1));
+    host.addEventListener('touchstart', e => {
+      tracking = !skip(e.target) && e.touches.length === 1; lock = '';
+      x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = e.timeStamp;
+      W = Math.max(200, Math.min(host.getBoundingClientRect().width || 360, window.innerWidth));
     }, { passive: true });
+    host.addEventListener('touchmove', e => {
+      if (!tracking) return;
+      const dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
+      if (!lock) { if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) lock = 'h'; else if (Math.abs(dy) > 10) { lock = 'v'; tracking = false; } }
+      if (lock !== 'h') return;
+      const n = cur + dirOf(dx), edge = n < 0 || n > tabs.length - 1;
+      const d = edge ? dx * .25 : dx;
+      move(d, 'none', 1 - Math.min(.6, Math.abs(d) / W));
+    }, { passive: true });
+    const finish = (e: TouchEvent, cancelled: boolean) => {
+      if (!tracking) return; tracking = false;
+      if (lock !== 'h') return;
+      const dx = (cancelled ? 0 : e.changedTouches[0].clientX - x0), v = Math.abs(dx) / Math.max(1, e.timeStamp - t0);
+      const dir = dirOf(dx), n = cur + dir;
+      if (cancelled || n < 0 || n > tabs.length - 1 || !(Math.abs(dx) > W * .3 || (v > .5 && Math.abs(dx) > 40))) { move(0, 'transform .2s ease, opacity .2s ease'); return; }
+      const out = dx < 0 ? -W : W;
+      move(out, 'transform .16s ease-in, opacity .16s ease-in', 0);
+      setTimeout(() => {
+        move(0, 'none'); show(n);
+        kids().forEach(k => { k.style.transition = 'none'; k.style.transform = `translateX(${-out * .25}px)`; k.style.opacity = '0'; });
+        requestAnimationFrame(() => requestAnimationFrame(() => move(0, 'transform .2s ease-out, opacity .2s ease-out')));
+        setTimeout(() => kids().forEach(k => { k.style.transition = ''; }), 260);
+      }, 160);
+    };
+    host.addEventListener('touchend', e => finish(e, false), { passive: true });
+    host.addEventListener('touchcancel', e => finish(e, true), { passive: true });
     show(0);
   })();
 

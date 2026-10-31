@@ -5,7 +5,7 @@ const path = Astro.url.pathname;
 const locale = getLocale(path);
 const I = useI18n(locale);
 const base = stripLocale(path);
-const links = [['/about/', I.t('nav_about')], ['/faq/', I.t('nav_faq')], ['/contact/', I.t('nav_contact')]].map(([h, l]) => [localizePath(locale, h), l]);
+const links = [['/about/', I.t('nav_about')], ['/faq/', I.t('nav_faq')], ['/contact/', I.t('nav_contact')], ['/favorites/', I.t('nav_favs')]].map(([h, l]) => [localizePath(locale, h), l]);
 // Language menu: same page in another language when it exists, otherwise that language's home page.
 const target = (code) => localizePath(code, isTranslatable(base) ? base : '/');
 const tagline = locale === 'en' ? 'Free QR Code Generator' : I.home.eyebrow;
@@ -15,7 +15,7 @@ const current = LOCALES.find(l => l.code === locale);
   <div class="wrap">
     <a class="brand" href={localizePath(locale, '/')}><img src="/favicon.svg" alt="" width="34" height="34" /><span class="brand-text"><span class="brand-name">{BRAND}</span><span class="brand-tag">{tagline}</span></span></a>
     <nav class="site-nav" id="site-nav" aria-label="Main">
-      {links.map(([href, label]) => <a href={href} aria-current={path === href ? 'page' : undefined}>{label}</a>)}
+      {links.map(([href, label]) => <a href={href} aria-current={path === href ? 'page' : undefined}>{label}{href === localizePath(locale, '/favorites/') && <span class="nav-badge" data-fav-count hidden></span>}</a>)}
     </nav>
     <details class="lang" id="lang-menu">
       <summary aria-label={I.t('lang')}>
@@ -51,6 +51,11 @@ const current = LOCALES.find(l => l.code === locale);
   nav.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setNav(false); });
   document.addEventListener('click', (e) => { if (nav.classList.contains('open') && !nav.contains(e.target as Node) && !navBtn.contains(e.target as Node)) setNav(false); });
   window.addEventListener('resize', () => { if (window.innerWidth >= 720) setNav(false); });
+  const favBadge = () => {
+    let n = 0; try { const v = JSON.parse(localStorage.getItem('qrcodestation-favs-v1') || '[]'); n = Array.isArray(v) ? v.length : 0; } catch (e) {}
+    document.querySelectorAll<HTMLElement>('[data-fav-count]').forEach(b => { b.textContent = String(n); b.hidden = !n; });
+  };
+  favBadge(); document.addEventListener('favs-changed', favBadge); window.addEventListener('storage', favBadge);
   const lang = document.getElementById('lang-menu') as HTMLDetailsElement | null;
   document.addEventListener('click', (e) => { if (lang?.open && !lang.contains(e.target as Node)) lang.open = false; });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setNav(false);

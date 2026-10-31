@@ -1,0 +1,76 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from './SiteHeader.astro';
+import SiteFooter from './SiteFooter.astro';
+import { BRAND } from '../lib/seo.js';
+import { useI18n, localizePath } from '../i18n/index.js';
+
+// Favorite codes live only in this browser (localStorage), so this page is rendered empty and filled by the script below.
+interface Props { locale: string; }
+const { locale } = Astro.props;
+const I = useI18n(locale);
+const T = Object.fromEntries(['fav_open', 'fav_remove', 'fav_empty'].map(k => [k, I.t(k)]).concat([['png', I.x('Download PNG')], ['copy', I.x('Copy image')], ['copied', I.t('v_copied')], ['copyfail', I.t('v_copyfail')]]));
+---
+<Base title={`${I.t('fav_title')} – ${BRAND}`} description={I.t('fav_intro')} noindex>
+  <SiteHeader />
+  <main class="wrap">
+    <article class="page-doc" style="max-width:none">
+      <h1>{I.t('fav_title')}</h1>
+      <p class="lede">{I.t('fav_intro')}</p>
+      <p class="fav-empty" data-fav-empty hidden>{I.t('fav_empty')}</p>
+      <div class="fav-grid" data-fav-grid></div>
+    </article>
+  </main>
+  <SiteFooter />
+  <script define:vars={{ T, home: localizePath(locale, '/') }}>
+    var FAVS = 'qrcodestation-favs-v1', STORE = 'qrcodestation-state-v1';
+    var grid = document.querySelector('[data-fav-grid]'), empty = document.querySelector('[data-fav-empty]');
+    function load() { try { var v = JSON.parse(localStorage.getItem(FAVS) || '[]'); return Array.isArray(v) ? v : []; } catch (e) { return []; } }
+    var favs = load();
+    var uri = function (svg) { return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg); };
+    function sized(svg, px) {
+      var m = /viewBox="0 0 ([\d.]+) ([\d.]+)"/.exec(svg), w = m ? +m[1] : 1, h = m ? +m[2] : 1;
+      return svg.replace('<svg ', '<svg width="' + px + '" height="' + Math.round(px * h / w) + '" ');
+    }
+    function save(blob, name) { var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000); }
+    function png(f) {
+      var img = new Image();
+      img.onload = function () { var c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight; c.getContext('2d').drawImage(img, 0, 0); c.toBlob(function (b) { if (b) save(b, 'qr-code.png'); }, 'image/png'); };
+      img.src = uri(sized(f.svg, 1024));
+    }
+    function copy(f, b) {
+      var done = function (ok) { b.textContent = ok ? T.copied : T.copyfail; setTimeout(function () { b.textContent = T.copy; }, 1800); };
+      var img = new Image();
+      img.onload = function () {
+        var c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight; c.getContext('2d').drawImage(img, 0, 0);
+        c.toBlob(function (bl) {
+          if (!bl || !navigator.clipboard || !window.ClipboardItem) return done(false);
+          navigator.clipboard.write([new ClipboardItem({ 'image/png': bl })]).then(function () { done(true); }, function () { done(false); });
+        }, 'image/png');
+      };
+      img.src = uri(sized(f.svg, 1024));
+    }
+    function btn(cls, text, fn) { var b = document.createElement('button'); b.type = 'button'; b.className = 'btn ' + cls; b.textContent = text; b.addEventListener('click', fn); return b; }
+    function draw() {
+      empty.hidden = favs.length > 0;
+      grid.replaceChildren.apply(grid, favs.map(function (f) {
+        var card = document.createElement('div'); card.className = 'fav-card';
+        var well = document.createElement('div'); well.className = 'well'; var img = document.createElement('img'); img.alt = ''; img.src = uri(f.svg); well.appendChild(img);
+        var type = document.createElement('span'); type.className = 'fav-type'; type.textContent = f.type;
+        var label = document.createElement('p'); label.className = 'fav-label'; label.textContent = f.label;
+        var acts = document.createElement('div'); acts.className = 'fav-actions';
+        var op = btn('primary', T.fav_open, function () { try { localStorage.setItem(STORE, JSON.stringify(f.state)); } catch (e) {} location.href = home; });
+        op.style.gridColumn = '1 / -1';
+        var row = document.createElement('div'); row.className = 'three';
+        var dp = btn('', 'PNG', function () { png(f); });
+        var ds = btn('', 'SVG', function () { save(new Blob([sized(f.svg, 1024)], { type: 'image/svg+xml' }), 'qr-code.svg'); });
+        var cp = btn('ghost', T.copy, function () { copy(f, cp); });
+        row.append(dp, ds, cp);
+        var rm = btn('ghost full', T.fav_remove, function () { favs = favs.filter(function (x) { return x.id !== f.id; }); try { localStorage.setItem(FAVS, JSON.stringify(favs)); } catch (e) {} document.dispatchEvent(new Event('favs-changed')); draw(); });
+        acts.append(op, row, rm);
+        card.append(well, type, label, acts); return card;
+      }));
+    }
+    draw();
+  </script>
+</Base>

@@ -118,7 +118,7 @@ export const help = {
 };
 export const names = {
   'Square': 'Cuadrado', 'Rounded': 'Redondeado', 'Dots': 'Puntos', 'Classy': 'Elegante', 'Diamond': 'Rombo', 'Small squares': 'Cuadrados pequeños',
-  'Vertical bars': 'Barras verticales', 'Horizontal bars': 'Barras horizontales', 'Extra rounded': 'Muy redondeado', 'Circle': 'Círculo', 'Leaf': 'Hoja', 'Pointed': 'Puntiagudo',
+  'Vertical bars': 'Barras verticales', 'Horizontal bars': 'Barras horizontales', 'Extra rounded': 'Muy redondeado', 'Slightly rounded': 'Poco redondeado', 'Circle': 'Círculo', 'Leaf': 'Hoja', 'Pointed': 'Puntiagudo',
   'Classic': 'Clásico', 'Charge': 'Energía', 'Ocean': 'Océano', 'Bars': 'Barras', 'Ember': 'Brasa', 'Inverse': 'Inverso', 'Soft': 'Suave', 'Bubble': 'Burbuja',
   'Sunset': 'Atardecer', 'Berry': 'Frutos rojos', 'Forest': 'Bosque', 'Diamonds': 'Rombos', 'Stripes': 'Rayas', 'Lines': 'Líneas', 'Pixel': 'Píxel', 'Candy': 'Caramelo',
   'Gold': 'Oro', 'Sky': 'Cielo', 'Mint': 'Menta', 'Crimson': 'Carmesí', 'Slate': 'Pizarra', 'Retro': 'Retro', 'Ink drop': 'Gota de tinta', 'Arrow': 'Flecha',
@@ -313,6 +313,12 @@ export const pages = {
     waBtn: 'Chatear por WhatsApp',
     waScan: 'Escanea para chatear',
     waMsg: '¡Hola {brand}! Tengo una pregunta.',
+    includeCredit: '¿Creaste un código QR con {brand}? Si puedes, danos crédito, por ejemplo mencionando {brand} o enlazando a qrcodestation.com. Ayuda a que más personas encuentren el sitio. ¡Gracias!',
+    moreEyebrow: 'Más de mi parte',
+    moreTitle: 'Descubre mis otros',
+    moreHighlight: 'proyectos geniales',
+    evDesc: 'Un directorio gratuito y con mapa de estaciones públicas de carga para vehículos eléctricos en Nepal. Encuentra y filtra cargadores cercanos, obtén indicaciones y planifica un viaje entre ciudades.',
+    moreCta: 'Escanea o haz clic para visitar',
     includeTitle: 'Al contactarnos, incluye por favor:',
     include: [
       'En qué necesitas ayuda, o los comentarios o ideas que quieres compartir',
@@ -343,7 +349,7 @@ export const pages = {
       ['h2', 'Datos guardados en tu navegador (almacenamiento local)'],
       ['p', 'Para recordar tu trabajo entre visitas, {brand} guarda cierta información en el almacenamiento local de tu navegador. Se queda en tu dispositivo: no se envía a nuestros servidores, no se comparte con nadie y no se usa para rastrearte. Esto es lo que se guarda:'],
       ['ul', ['<strong>Tu contenido:</strong> los textos, enlaces y otros datos que cambiaste respecto a los valores de ejemplo.', '<strong>Tu diseño:</strong> colores, formas, estilos predefinidos, ajustes del logotipo y opciones de calidad.', '<strong>Tus logotipos:</strong> las imágenes que subiste (solo se conservan las de menos de unos 400 KB).', '<strong>Tu tema:</strong> modo claro u oscuro, guardado como <code>theme</code>.']],
-      ['p', 'Tu contenido y tu diseño se guardan bajo una sola clave, <code>qrcodestation-state-v1</code>. El almacenamiento local no caduca, así que estos datos permanecen hasta que los borres. Las ventanas privadas o de incógnito los eliminan automáticamente al cerrarse.'],
+      ['p', 'Tu contenido y tu diseño se guardan bajo una sola clave, <code>qrcodestation-state-v1</code>. El almacenamiento local no caduca, así que estos datos permanecen hasta que los borres. Las ventanas privadas o de incógnito los eliminan automáticamente al cerrarse. Los favoritos que guardes se almacenan igual, bajo <code>qrcodestation-favs-v1</code>.'],
       ['h2', 'Cómo borrar tus datos guardados'],
       ['p', 'Elige cualquier opción. Los nombres de los menús pueden variar un poco entre versiones del navegador.'],
       ['ul', ['<strong>Con un clic:</strong> pulsa el botón de abajo. Elimina todo lo que {brand} guardó en este dispositivo y navegador.', '<strong>Chrome o Edge (ordenador):</strong> abre Configuración → Privacidad y seguridad → Borrar datos de navegación (o Cookies y otros datos de sitios → Ver todos los datos y permisos de sitios), busca este sitio y bórralo. O pulsa F12 → Aplicación → Almacenamiento local → clic derecho en este sitio → Borrar.', '<strong>Firefox:</strong> Ajustes → Privacidad y seguridad → Cookies y datos del sitio → Administrar datos, busca este sitio y pulsa Eliminar seleccionados.', '<strong>Safari (Mac):</strong> Ajustes → Privacidad → Gestionar datos de sitios web, busca este sitio y pulsa Eliminar.', '<strong>iPhone e iPad:</strong> Ajustes → Apps → Safari → Avanzado → Datos de sitios web (en versiones anteriores: Ajustes → Safari → Avanzado), busca este sitio y desliza a la izquierda para borrar.', '<strong>Android (Chrome):</strong> toca ⋮ → Configuración → Privacidad y seguridad → Borrar datos de navegación, elige «Cookies y datos de sitios» y toca Borrar datos.']],

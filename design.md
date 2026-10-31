@@ -84,7 +84,7 @@ All colors are CSS custom properties on `:root` / `[data-theme]`. Components onl
 - **Borders:** 1px `line`; selected items switch to `charge`.
 - **Selected state (pills, tiles, presets, tabs, swatches):** `border-color: charge` + `color-mix(in oklab, charge 12–15%, transparent)` fill + `charge` text.
 - **Selection highlight:** `color-mix(in oklab, charge 35%, transparent)`.
-- **Warnings:** the only off-palette color is amber (`.warn`, `#d97706` on a 10% amber tint) for contrast and logo-coverage warnings.
+- **Warnings:** `.warn` uses `--charge` text on a 12% `--charge` tint (same green as selected states) for contrast and logo-coverage warnings.
 - **QR output colors are user data**, not theme tokens. Presets and the color picker never change the site theme.
 
 ### Accent gradient (headlines)

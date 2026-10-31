@@ -118,7 +118,7 @@ export const help = {
 };
 export const names = {
   'Square': 'Quadrato', 'Rounded': 'Arrotondato', 'Dots': 'Punti', 'Classy': 'Elegante', 'Diamond': 'Rombo', 'Small squares': 'Quadrati piccoli',
-  'Vertical bars': 'Barre verticali', 'Horizontal bars': 'Barre orizzontali', 'Extra rounded': 'Molto arrotondato', 'Circle': 'Cerchio', 'Leaf': 'Foglia', 'Pointed': 'Appuntito',
+  'Vertical bars': 'Barre verticali', 'Horizontal bars': 'Barre orizzontali', 'Extra rounded': 'Molto arrotondato', 'Slightly rounded': 'Leggermente arrotondato', 'Circle': 'Cerchio', 'Leaf': 'Foglia', 'Pointed': 'Appuntito',
   'Classic': 'Classico', 'Charge': 'Energia', 'Ocean': 'Oceano', 'Bars': 'Barre', 'Ember': 'Brace', 'Inverse': 'Inverso', 'Soft': 'Morbido', 'Bubble': 'Bolla',
   'Sunset': 'Tramonto', 'Berry': 'Frutti di bosco', 'Forest': 'Foresta', 'Diamonds': 'Rombi', 'Stripes': 'Righe', 'Lines': 'Linee', 'Pixel': 'Pixel', 'Candy': 'Caramella',
   'Gold': 'Oro', 'Sky': 'Cielo', 'Mint': 'Menta', 'Crimson': 'Cremisi', 'Slate': 'Ardesia', 'Retro': 'Retrò', 'Ink drop': 'Goccia d’inchiostro', 'Arrow': 'Freccia',
@@ -313,6 +313,12 @@ export const pages = {
     waBtn: 'Chatta su WhatsApp',
     waScan: 'Inquadra per chattare',
     waMsg: 'Ciao {brand}! Ho una domanda.',
+    includeCredit: 'Hai creato un codice QR con {brand}? Se puoi, citaci, ad esempio menzionando {brand} o inserendo un link a qrcodestation.com. Aiuta più persone a trovare il sito. Grazie!',
+    moreEyebrow: 'Altro da me',
+    moreTitle: 'Scopri i miei altri',
+    moreHighlight: 'progetti interessanti',
+    evDesc: 'Un elenco gratuito, su mappa, delle colonnine di ricarica pubbliche per veicoli elettrici in tutto il Nepal. Trova e filtra le colonnine vicine, ottieni le indicazioni e pianifica un viaggio tra le città.',
+    moreCta: 'Scansiona o clicca per visitare',
     includeTitle: 'Quando ci contatti, indica per favore:',
     include: [
       'Di cosa hai bisogno, o il feedback o l’idea che vuoi condividere',
@@ -343,7 +349,7 @@ export const pages = {
       ['h2', 'Dati salvati nel tuo browser (archiviazione locale)'],
       ['p', 'Per ricordare il tuo lavoro tra una visita e l’altra, {brand} salva alcune informazioni nell’archiviazione locale del browser. Restano sul tuo dispositivo: non vengono inviate ai nostri server, non vengono condivise né usate per il tracciamento. Ecco cosa viene salvato:'],
       ['ul', ['<strong>Il tuo contenuto:</strong> testi, link e altri dettagli che hai modificato rispetto ai valori di esempio.', '<strong>Il tuo design:</strong> colori, forme, stili predefiniti, impostazioni del logo e opzioni di qualità.', '<strong>I tuoi loghi:</strong> le immagini caricate (vengono conservate solo quelle sotto i 400 KB circa).', '<strong>Il tuo tema:</strong> modalità chiara o scura, salvata come <code>theme</code>.']],
-      ['p', 'Contenuto e design sono salvati con un’unica chiave, <code>qrcodestation-state-v1</code>. L’archiviazione locale non ha scadenza, quindi i dati restano finché non li elimini. Le finestre private li cancellano automaticamente alla chiusura.'],
+      ['p', 'Contenuto e design sono salvati con un’unica chiave, <code>qrcodestation-state-v1</code>. L’archiviazione locale non ha scadenza, quindi i dati restano finché non li elimini. Le finestre private li cancellano automaticamente alla chiusura. I preferiti che salvi sono archiviati allo stesso modo, con la chiave <code>qrcodestation-favs-v1</code>.'],
       ['h2', 'Come eliminare i dati salvati'],
       ['p', 'Scegli una qualsiasi opzione. I nomi dei menu possono variare leggermente tra le versioni del browser.'],
       ['ul', ['<strong>Con un clic:</strong> premi il pulsante qui sotto. Rimuove tutto ciò che {brand} ha salvato su questo dispositivo e browser.', '<strong>Chrome o Edge (computer):</strong> apri Impostazioni → Privacy e sicurezza → Cancella dati di navigazione (oppure Cookie e altri dati dei siti → Visualizza tutti i dati e le autorizzazioni dei siti), trova questo sito ed eliminalo. Oppure premi F12 → Applicazione → Archiviazione locale → clic destro su questo sito → Cancella.', '<strong>Firefox:</strong> Impostazioni → Privacy e sicurezza → Cookie e dati dei siti → Gestisci dati, cerca questo sito e clicca su Rimuovi selezionati.', '<strong>Safari (Mac):</strong> Impostazioni → Privacy → Gestisci dati siti web, cerca questo sito e clicca su Rimuovi.', '<strong>iPhone e iPad:</strong> Impostazioni → App → Safari → Avanzate → Dati dei siti web (nelle versioni meno recenti: Impostazioni → Safari → Avanzate), cerca questo sito e scorri verso sinistra per eliminare.', '<strong>Android (Chrome):</strong> tocca ⋮ → Impostazioni → Privacy e sicurezza → Cancella dati di navigazione, scegli «Cookie e dati dei siti» e tocca Cancella dati.']],

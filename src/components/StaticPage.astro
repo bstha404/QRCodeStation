@@ -2,6 +2,7 @@
 import Page from '../layouts/Page.astro';
 import Faq from './Faq.astro';
 import { BRAND, CONTACT_EMAIL, WHATSAPP_NUMBER, WHATSAPP_DISPLAY, LANDINGS } from '../lib/seo.js';
+import { readFileSync } from 'node:fs';
 import { QrCode } from '../lib/qrcodegen.js';
 import { buildSvg, DESIGN_DEFAULTS } from '../lib/render.js';
 import { useI18n, localizePath } from '../i18n/index.js';
@@ -22,9 +23,13 @@ const jsonLd = id === 'faq' ? [{ '@context': 'https://schema.org', '@type': 'FAQ
 const mailTo = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(tok(I.c.pages.contact.emailSubject))}`;
 const waText = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(tok(I.c.pages.contact.waMsg))}`;
 const mailHref = mailTo, waHref = waText;
-const qrSvg = (txt) => buildSvg(QrCode.encodeText(txt, QrCode.Ecc.MEDIUM), { ...DESIGN_DEFAULTS, border: 2 });
+const qrSvg = (txt) => buildSvg(QrCode.encodeText(txt, QrCode.Ecc.MEDIUM), { ...DESIGN_DEFAULTS, fg: 'currentColor', transparent: true, border: 2 });
 const emailSvg = id === 'contact' ? qrSvg(mailTo) : '';
 const waSvg = id === 'contact' ? qrSvg(waText) : '';
+// "More from me": the maker's other project, with a QR code that carries its own logo.
+const EV_URL = 'https://evchargingstationnepal.com/';
+const evLogo = id === 'contact' ? 'data:image/png;base64,' + readFileSync('branding/evchargingstationnepal-logo.png').toString('base64') : '';
+const evSvg = id === 'contact' ? buildSvg(QrCode.encodeText(EV_URL, QrCode.Ecc.HIGH), { ...DESIGN_DEFAULTS, fg: 'currentColor', transparent: true, border: 1, body: 'dots', frame: 'extra', ball: 'rounded', logo: evLogo, logoSize: .24, clearLogo: true, logoBg: true, logoBgColor: '#FFFFFF', iconStyle: 'round', logoRound: 48 }) : '';
 const typeLabel = (l) => locale === 'en' ? `${l.nav} QR code` : I.t('ft_qr', { x: I.t('p_' + l.type) });
 ---
 <Page title={tok(pg.title)} description={tok(pg.desc)} heading={tok(pg.h1)} updated={updated} jsonLd={jsonLd}>
@@ -41,7 +46,7 @@ const typeLabel = (l) => locale === 'en' ? `${l.nav} QR code` : I.t('ft_qr', { x
     <script define:vars={{ done: tok(pg.clearDone) }}>
       document.querySelectorAll('[data-clear-storage]').forEach(function (btn) {
         btn.addEventListener('click', function () {
-          ['qrcodestation-state-v1', 'qrstudio-state-v2', 'theme'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
+          ['qrcodestation-state-v1', 'qrcodestation-favs-v1', 'qrstudio-state-v2', 'theme'].forEach(function (k) { try { localStorage.removeItem(k); } catch (e) {} });
           var st = document.querySelector('[data-clear-status]'); if (st) st.textContent = done;
         });
       });
@@ -72,6 +77,20 @@ const typeLabel = (l) => locale === 'en' ? `${l.nav} QR code` : I.t('ft_qr', { x
     <section class="contact-card contact-include">
       <h2>{pg.includeTitle}</h2>
       <ul>{pg.include.map(li => <li>{li}</li>)}</ul>
+      <p>{tok(pg.includeCredit)}</p>
+    </section>
+    <section class="more-from" aria-labelledby="more-h">
+      <p class="eyebrow">{pg.moreEyebrow}</p>
+      <h2 id="more-h">{pg.moreTitle} <span>{pg.moreHighlight}</span></h2>
+      <a class="project-card" href={EV_URL} rel="noopener" target="_blank">
+        <div class="project-qr" set:html={evSvg} role="img" aria-label="QR code for evchargingstationnepal.com"></div>
+        <div class="project-text">
+          <p class="eyebrow">EV Charging Station Nepal</p>
+          <p class="project-domain" dir="ltr">evchargingstationnepal.com</p>
+          <p class="project-desc">{pg.evDesc}</p>
+          <p class="project-cta">{pg.moreCta} <span class="arrow" aria-hidden="true">→</span></p>
+        </div>
+      </a>
     </section>
   </>)}
 </Page>

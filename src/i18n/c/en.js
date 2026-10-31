@@ -124,7 +124,7 @@ export const help = {
 // Shape, preset and color-family names.
 export const names = {
   'Square': 'Square', 'Rounded': 'Rounded', 'Dots': 'Dots', 'Classy': 'Classy', 'Diamond': 'Diamond', 'Small squares': 'Small squares',
-  'Vertical bars': 'Vertical bars', 'Horizontal bars': 'Horizontal bars', 'Extra rounded': 'Extra rounded', 'Circle': 'Circle', 'Leaf': 'Leaf', 'Pointed': 'Pointed',
+  'Vertical bars': 'Vertical bars', 'Horizontal bars': 'Horizontal bars', 'Extra rounded': 'Extra rounded', 'Slightly rounded': 'Slightly rounded', 'Circle': 'Circle', 'Leaf': 'Leaf', 'Pointed': 'Pointed',
   'Classic': 'Classic', 'Charge': 'Charge', 'Ocean': 'Ocean', 'Bars': 'Bars', 'Ember': 'Ember', 'Inverse': 'Inverse', 'Soft': 'Soft', 'Bubble': 'Bubble',
   'Sunset': 'Sunset', 'Berry': 'Berry', 'Forest': 'Forest', 'Diamonds': 'Diamonds', 'Stripes': 'Stripes', 'Lines': 'Lines', 'Pixel': 'Pixel', 'Candy': 'Candy',
   'Gold': 'Gold', 'Sky': 'Sky', 'Mint': 'Mint', 'Crimson': 'Crimson', 'Slate': 'Slate', 'Retro': 'Retro', 'Ink drop': 'Ink drop', 'Arrow': 'Arrow',
@@ -329,6 +329,12 @@ export const pages = {
     waBtn: 'Chat on WhatsApp',
     waScan: 'Scan to chat',
     waMsg: 'Hello {brand}! I have a question.',
+    includeCredit: 'Made a QR code with {brand}? If you can, please give us credit, for example by mentioning {brand} or linking to qrcodestation.com. It helps more people find the site. Thank you!',
+    moreEyebrow: 'More from me',
+    moreTitle: 'Check out my other',
+    moreHighlight: 'cool projects',
+    evDesc: 'A free, map-based directory of public EV charging stations across Nepal. Find and filter chargers near you, get directions, and plan a trip between cities.',
+    moreCta: 'Scan or click to visit',
     includeTitle: 'When you contact us, please include:',
     include: [
       'What you need help with, or the feedback or idea you want to share',
@@ -359,7 +365,7 @@ export const pages = {
       ['h2', 'Data stored in your browser (local storage)'],
       ['p', 'To remember your work between visits, {brand} saves some information in your browser’s local storage. It stays on your device: it is not sent to our servers, not shared with anyone and not used for tracking. This is what is saved:'],
       ['ul', ['<strong>Your content:</strong> the text, links and other details you changed from the example values.', '<strong>Your design:</strong> colors, shapes, presets, logo settings and quality options.', '<strong>Your logos:</strong> images you uploaded (only images under about 400 KB are kept).', '<strong>Your theme:</strong> light or dark mode, saved as <code>theme</code>.']],
-      ['p', 'Your content and design are stored under one key, <code>qrcodestation-state-v1</code>. Local storage has no expiry date, so this data stays until you delete it. Private or incognito windows delete it automatically when you close them.'],
+      ['p', 'Your content and design are stored under one key, <code>qrcodestation-state-v1</code>. Local storage has no expiry date, so this data stays until you delete it. Private or incognito windows delete it automatically when you close them. Favorites you save are stored the same way, under <code>qrcodestation-favs-v1</code>.'],
       ['h2', 'How to delete your saved data'],
       ['p', 'Choose any option. Menu names can differ slightly between browser versions.'],
       ['ul', ['<strong>One click:</strong> press the button below. It removes everything {brand} saved on this device and browser.', '<strong>Chrome or Edge (computer):</strong> open Settings → Privacy and security → Delete browsing data (or Cookies and other site data → See all site data and permissions), find this site and delete it. Or press F12 → Application → Local storage → right-click this site → Clear.', '<strong>Firefox:</strong> Settings → Privacy & Security → Cookies and Site Data → Manage Data, search for this site and click Remove Selected.', '<strong>Safari (Mac):</strong> Settings → Privacy → Manage Website Data, search for this site and click Remove.', '<strong>iPhone and iPad:</strong> Settings → Apps → Safari → Advanced → Website Data (on older versions: Settings → Safari → Advanced), search for this site and swipe left to delete.', '<strong>Android (Chrome):</strong> tap ⋮ → Settings → Privacy and security → Delete browsing data, choose “Cookies and site data”, then tap Delete data.']],
