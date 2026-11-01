@@ -480,7 +480,7 @@ export function buildSvg(qr, o, px) {
     let clip = '';
     if (upload && shape !== 'plain') { const cid = `qc${gradPrefix}${++gradN}`; logo += `<clipPath id="${cid}"><path d="${shapeD(shape, ix, ix, is, rnd)}"/></clipPath>`; clip = ` clip-path="url(#${cid})"`; }
     const href = upload && /^data:image\/svg\+xml/.test(o.logo) ? recolorSvg(o.logo, o.iconCustom ? o.iconColor : '', o.iconFgCustom ? o.iconFg : '') : o.logo;
-    logo += `<image href="${href}" x="${n2(ix)}" y="${n2(ix)}" width="${n2(is)}" height="${n2(is)}" preserveAspectRatio="${upload && shape !== 'plain' ? 'xMidYMid slice' : 'xMidYMid meet'}"${clip}/>`;
+    logo += `<image href="${href}" x="${n2(ix)}" y="${n2(ix)}" width="${n2(is)}" height="${n2(is)}" preserveAspectRatio="xMidYMid meet"${clip}/>`;
   }
   // Decoration: a soft cookie-shaped backdrop, faint ghost modules and scattered specks.
   let decor = '', ghostSvg = '';

@@ -9,7 +9,7 @@ import { useI18n, localizePath } from '../i18n/index.js';
 interface Props { locale: string; }
 const { locale } = Astro.props;
 const I = useI18n(locale);
-const T = Object.fromEntries(['fav_open', 'fav_remove', 'fav_empty'].map(k => [k, I.t(k)]).concat([['png', I.x('Download PNG')], ['copy', I.x('Copy image')], ['copied', I.t('v_copied')], ['copyfail', I.t('v_copyfail')]]));
+const T = Object.fromEntries(['fav_open', 'fav_remove', 'fav_empty'].map(k => [k, I.t(k)]).concat([['png', I.x('Download PNG')], ['copy', I.t('copy_img')], ['copied', I.t('v_copied')], ['copyfail', I.t('v_copyfail')]]));
 ---
 <Base title={`${I.t('fav_title')} – ${BRAND}`} description={I.t('fav_intro')} noindex>
   <SiteHeader />

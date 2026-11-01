@@ -118,8 +118,8 @@ textarea.input { resize: vertical; line-height: 1.5; }
 .logo-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .logo-thumb { width: 64px; height: 64px; border-radius: 14px; border: 1px solid var(--line); background: var(--ink); display: grid; place-items: center; padding: 8px; cursor: pointer; }
 .logo-thumb[aria-pressed="true"] { border-color: var(--charge); background: color-mix(in oklab, var(--charge) 12%, transparent); }
-.logo-thumb { overflow: hidden; }
-.logo-thumb img { width: 100%; height: 100%; object-fit: contain; }
+.logo-thumb { overflow: hidden; position: relative; }
+.logo-thumb img { position: absolute; inset: 8px; width: calc(100% - 16px); height: calc(100% - 16px); object-fit: contain; }
 .sample-logos { display: grid; gap: 8px; margin-top: 16px; }
 .sample-row { display: flex; flex-wrap: wrap; gap: 8px; }
 .sample-logo { width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--line); background: var(--ink); display: grid; place-items: center; padding: 0; cursor: pointer; transition: border-color .15s, background .15s; }
@@ -214,7 +214,8 @@ a.pill { text-decoration: none; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab { flex: 1 1 0; min-width: max-content; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 16px; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--muted); font: 600 14px/1 'Space Grotesk', sans-serif; cursor: pointer; transition: color .15s, border-color .15s; }
 .tab:hover { color: inherit; }
-.tab[aria-selected="true"] { color: var(--charge); border-bottom-color: var(--charge); }
+.tab[aria-selected="true"] { color: var(--charge); }
+.tab-ind { position: absolute; left: 0; bottom: 0; height: 2px; width: 0; background: var(--charge); transition: transform .25s ease, width .25s ease; pointer-events: none; }
 .tab .card-sum { display: none; font-weight: 500; }
 @media (min-width: 1100px) { .tab .card-sum { display: inline; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } }
 .tab:focus-visible { outline: 2px solid var(--charge); outline-offset: -2px; }
@@ -460,12 +461,12 @@ a.pill { text-decoration: none; }
 
 /* Favorites page */
 .fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 24px; }
-.fav-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: grid; gap: 10px; align-content: start; }
+.fav-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
 .fav-card .well { padding: 12px; display: grid; place-items: center; }
 .fav-card img { width: 100%; height: auto; display: block; border-radius: 8px; }
 .fav-label { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; margin: 0; }
 .fav-type { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--charge); }
-.fav-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fav-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; padding-top: 6px; }
 .fav-actions .btn { padding-inline: 8px; font-size: 13px; }
 .fav-actions .full { grid-column: 1 / -1; }
 .fav-empty { color: var(--muted); margin-top: 24px; }
@@ -528,3 +529,44 @@ a.pill { text-decoration: none; }
 .bar-actions { display: inline-flex; align-items: center; gap: 8px; }
 .bar-actions .icon-btn { width: 32px; height: 32px; }
 @media (max-width: 719px) { .eye-row { display: none; } }
+
+.fav-actions .three .btn { white-space: nowrap; padding-inline: 4px; }
+.expand-btn { display: none; }
+.group.has-expand { position: relative; }
+@media (max-width: 719px) {
+  .tiles[data-fold]:not([data-open]) { max-height: var(--row1, 84px); overflow: hidden; }
+  .group.has-expand .expand-btn { display: grid; place-items: center; position: absolute; top: -6px; inset-inline-end: 0; width: 30px; height: 30px; border-radius: 999px; border: 1px solid var(--line); background: var(--ink); color: var(--muted); padding: 0; cursor: pointer; }
+  .group.has-expand .expand-btn:hover { border-color: var(--charge); color: var(--charge); }
+  .expand-btn svg { transition: transform .2s; }
+  .expand-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+  .fav-btn { flex: 0 0 52px !important; padding-inline: 0 !important; }
+  .fav-btn [data-fav-label] { display: none; }
+}
+
+.fav-label { line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.fav-card { gap: 8px; }
+.fav-actions { padding-top: 0; }
+/* Date and time fields: keep the native picker icon inside the box (Android Chrome pushed it to the right edge) */
+.input { min-width: 0; box-sizing: border-box; }
+.input[type="datetime-local"], .input[type="date"], .input[type="time"] { -webkit-appearance: none; appearance: none; display: block; max-width: 100%; min-height: 44px; }
+.input[type="datetime-local"]::-webkit-date-and-time-value { text-align: start; margin: 0; min-height: 1.2em; }
+.input[type="datetime-local"]::-webkit-calendar-picker-indicator { margin: 0; margin-inline-start: 6px; padding: 0; }
+
+/* Search field with keyboard hints */
+.kbd-wrap { position: relative; max-width: 420px; }
+.kbd-wrap .input { max-width: none; padding-inline-end: 118px; }
+.kbd-hint { position: absolute; inset-inline-end: 10px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 6px; color: var(--subtle); font-size: 13px; pointer-events: none; }
+.kbd-hint kbd { font-family: 'JetBrains Mono', monospace; font-size: 12px; min-width: 24px; padding: 3px 7px; text-align: center; border-radius: 8px; border: 1px solid var(--line); border-bottom-width: 2px; background: var(--panel); color: var(--muted); }
+.kbd-wrap .input:not(:placeholder-shown) ~ .kbd-hint { display: none; }
+.kbd-wrap .input:not(:placeholder-shown) { padding-inline-end: 14px; }
+
+/* The settings collapse button also shows whenever the preview has dropped below the settings */
+@media (max-width: 971px) {
+  .card-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px 0 20px; font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--subtle); }
+  .collapse-btn { width: 32px; height: 32px; border-radius: 999px; border: 1px solid var(--line); background: var(--ink); color: var(--muted); font-size: 20px; line-height: 1; display: grid; place-items: center; padding: 0 0 2px; cursor: pointer; }
+  .collapse-btn:hover { border-color: var(--charge); color: var(--charge); }
+  .panel-stack > .card:not(.explain) > .card-bar + .card-body { padding-top: 12px; }
+  .gen[data-collapsed] .panel-stack > .card:not(.explain) > .card-body { display: none; }
+  .gen[data-collapsed] .panel-stack > .card:not(.explain) > .card-bar { padding-bottom: 10px; }
+  .eye-row { display: none; }
+}

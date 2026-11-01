@@ -37,6 +37,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     <svg class="fab-set" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/></svg>
   </button>
   <div class="tabs" role="tablist" aria-label="QR code options">
+    <span class="tab-ind" aria-hidden="true"></span>
     <button type="button" class="tab" role="tab" id="tab-content" aria-controls="panel-content" data-tab="content" aria-selected="true"><span class="step">1</span><span class="tab-name">{x("Content")}</span></button>
     <button type="button" class="tab" role="tab" id="tab-design" aria-controls="panel-design" data-tab="design" aria-selected="false"><span class="step">2</span><span class="tab-name">{x("Design")}</span><span class="card-sum" data-summary="design"></span></button>
     <button type="button" class="tab" role="tab" id="tab-logo" aria-controls="panel-logo" data-tab="logo" aria-selected="false"><span class="step">3</span><span class="tab-name">{x("Logo")}</span><span class="card-sum" data-summary="logo">{x("None")}</span></button>
@@ -149,7 +150,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
         </div>
         <div class="sample-logos">
           <span class="label">{I.t('logo_try')}</span>
-          <div class="pills" role="group" aria-label={I.t('logo_shape')}>{LOGO_SHAPES.map(st => <button type="button" class="pill" data-opt="iconStyle" data-value={st} aria-pressed={st === 'round' ? 'true' : 'false'}>{I.t('logo_st_' + (st === 'round' ? 'rounded' : st))}</button>)}</div>
+          <div class="pills" role="group" aria-label={I.t('logo_shape')}>{LOGO_SHAPES.map(st => <button type="button" class="pill" data-opt="iconStyle" data-value={st} aria-pressed={st === 'plain' ? 'true' : 'false'}>{I.t('logo_st_' + (st === 'round' ? 'rounded' : st))}</button>)}</div>
           <label class="range" data-show="iconRound" hidden><span>{I.t('logo_round')}</span><input type="range" min="0" max="100" step="1" data-num="logoRound" value="48" /><output data-out="logoRound" data-suffix="%">48%</output></label>
           <label class="switch-row"><span><b>{I.t('logo_icustom')}</b></span><input type="checkbox" class="switch" role="switch" data-bool="iconCustom" /></label>
           <div class="icon-color" data-show="iconCustom" hidden>
@@ -161,7 +162,10 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
           </div>
           <div data-show="iconAny" hidden><ColorPresets scope="icon" targets={[['iconColor', 'Icon color', 'iconCustom'], ['iconFg', 'Glyph color', 'iconFgCustom']]} /></div>
           <div class="sample-row">{SAMPLE_LOGOS.map(l => <button type="button" class="sample-logo" data-sample-logo={l.url} data-ihex={l.hex} data-ipath={l.path} title={l.title} aria-label={l.title} aria-pressed="false"><img src={l.url} alt="" width="28" height="28" /></button>)}</div>
-          <input class="input" type="search" data-icon-search data-kbd placeholder={`${I.t('logo_search_ph')} · ${I.t('kbd_press', { key: '/' })}`} aria-label={I.t('logo_search_ph')} aria-keyshortcuts="/ Control+K Meta+K" autocomplete="off" spellcheck="false" />
+          <div class="kbd-wrap">
+            <input class="input" type="search" data-icon-search data-kbd placeholder={I.t('logo_search_ph')} aria-label={I.t('logo_search_ph')} aria-keyshortcuts="/ Control+K Meta+K" autocomplete="off" spellcheck="false" />
+            <span class="kbd-hint" aria-hidden="true"><kbd data-kbd-mod>Ctrl K</kbd><span>{I.t('kbd_or')}</span><kbd>/</kbd></span>
+          </div>
           <div class="sample-row" data-icon-results hidden></div>
           <p class="hint" data-icon-status hidden></p>
           {/* <p class="hint">{I.t('logo_icons_note')}</p> */}
@@ -316,7 +320,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
 <script>
   import { QrCode, QrSegment } from '../lib/qrcodegen.js';
   import { TYPES, BODY, FRAME, BALL, PRESETS, DESIGN_DEFAULTS, FIELD_DEFAULTS, buildSvg, buildPayload, buildSheet, contrast, COLOR_FAMILIES, APP_LINKS, iconLogo, isIconLogo, ICON_STYLES, LOGO_SHAPES } from '../lib/render.js';
-  let shownIconStyle = 'round|48||';
+  let shownIconStyle = 'plain|48||';
   const mkIcon = (hex: string, path: string) => iconLogo(hex, path, s.iconStyle, s.iconCustom ? s.iconColor : '', s.iconFgCustom ? s.iconFg : '', s.logoRound);
 
   const I18N = JSON.parse(document.getElementById('i18n-data')!.textContent || '{}');
@@ -327,7 +331,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   const $ = (sel: string) => root.querySelector(sel) as any;
   const $$ = (sel: string) => Array.from(root.querySelectorAll(sel)) as any[];
 
-  const defaults = () => ({ type: 'url', data: { ...FIELD_DEFAULTS, ...(I18N.defs || {}) }, ...DESIGN_DEFAULTS, qfText: T('qf_text'), logo: null as string | null, logos: [] as string[], logoBg: false, logoBgColor: '#FFFFFF', logoStroke: false, logoStrokeColor: '#FFFFFF', logoStrokeW: 3, logoPct: 22, clearLogo: true, iconStyle: 'round', logoRound: 48, iconCustom: false, iconColor: '#0B0D0C', iconFgCustom: false, iconFg: '#FFFFFF', ecc: 'M', boost: true, mask: -1, border: 4, radius: 0, presetMode: 'all', minVer: 1, maxVer: 40, exportSize: 1024, showCode: false, defHidden: false, stash: {} as Record<string, string> });
+  const defaults = () => ({ type: 'url', data: { ...FIELD_DEFAULTS, ...(I18N.defs || {}) }, ...DESIGN_DEFAULTS, qfText: T('qf_text'), logo: null as string | null, logos: [] as string[], logoBg: false, logoBgColor: '#FFFFFF', logoStroke: false, logoStrokeColor: '#FFFFFF', logoStrokeW: 3, logoPct: 22, clearLogo: true, iconStyle: 'plain', logoRound: 48, iconCustom: false, iconColor: '#0B0D0C', iconFgCustom: false, iconFg: '#FFFFFF', ecc: 'M', boost: true, mask: -1, border: 4, radius: 0, presetMode: 'all', minVer: 1, maxVer: 40, exportSize: 1024, showCode: false, defHidden: false, stash: {} as Record<string, string> });
   let s: any = defaults();
   try {
     const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
@@ -422,7 +426,13 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     $$('[data-fields]').forEach(el => { el.hidden = el.dataset.fields !== s.type; });
     $$('[data-showif]').forEach(el => { const [k, v] = el.dataset.showif.split('='); el.hidden = String(s.data[k]) !== v; });
     $$('[data-help]').forEach(el => { el.hidden = el.dataset.help !== s.type; });
-    $$('[data-field]').forEach(el => { const v = s.data[el.dataset.field] ?? ''; if (el !== active && el.value !== v) el.value = v; });
+    $$('[data-field]').forEach(el => {
+      const v = s.data[el.dataset.field] ?? ''; if (el !== active && el.value !== v) el.value = v;
+      if (el.tagName === 'SELECT') return;
+      // While example values are hidden, they show as the placeholder (grey) instead.
+      if (el.dataset.ph0 === undefined) el.dataset.ph0 = el.placeholder;
+      el.placeholder = (s.defHidden && s.stash && s.stash[el.dataset.field]) || el.dataset.ph0;
+    });
     $$('[data-social]').forEach(b => b.setAttribute('aria-pressed', String(!!s.data.url && s.data.url.startsWith(b.dataset.prefix))));
     $$('[data-field-opt]').forEach(b => b.setAttribute('aria-pressed', String(s.data[b.dataset.fieldOpt] === b.dataset.value)));
     $$('[data-field-bool]').forEach(el => { el.checked = !!s.data[el.dataset.fieldBool]; });
@@ -490,7 +500,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     $$('[data-action="toggleDefaults"]').forEach(eb => { eb.setAttribute('aria-pressed', String(!!s.defHidden)); eb.setAttribute('aria-label', el0); eb.title = el0; });
     favId = r.qr ? hashOf(JSON.stringify(snapshot())) : '';
     const faved = !!favId && loadFavs().some(f => f.id === favId), fb = $('[data-action="fav"]');
-    fb.setAttribute('aria-pressed', String(faved)); fb.disabled = !r.qr; $('[data-fav-label]').textContent = T(faved ? 'fav_on' : 'fav_add');
+    fb.setAttribute('aria-pressed', String(faved)); fb.disabled = !r.qr; $('[data-fav-label]').textContent = T(faved ? 'fav_on' : 'fav_add'); fb.setAttribute('aria-label', T(faved ? 'fav_on' : 'fav_add')); fb.title = T(faved ? 'fav_on' : 'fav_add');
     $$('[data-dl], [data-action="copySvg"], [data-action="copyImg"], [data-action="printPdf"]').forEach(b => { b.disabled = !r.qr; });
 
     const E = r.qr ? 'LMQH'[r.qr.errorCorrectionLevel.ordinal] : '';
@@ -681,7 +691,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
       if (inp) { inp.focus(); inp.setSelectionRange(d.prefix!.length, url.length); }
     }
     else if (d.logoPick) set({ logo: s.logos[+d.logoPick] });
-    else if (d.sampleLogo) set(s.logo === d.sampleLogo ? { logo: null } : { logo: d.sampleLogo, ecc: s.ecc === 'L' || s.ecc === 'M' ? 'H' : s.ecc });
+    else if (d.sampleLogo) set(s.logo === d.sampleLogo ? { logo: null } : { logo: d.sampleLogo });
     else if (d.logoDel) {
       const i = +d.logoDel, gone = s.logos[i], logos = s.logos.filter((_: string, j: number) => j !== i);
       set({ logos, logo: gone === s.logo ? (logos[Math.min(i, logos.length - 1)] ?? null) : s.logo });
@@ -711,25 +721,32 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   });
   // Brand icon search: the Simple Icons list (/brand-icons.json, a static file on this site) loads on first use.
   // The search itself runs in the browser; nothing typed here is sent anywhere.
-  let iconList: [string, string, string][] | null = null, iconLoad: Promise<void> | null = null;
+  let customLogos: [string, string, string][] = [], iconList: [string, string, string][] | null = null, iconLoad: Promise<void> | null = null;
   const iconBox = $('[data-icon-results]'), iconMsg = $('[data-icon-status]');
   const norm = (v: string) => v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9+]/g, '');
   function showIcons(q: string) {
     const n = norm(q);
     if (!n) { iconBox.hidden = iconMsg.hidden = true; return; }
     if (!iconList) { iconMsg.textContent = T('logo_search_load'); iconMsg.hidden = false; return; }
+    const mine = customLogos.filter(c => norm(c[0] + ' ' + c[2]).includes(n)).slice(0, 8);
     const hits = iconList.filter(i => norm(i[0]).includes(n)).sort((a, b) => +!norm(a[0]).startsWith(n) - +!norm(b[0]).startsWith(n) || a[0].length - b[0].length).slice(0, 30);
-    iconBox.replaceChildren(...hits.map(([title, hex, path]) => {
+    const mineBtns = mine.map(([title, url]) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'sample-logo'; b.dataset.sampleLogo = url; b.title = title; b.setAttribute('aria-label', title); b.setAttribute('aria-pressed', String(url === s.logo));
+      const img = document.createElement('img'); img.src = url; img.alt = ''; b.appendChild(img); return b;
+    });
+    iconBox.replaceChildren(...mineBtns, ...hits.map(([title, hex, path]) => {
       const url = mkIcon(hex, path), b = document.createElement('button');
       b.type = 'button'; b.className = 'sample-logo'; b.dataset.sampleLogo = url; b.dataset.ihex = hex; b.dataset.ipath = path; b.title = title; b.setAttribute('aria-label', title); b.setAttribute('aria-pressed', String(url === s.logo));
       const img = document.createElement('img'); img.src = url; img.alt = ''; b.appendChild(img); return b;
     }));
-    iconBox.hidden = !hits.length; iconMsg.hidden = !!hits.length; iconMsg.textContent = hits.length ? '' : T('logo_search_none');
+    const any = hits.length + mine.length; iconBox.hidden = !any; iconMsg.hidden = !!any; iconMsg.textContent = any ? '' : T('logo_search_none');
   }
   const iconInput = $('[data-icon-search]') as HTMLInputElement;
+  if (/Mac|iPhone|iPad/.test(navigator.platform)) $('[data-kbd-mod]').textContent = '⌘K';
   iconInput.addEventListener('input', () => {
     showIcons(iconInput.value);
-    if (!iconList) iconLoad ||= fetch('/brand-icons.json').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then(j => { iconList = j; }, () => { iconLoad = null; iconMsg.textContent = T('logo_search_fail'); iconMsg.hidden = false; }).then(() => { if (iconList) showIcons(iconInput.value); });
+    if (!iconList) iconLoad ||= fetch('/brand-icons.json').then(r => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then(async j => { try { customLogos = await (await fetch('/custom-logos.json')).json(); } catch (e) {} iconList = j; }, () => { iconLoad = null; iconMsg.textContent = T('logo_search_fail'); iconMsg.hidden = false; }).then(() => { if (iconList) showIcons(iconInput.value); });
   });
   // Keyboard shortcut for search fields marked data-kbd: "/" (or Ctrl/⌘+K) opens the tab that holds the field
   // and focuses it, so you can start typing at once. Escape clears the field, then leaves it.
@@ -782,7 +799,13 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     if (a.dataset.cropAct === 'ok') {
       const out = document.createElement('canvas'); out.width = out.height = 512; crDraw(out);
       crEnd(out.toDataURL('image/webp', .92));
-    } else crEnd(a.dataset.cropAct === 'skip' ? dlg.dataset.url! : null);
+    } else {
+      if (a.dataset.cropAct !== 'skip' || !cr.img) { crEnd(null); return; }
+      // Keep original: the whole image, centered in a square with a margin, so portrait pictures fit every shape.
+      const out = document.createElement('canvas'); out.width = out.height = 512; const g2 = out.getContext('2d')!;
+      const k = Math.min(448 / cr.img.naturalWidth, 448 / cr.img.naturalHeight), w = cr.img.naturalWidth * k, h = cr.img.naturalHeight * k;
+      g2.drawImage(cr.img, (512 - w) / 2, (512 - h) / 2, w, h); crEnd(out.toDataURL('image/webp', .92));
+    }
   });
   dlg.addEventListener('cancel', (e) => { e.preventDefault(); crEnd(null); });
   async function addLogoFiles(all: File[]) {
@@ -791,7 +814,7 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     const out: string[] = [];
     for (const u of urls) { const c = u.startsWith('data:image/svg+xml') ? u : await cropLogo(u); if (c) out.push(c); }   // SVG stays vector
     if (!out.length) return;
-    set({ logos: [...s.logos, ...out.filter(u => !s.logos.includes(u))], logo: out[out.length - 1], ecc: s.ecc === 'L' || s.ecc === 'M' ? 'H' : s.ecc });
+    set({ logos: [...s.logos, ...out.filter(u => !s.logos.includes(u))], logo: out[out.length - 1] });
   }
   // Drag and drop images onto the upload button / logo row.
   const dz = (e: DragEvent) => ((e.target as HTMLElement).closest('[data-dropzone]') as HTMLElement | null);
@@ -889,13 +912,23 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
   (() => {
     const tabs = Array.from(document.querySelectorAll<HTMLElement>('[data-tab]'));
     const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-panel]'));
-    const host = document.querySelector<HTMLElement>('[data-panels]')!;
     let cur = 0;
+    // The underline under the tabs is its own element so it can follow the finger while swiping.
+    const ind = document.querySelector<HTMLElement>('.tab-ind')!;
+    const placeInd = (to = -1, p = 0, anim = true) => {
+      const a = tabs[cur], b = to >= 0 && tabs[to] ? tabs[to] : a;
+      ind.style.transition = anim ? '' : 'none';
+      ind.style.width = (a.offsetWidth + (b.offsetWidth - a.offsetWidth) * p) + 'px';
+      ind.style.transform = `translateX(${a.offsetLeft + (b.offsetLeft - a.offsetLeft) * p}px)`;
+    };
+    window.addEventListener('resize', () => placeInd(-1, 0, false));
+    document.fonts?.ready.then(() => placeInd(-1, 0, false));
     const show = (i: number, focus = false) => {
       cur = Math.max(0, Math.min(tabs.length - 1, i));
       tabs.forEach((b, j) => { b.setAttribute('aria-selected', String(j === cur)); b.tabIndex = j === cur ? 0 : -1; });
       panels.forEach((p, j) => { p.hidden = j !== cur; });
       tabs[cur].scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+      placeInd();
       if (focus) tabs[cur].focus();
     };
     tabs.forEach((b, j) => {
@@ -911,13 +944,13 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
     const kids = () => Array.from(panels[cur].children) as HTMLElement[];
     const move = (dx: number, ease: string, op = 1) => kids().forEach(k => { k.style.transition = ease; k.style.transform = dx ? `translateX(${dx}px)` : ''; k.style.opacity = op === 1 ? '' : String(op); });
     const dirOf = (dx: number) => (dx < 0 ? 1 : -1) * (rtl() ? -1 : 1);
-    const skip = (el: EventTarget | null) => el instanceof HTMLElement && !!el.closest('input[type="range"], input[type="text"], textarea');
-    host.addEventListener('touchstart', e => {
+    const skip = (el: EventTarget | null) => el instanceof HTMLElement && !!el.closest('input[type="range"], .type-bar, .tabs, .view-fab');
+    root.addEventListener('touchstart', e => {
       tracking = !skip(e.target) && e.touches.length === 1; lock = '';
       x0 = e.touches[0].clientX; y0 = e.touches[0].clientY; t0 = e.timeStamp;
-      W = Math.max(200, Math.min(host.getBoundingClientRect().width || 360, window.innerWidth));
+      W = Math.max(200, Math.min(root.getBoundingClientRect().width || 360, window.innerWidth));
     }, { passive: true });
-    host.addEventListener('touchmove', e => {
+    root.addEventListener('touchmove', e => {
       if (!tracking) return;
       const dx = e.touches[0].clientX - x0, dy = e.touches[0].clientY - y0;
       if (!lock) { if (Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy)) lock = 'h'; else if (Math.abs(dy) > 10) { lock = 'v'; tracking = false; } }
@@ -925,13 +958,14 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
       const n = cur + dirOf(dx), edge = n < 0 || n > tabs.length - 1;
       const d = edge ? dx * .25 : dx;
       move(d, 'none', 1 - Math.min(.6, Math.abs(d) / W));
+      placeInd(edge ? -1 : n, Math.min(1, Math.abs(d) / W), false);
     }, { passive: true });
     const finish = (e: TouchEvent, cancelled: boolean) => {
       if (!tracking) return; tracking = false;
       if (lock !== 'h') return;
       const dx = (cancelled ? 0 : e.changedTouches[0].clientX - x0), v = Math.abs(dx) / Math.max(1, e.timeStamp - t0);
       const dir = dirOf(dx), n = cur + dir;
-      if (cancelled || n < 0 || n > tabs.length - 1 || !(Math.abs(dx) > W * .3 || (v > .5 && Math.abs(dx) > 40))) { move(0, 'transform .2s ease, opacity .2s ease'); return; }
+      if (cancelled || n < 0 || n > tabs.length - 1 || !(Math.abs(dx) > W * .3 || (v > .5 && Math.abs(dx) > 40))) { move(0, 'transform .2s ease, opacity .2s ease'); placeInd(); return; }
       const out = dx < 0 ? -W : W;
       move(out, 'transform .16s ease-in, opacity .16s ease-in', 0);
       setTimeout(() => {
@@ -941,9 +975,26 @@ const presetSvgs = PRESETS.map(p => buildSvg(sample, { ...p, border: 2 }));
         setTimeout(() => kids().forEach(k => { k.style.transition = ''; }), 260);
       }, 160);
     };
-    host.addEventListener('touchend', e => finish(e, false), { passive: true });
-    host.addEventListener('touchcancel', e => finish(e, true), { passive: true });
+    root.addEventListener('touchend', e => finish(e, false), { passive: true });
+    root.addEventListener('touchcancel', e => finish(e, true), { passive: true });
     show(0);
+  })();
+
+  // Small screens: long tile lists show one row; a round button expands them.
+  (() => {
+    const chevron = '<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+    document.querySelectorAll<HTMLElement>('.tiles').forEach(list => {
+      const grp = list.parentElement as HTMLElement; grp.classList.add('has-expand'); list.dataset.fold = '';
+      const btn = document.createElement('button'); btn.type = 'button'; btn.className = 'expand-btn'; btn.innerHTML = chevron;
+      const sync = () => { const o = list.hasAttribute('data-open'); btn.setAttribute('aria-expanded', String(o)); btn.setAttribute('aria-label', T(o ? 'collapse' : 'expand')); btn.title = T(o ? 'collapse' : 'expand'); };
+      btn.addEventListener('click', () => { list.toggleAttribute('data-open'); sync(); });
+      grp.appendChild(btn); sync();
+      let lastW = 0;
+      new ResizeObserver(() => {
+        const w = list.clientWidth; if (!w || w === lastW) return; lastW = w;
+        const t = list.querySelector<HTMLElement>('.tile'); if (t) list.style.setProperty('--row1', t.getBoundingClientRect().height + 'px');
+      }).observe(list);
+    });
   })();
 
   // Help boxes: always open on wide screens, collapsible dropdowns on mobile.
