@@ -4,7 +4,7 @@ Guidance for AI coding agents (and new contributors) working in this repo. Read 
 
 ## What this is
 
-A free, private QR code generator at **https://qrcodestation.com**. Static Astro site, no backend, no database, no accounts, no ads, no analytics. QR codes are generated in the visitor's browser. 12 languages (English + es, ja, fr, de, pt, ko, it, id, ru, th, ar). Codes are **static** only: no dynamic/editable codes and no scan statistics, so never claim or add copy implying otherwise.
+A free, private QR code generator at **https://qrcodestation.com**. Static Astro site, no backend, no database, no accounts, no ads. Google Analytics (gtag, `G-KSN5MFNZ61`) is installed in `Base.astro` (production only) and is disclosed in the Privacy policy (Cookies section). QR codes are generated in the visitor's browser. 12 languages (English + es, ja, fr, de, pt, ko, it, id, ru, th, ar). Codes are **static** only: no dynamic/editable codes and no scan statistics, so never claim or add copy implying otherwise.
 
 ## Commands
 
@@ -85,6 +85,6 @@ Always run `npm run build` and `npm run check:i18n` after changing copy, routes 
 
 ## Do not
 
-- Add trackers, ads, cookie banners, sign-up walls or any network call that sends user input anywhere.
+- Add other trackers, ads, cookie banners, sign-up walls or any network call that sends user input anywhere (the Google tag is the one analytics tool and it never receives QR content).
 - Claim dynamic codes, scan statistics, hosting or any capability the site does not have.
 - Say that Adobe, Canva, Google or other products have limits you have not verified.

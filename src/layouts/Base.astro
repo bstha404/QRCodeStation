@@ -28,6 +28,16 @@ const ogImage = new URL('/og-image.png', Astro.site);
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="author" href="/humans.txt" />
     <meta name="theme-color" content="#F2F5F2" />
+    {import.meta.env.PROD && (<>
+      <!-- Google tag (gtag.js) -->
+      <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-KSN5MFNZ61"></script>
+      <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KSN5MFNZ61');
+      </script>
+    </>)}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />

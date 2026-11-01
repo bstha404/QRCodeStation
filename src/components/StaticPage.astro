@@ -13,7 +13,7 @@ const I = useI18n(locale);
 const pg = I.c.pages[id];
 const tok = (s: string) => s.replaceAll('{brand}', BRAND).replaceAll('{email}', CONTACT_EMAIL)
   .replaceAll('{contact_url}', localizePath(locale, '/contact/')).replaceAll('{privacy_url}', localizePath(locale, '/privacy-policy/'));
-const iso = '2026-10-17';
+const iso = '2026-11-01';
 let dateText = I.c.pages.updatedDate;
 try { dateText = new Date(iso + 'T00:00:00Z').toLocaleDateString(locale, { dateStyle: 'long', timeZone: 'UTC' }); } catch (e) {}
 const updated = (id === 'privacy' || id === 'terms') ? `${I.c.pages.updated}: ${dateText}` : undefined;
